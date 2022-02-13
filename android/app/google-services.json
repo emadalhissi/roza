@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1060819256946",
+    "project_id": "roza-6bf1e",
+    "storage_bucket": "roza-6bf1e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060819256946:android:793816b6be6644fc7224eb",
+        "android_client_info": {
+          "package_name": "com.roza.rozaProject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060819256946-7lve2epa0lt0ttsl0jsm1cuslfqppemc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roza.rozaProject",
+            "certificate_hash": "fa30986b7e6ad50ff7279bea8d6da85e1b2878ac"
+          }
+        },
+        {
+          "client_id": "1060819256946-7rdnaq3the2o1ph2fmac9mtdf5d72krf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcJB4MPb8nD0WuFjQSxr0Sigd5c9zUqQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060819256946-7rdnaq3the2o1ph2fmac9mtdf5d72krf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
