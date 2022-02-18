@@ -18,7 +18,7 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
     with SnackBarHelper {
   late TextEditingController mobileEditingController;
   late TextEditingController otpEditingController;
-  String verificationId = '';
+  String _verificationId = '';
   String countryCode = '+970';
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -27,6 +27,7 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
     super.initState();
     mobileEditingController = TextEditingController();
     otpEditingController = TextEditingController();
+    auth.setLanguageCode('ar');
   }
 
   @override
@@ -75,7 +76,7 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
             ElevatedButton(
               onPressed: () async {
                 // await sendOTP();
-                //  verifyPhoneNumber();
+                 verifyPhoneNumber();
               },
               child: Text('Send OTP'),
               style: ElevatedButton.styleFrom(
@@ -98,7 +99,7 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
             ElevatedButton(
               onPressed: () async {
                 // await register();
-                // signInWithPhoneNumber();
+                signInWithPhoneNumber();
               },
               child: Text('Verify'),
               style: ElevatedButton.styleFrom(
@@ -113,46 +114,101 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
     );
   }
 
-  Future<void> sendOTP() async {
-    setState(() {
-      // loading = true;
-    });
-    await auth.verifyPhoneNumber(
-      phoneNumber: mobileEditingController.text.toString(),
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((value) {
-          print("You are logged in successfully");
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => RegisterScreen()),
-            ModalRoute.withName('/'),
-          );
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print('verificationFailed error message => ${e.message}');
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        setState(() {
-          this.verificationId = verificationId;
-        });
+  void verifyPhoneNumber() async {
+    PhoneVerificationCompleted verificationCompleted =
+        (PhoneAuthCredential phoneAuthCredential) async {
+      await auth.signInWithCredential(phoneAuthCredential);
+      print(
+          'Phone number automatically verified and user signed in: ${auth.currentUser!.uid}');
+    };
 
-        print("You are logged in, codeSent " + '${verificationId.toString()}');
+    PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException authException) {
+      print(
+          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    };
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CodeActiveScreen(
-              verificationId: this.verificationId,
-              phone: mobileEditingController.text.toString(),
-            ),
-          ),
-        );
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
+    PhoneCodeSent codeSent =
+        (String verificationId, [int? forceResendingToken]) async {
+      print('Please check your phone for the verification code.');
+      _verificationId = verificationId;
+    };
+
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      print('verification code: ' + verificationId);
+      _verificationId = verificationId;
+    };
+
+    try {
+      await auth.verifyPhoneNumber(
+          phoneNumber: mobileEditingController.text,
+          timeout: const Duration(seconds: 5),
+          verificationCompleted: verificationCompleted,
+          verificationFailed: verificationFailed,
+          codeSent: codeSent,
+          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    } catch (e) {
+      print('Failed to Verify Phone Number: $e');
+    }
   }
+
+  void signInWithPhoneNumber() async {
+    try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: otpEditingController.text,
+      );
+
+      final User? user = (await auth.signInWithCredential(credential)).user;
+
+      print('Successfully signed in UID: ${user!.uid}');
+    } catch (e) {
+      print('Failed to sign in: ' + e.toString());
+    }
+  }
+
+//
+// Future<void> sendOTP() async {
+//   setState(() {
+//     // loading = true;
+//   });
+//   await auth.verifyPhoneNumber(
+//     phoneNumber: mobileEditingController.text.toString(),
+//     verificationCompleted: (PhoneAuthCredential credential) async {
+//       await auth.signInWithCredential(credential).then((value) {
+//         print("You are logged in successfully");
+//         Navigator.pushAndRemoveUntil(
+//           context,
+//           MaterialPageRoute(
+//               builder: (BuildContext context) => RegisterScreen()),
+//           ModalRoute.withName('/'),
+//         );
+//       });
+//     },
+//     verificationFailed: (FirebaseAuthException e) {
+//       print('verificationFailed error message => ${e.message}');
+//     },
+//     codeSent: (String verificationId, int? resendToken) async {
+//       setState(() {
+//         this.verificationId = verificationId;
+//       });
+//
+//       print("You are logged in, codeSent " + '${verificationId.toString()}');
+//
+//       Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => CodeActiveScreen(
+//             verificationId: this.verificationId,
+//             phone: mobileEditingController.text.toString(),
+//           ),
+//         ),
+//       );
+//     },
+//     codeAutoRetrievalTimeout: (String verificationId) {},
+//   );
+// }
 
 // Future<void> resetPassword() async {
 //   // bool state = await AutController()
