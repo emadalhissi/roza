@@ -1,9 +1,13 @@
 import 'package:emadic/Helpers/snack_bar.dart';
-import 'package:flutter/material.dart';
+import 'package:emadic/Screens/auth/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class RegisterWithMobileScreen extends StatefulWidget {
-  const RegisterWithMobileScreen({Key? key}) : super(key: key);
+  final String phone;
+
+  RegisterWithMobileScreen({this.phone = ''});
 
   @override
   _RegisterWithMobileScreenState createState() =>
@@ -12,9 +16,28 @@ class RegisterWithMobileScreen extends StatefulWidget {
 
 class _RegisterWithMobileScreenState extends State<RegisterWithMobileScreen>
     with SnackBarHelper {
-  late UserCredential userCredential;
-  User? user = FirebaseAuth.instance.currentUser;
   late TextEditingController mobileEditingController;
+  var otpController = TextEditingController();
+  var numController = TextEditingController();
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  String verificationId = "";
+
+  void signInWithPhoneAuthCredential(
+      PhoneAuthCredential phoneAuthCredential) async {
+    try {
+      final authCredential =
+      await auth.signInWithCredential(phoneAuthCredential);
+
+      if (authCredential.user != null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
+    } on FirebaseAuthException catch (e) {
+      print("catch");
+    }
+  }
 
   @override
   void initState() {
@@ -25,7 +48,6 @@ class _RegisterWithMobileScreenState extends State<RegisterWithMobileScreen>
   @override
   void dispose() {
     mobileEditingController.dispose();
-
     super.dispose();
   }
 
@@ -33,66 +55,129 @@ class _RegisterWithMobileScreenState extends State<RegisterWithMobileScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.all(25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Spacer(),
             Center(
-                child: Text(
-              'Enter Mobile',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+              child: Text(
+                'Login with mobile',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
               ),
-            )),
-            SizedBox(height: 20),
+            ),
+            SizedBox(height: 50),
             TextField(
               controller: mobileEditingController,
-              decoration: InputDecoration(hintText: 'Mobile'),
+              decoration: InputDecoration(
+                hintText: 'Mobile',
+                prefixText: '+972'
+              ),
+              maxLength: 9,
             ),
-            SizedBox(height: 20),
             Spacer(),
             ElevatedButton(
-              onPressed: () async => await performMobile(),
-              child: Text('Continue'),
+              onPressed: () async {
+                await fetchotp();
+              },
+              child: Text('Send OTP'),
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 minimumSize: Size(double.infinity, 50),
               ),
             ),
-            SizedBox(height: 100),
           ],
         ),
       ),
     );
   }
-
-  Future<void> performMobile() async {
-    if (checkData()) {
-      await mobile();
-    }
-  }
-
-  bool checkData() {
-    if (mobileEditingController.text.isEmpty) {
-      showSnackBar(
-        context,
-        message: 'Enter Email!',
-        error: true,
-      );
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> mobile() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
+  Future<void> fetchotp() async {
+    await auth.verifyPhoneNumber(
       phoneNumber: mobileEditingController.text.toString(),
-      verificationCompleted: (PhoneAuthCredential credential) {},
-      verificationFailed: (FirebaseAuthException e) {},
-      codeSent: (String verificationId, int? resendToken) {},
-      codeAutoRetrievalTimeout: (String verificationId) {},
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+      },
+
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          print('The provided phone number is not valid.');
+        }
+      },
+
+      codeSent: (String verificationId, int? resendToken) async {
+        this.verificationId = verificationId;
+
+      },
+
+      codeAutoRetrievalTimeout: (String verificationId) {
+      },
     );
   }
+ // Future<void> sendOTP() async {
+ //    await FirebaseAuth.instance.verifyPhoneNumber(
+ //        phoneNumber: '+972${mobileEditingController.text.toString()}',
+ //        verificationCompleted: (PhoneAuthCredential credential) async {
+ //          print('--verificationCompleted--');
+ //          await FirebaseAuth.instance
+ //              .signInWithCredential(credential)
+ //              .then((value) async {
+ //            // CupertinoAlertDialog(
+ //            //   title: Text("Phone Authentication"),
+ //            //   content: Text("Phone Number verified!!!"),
+ //            //   actions: [
+ //            //     CupertinoButton(
+ //            //         child: Text('Close'),
+ //            //         onPressed: () {
+ //            //           Navigator.of(context).pop();
+ //            //         }),
+ //            //   ],
+ //            // );
+ //          });
+ //        },
+ //        verificationFailed: (FirebaseAuthException e) {
+ //          print(e.message);
+ //        },
+ //        codeSent: (String verficationID, int? resendToken) {
+ //          setState(() {
+ //            // _verificationCode = verficationID;
+ //          });
+ //        },
+ //        codeAutoRetrievalTimeout: (String verificationID) {
+ //          setState(() {
+ //            // _verificationCode = verificationID;
+ //          });
+ //        },
+ //        timeout: Duration(seconds: 120));
+ //  }
+ //
+ //  void verifyWithMobile() async {
+ //    try {
+ //      await FirebaseAuth.instance
+ //          .signInWithCredential(PhoneAuthProvider.credential(
+ //        verificationId: '',
+ //        smsCode: '',
+ //      ))
+ //          .then((value) async {
+ //        CupertinoAlertDialog(
+ //          title: Text("Phone Authentication"),
+ //          content: Text("Phone Number verified!!!"),
+ //          actions: [
+ //            CupertinoButton(
+ //                child: Text('Close'),
+ //                onPressed: () {
+ //                  Navigator.of(context).pop();
+ //                }),
+ //          ],
+ //        );
+ //      });
+ //    } catch (e) {
+ //      FocusScope.of(context).unfocus();
+ //
+ //      showSnackBar(
+ //        context,
+ //        message: 'Wrong OTP!',
+ //        error: true,
+ //      );
+ //    }
+ //  }
 }

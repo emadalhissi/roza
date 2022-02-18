@@ -1,6 +1,7 @@
 import 'package:emadic/Helpers/snack_bar.dart';
 import 'package:emadic/Screens/auth/login_screen.dart';
 import 'package:emadic/Screens/auth/register_with_mobile_screen.dart';
+import 'package:emadic/Screens/auth/register_with_mobile_screen2.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -84,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegisterWithMobileScreen(),
+                      builder: (context) => RegisterWithMobileScreen2(),
                     ));
               },
               child: Text('Register using mobile'),
