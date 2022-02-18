@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CodeActiveScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class CodeActiveScreen extends StatefulWidget {
 
 class _CodeActiveScreenState extends State<CodeActiveScreen> {
   late TextEditingController otpEditingController;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -53,12 +56,11 @@ class _CodeActiveScreenState extends State<CodeActiveScreen> {
               decoration: InputDecoration(
                 hintText: 'OTP',
               ),
-
             ),
             Spacer(),
             ElevatedButton(
               onPressed: () async {
-                Navigator.pop(context);
+                await verify();
               },
               child: Text('Send OTP'),
               style: ElevatedButton.styleFrom(
@@ -69,6 +71,28 @@ class _CodeActiveScreenState extends State<CodeActiveScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> verify() async {
+    await auth.verifyPhoneNumber(
+      phoneNumber: widget.phone,
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {},
+      codeSent: (String verificationId, int? resendToken) async {
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: widget.verificationId,
+          smsCode: otpEditingController.text.toString(),
+        );
+
+        print('Before credential:');
+        print(credential);
+        await auth.signInWithCredential(credential);
+
+        print('After credential:');
+        print(credential);
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
     );
   }
 }

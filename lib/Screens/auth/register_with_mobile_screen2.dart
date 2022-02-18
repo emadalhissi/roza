@@ -17,6 +17,7 @@ class RegisterWithMobileScreen2 extends StatefulWidget {
 class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
     with SnackBarHelper {
   late TextEditingController mobileEditingController;
+  late TextEditingController otpEditingController;
   String verificationId = '';
   String countryCode = '+970';
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,23 +26,31 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
   void initState() {
     super.initState();
     mobileEditingController = TextEditingController();
+    otpEditingController = TextEditingController();
   }
 
   @override
   void dispose() {
     mobileEditingController.dispose();
+    otpEditingController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.only(
+          right: 25,
+          left: 25,
+          bottom: 25,
+          top: 100,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
+            // Spacer(),
             Center(
               child: Text(
                 'Login with mobile 2',
@@ -56,17 +65,17 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
               controller: mobileEditingController,
               decoration: InputDecoration(
                 hintText: 'Mobile',
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Text('+972'),
-                ),
+                // prefixIcon: Padding(
+                //   padding: const EdgeInsets.all(15),
+                //   child: Text('+972'),
+                // ),
               ),
-              maxLength: 9,
+              // maxLength: 9,/
             ),
-            Spacer(),
             ElevatedButton(
               onPressed: () async {
-                await register();
+                // await sendOTP();
+                //  verifyPhoneNumber();
               },
               child: Text('Send OTP'),
               style: ElevatedButton.styleFrom(
@@ -74,18 +83,42 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
                 minimumSize: Size(double.infinity, 50),
               ),
             ),
+            SizedBox(height: 50),
+            TextField(
+              controller: otpEditingController,
+              decoration: InputDecoration(
+                hintText: 'OTP',
+                // prefixIcon: Padding(
+                //   padding: const EdgeInsets.all(15),
+                //   child: Text('+972'),
+                // ),
+              ),
+              // maxLength: 9,/
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                // await register();
+                // signInWithPhoneNumber();
+              },
+              child: Text('Verify'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+                minimumSize: Size(double.infinity, 50),
+              ),
+            ),
+            Spacer(),
           ],
         ),
       ),
     );
   }
 
-  Future<void> register() async {
+  Future<void> sendOTP() async {
     setState(() {
       // loading = true;
     });
     await auth.verifyPhoneNumber(
-      phoneNumber: countryCode + mobileEditingController.text.toString(),
+      phoneNumber: mobileEditingController.text.toString(),
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((value) {
           print("You are logged in successfully");
@@ -107,17 +140,12 @@ class _RegisterWithMobileScreen2State extends State<RegisterWithMobileScreen2>
 
         print("You are logged in, codeSent " + '${verificationId.toString()}');
 
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId,
-          smsCode: '',
-        );
-        
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => CodeActiveScreen(
               verificationId: this.verificationId,
-              phone: countryCode + mobileEditingController.text.toString(),
+              phone: mobileEditingController.text.toString(),
             ),
           ),
         );
