@@ -1,11 +1,10 @@
-import 'package:emadic/Helpers/snack_bar.dart';
-import 'package:emadic/Screens/auth/login_screen.dart';
-import 'package:emadic/Screens/auth/register_with_mobile_screen.dart';
-import 'package:emadic/Screens/auth/register_with_mobile_screen2.dart';
+import 'package:Rehrati/Helpers/snack_bar.dart';
+import 'package:Rehrati/Screens/auth/login_screen.dart';
+import 'package:Rehrati/Screens/auth/register_with_mobile_screen.dart';
+import 'package:Rehrati/Screens/auth/register_with_mobile_screen2.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -36,6 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
         child: Column(
@@ -43,13 +43,14 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
           children: [
             Spacer(),
             Center(
-                child: Text(
-              'REGISTER',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+              child: Text(
+                'REGISTER',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            )),
+            ),
             SizedBox(height: 20),
             TextField(
               controller: emailEditingController,
@@ -73,20 +74,22 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
             TextButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
               },
               child: Text('Have an account? Login'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RegisterWithMobileScreen2(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RegisterWithMobileScreen2(),
+                  ),
+                );
               },
               child: Text('Register using mobile'),
             ),
@@ -106,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
-                await signInWithFacebook();
+                // await signInWithFacebook();
               },
               child: Text('Continue with Facebook'),
               style: ElevatedButton.styleFrom(
@@ -181,7 +184,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -191,16 +195,5 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  Future<UserCredential> signInWithFacebook() async {
-    // Trigger the sign-in flow
-    final LoginResult loginResult = await FacebookAuth.instance.login();
-
-    // Create a credential from the access token
-    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
-
-    // Once signed in, return the UserCredential
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }

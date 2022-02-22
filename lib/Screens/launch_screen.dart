@@ -1,4 +1,5 @@
-import 'package:emadic/Screens/auth/register_screen.dart';
+import 'package:Rehrati/Screens/auth/register_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LaunchScreen extends StatefulWidget {
@@ -13,15 +14,18 @@ class _LaunchScreenState extends State<LaunchScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), (){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => RegisterScreen()));
-    });
+    // Future.delayed(Duration(seconds: 3), (){
+    //   Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => RegisterScreen()));
+    // });
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('LAUNCH SCREEN!')
+      body: Column(
+        children: [
+          Image.asset('assets/images/trip.png', scale: 2.5,),
+          Text('Rehlati'),
+        ],
       ),
     );
   }

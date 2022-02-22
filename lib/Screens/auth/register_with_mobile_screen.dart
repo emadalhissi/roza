@@ -1,5 +1,5 @@
-import 'package:emadic/Helpers/snack_bar.dart';
-import 'package:emadic/Screens/auth/login_screen.dart';
+import 'package:Rehrati/Helpers/snack_bar.dart';
+import 'package:Rehrati/Screens/auth/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

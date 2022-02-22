@@ -1,4 +1,4 @@
-import 'package:emadic/Helpers/snack_bar.dart';
+import 'package:Rehrati/Helpers/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
