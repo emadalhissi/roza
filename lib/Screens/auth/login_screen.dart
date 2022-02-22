@@ -65,7 +65,30 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   fontSize: 20,
                 ),
               ),
-              const Spacer(),
+              const Text(
+                'Please enter your email and password',
+                style: TextStyle(
+                  color: Color(0xff8A8A8E),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: emailEditingController,
+                decoration: const InputDecoration(
+                  hintText: 'Email Address',
+
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordEditingController,
+                decoration: const InputDecoration(
+                  hintText: 'Password',
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {},
                 child: const Padding(
