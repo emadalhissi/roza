@@ -1,10 +1,17 @@
 // import 'package:api_ex/models/api_models/student_api_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum SharedPrefKeys { loggedIn, fullName, email, lang, gender, token }
+enum SharedPrefKeys {
+  loggedIn,
+  fullName,
+  email,
+  lang,
+  gender,
+  token,
+}
 
 class SharedPrefController {
-    static final SharedPrefController _sharedPrefControllerObj =
+  static final SharedPrefController _sharedPrefControllerObj =
       SharedPrefController._sharedPrefPrivateConstructor();
 
   late SharedPreferences _sharedPrefLibObj;
@@ -18,14 +25,6 @@ class SharedPrefController {
   Future<void> initSharedPref() async {
     _sharedPrefLibObj = await SharedPreferences.getInstance();
   }
-
-  // Future<void> save({required StudentApiModel studentApiModel}) async {
-  //   await _sharedPrefLibObj.setBool(SharedPrefKeys.loggedIn.toString(), true);
-  //   await _sharedPrefLibObj.setString(SharedPrefKeys.fullName.toString(), studentApiModel.fullName);
-  //   await _sharedPrefLibObj.setString(SharedPrefKeys.email.toString(), studentApiModel.email);
-  //   await _sharedPrefLibObj.setString(SharedPrefKeys.gender.toString(), studentApiModel.gender);
-  //   await _sharedPrefLibObj.setString(SharedPrefKeys.token.toString(), 'Bearer ' + studentApiModel.token);
-  // }
 
   Future<void> saveEmail({required String email}) async {
     await _sharedPrefLibObj.setString(SharedPrefKeys.email.toString(), email);

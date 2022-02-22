@@ -1,6 +1,7 @@
-import 'package:Rehrati/Helpers/snack_bar.dart';
+import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -32,43 +33,21 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            Center(
-                child: Text(
-              'LOGIN',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
-            SizedBox(height: 20),
-            TextField(
-              controller: emailEditingController,
-              decoration: InputDecoration(hintText: 'Email'),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: passwordEditingController,
-              decoration: InputDecoration(hintText: 'Password'),
-            ),
-            Spacer(),
-            ElevatedButton(
-              onPressed: () async => await performLogin(),
-              child: Text('Login'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                minimumSize: Size(double.infinity, 50),
-              ),
-            ),
-            SizedBox(height: 100),
-          ],
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context)!.login,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
+      body: Column(),
     );
   }
 
@@ -104,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
         password: passwordEditingController.text.toString(),
       );
       print(userCredential.user!.emailVerified);
-      if(userCredential.user!.emailVerified == false) {
+      if (userCredential.user!.emailVerified == false) {
         await user!.sendEmailVerification();
       }
     } on FirebaseAuthException catch (e) {

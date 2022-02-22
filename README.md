@@ -1,4 +1,4 @@
-# Rehrati
+# Rehlati
 
 A new Flutter application.
 

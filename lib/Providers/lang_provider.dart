@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Rehrati/preferences/shared_preferences_controller.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 
 class LangProvider extends ChangeNotifier {
 

@@ -1,6 +1,6 @@
-// import 'package:Rehrati/database/db_controller.dart';
-// import 'package:Rehrati/database/db_operations.dart';
-// import 'package:Rehrati/models/contact.dart';
+// import 'package:Rehlati/database/db_controller.dart';
+// import 'package:Rehlati/database/db_operations.dart';
+// import 'package:Rehlati/models/contact.dart';
 // import 'package:sqflite/sqflite.dart';
 //
 // class ContactDbController implements DbOperations<Contact> {

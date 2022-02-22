@@ -9,7 +9,7 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="Rehrati رحلاتي"
+        android:label="Rehlati رحلاتي"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true">
         <activity
