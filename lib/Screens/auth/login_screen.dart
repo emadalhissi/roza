@@ -1,4 +1,7 @@
+import 'package:Rehlati/Screens/auth/register_screen.dart';
+import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -53,11 +56,17 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
           bottom: 20,
           right: 20,
           left: 20,
+          top: 20,
         ),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Image.asset(
+                'assets/images/trip.png',
+                scale: 3.3,
+              ),
+              const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)!.welcome,
                 style: const TextStyle(
@@ -65,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   fontSize: 20,
                 ),
               ),
+              const SizedBox(height: 16),
               const Text(
                 'Please enter your email and password',
                 style: TextStyle(
@@ -75,22 +85,38 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              TextField(
-                controller: emailEditingController,
-                decoration: const InputDecoration(
-                  hintText: 'Email Address',
-
-                ),
+              AppTextField(
+                textEditingController: emailEditingController,
+                hint: 'Email Address',
+                textInputType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: passwordEditingController,
-                decoration: const InputDecoration(
-                  hintText: 'Password',
-                ),
+              AppTextField(
+                textEditingController: passwordEditingController,
+                hint: 'Password',
+                obscure: true,
               ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(''),
+                  InkWell(
+                    onTap: () {},
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        color: Color(0xff22292E),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async => await performLogin(),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -159,19 +185,29 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     'Don’t have an account? ',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),
-                  Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
@@ -185,7 +221,14 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
 
   Future<void> performLogin() async {
     if (checkData()) {
-      await login();
+      // await login();
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
     }
   }
 
@@ -193,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
     if (emailEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Email!',
+        message: 'Enter Email Address!',
         error: true,
       );
       return false;

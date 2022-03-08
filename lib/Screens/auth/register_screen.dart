@@ -2,8 +2,11 @@ import 'package:Rehlati/Helpers/snack_bar.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/Screens/auth/register_with_mobile_screen.dart';
 import 'package:Rehlati/Screens/auth/register_with_mobile_screen2.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
+import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -15,18 +18,21 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   late UserCredential userCredential;
+  late TextEditingController nameEditingController;
   late TextEditingController emailEditingController;
   late TextEditingController passwordEditingController;
 
   @override
   void initState() {
     super.initState();
+    nameEditingController = TextEditingController();
     emailEditingController = TextEditingController();
     passwordEditingController = TextEditingController();
   }
 
   @override
   void dispose() {
+    nameEditingController.dispose();
     emailEditingController.dispose();
     passwordEditingController.dispose();
     super.dispose();
@@ -36,88 +42,160 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Create an Account',
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            Center(
-              child: Text(
-                'REGISTER',
+        padding: const EdgeInsets.only(
+          bottom: 20,
+          right: 20,
+          left: 20,
+          top: 20,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                'assets/images/trip.png',
+                scale: 3.3,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Join Our Community',
                 style: TextStyle(
-                  fontSize: 30,
                   fontWeight: FontWeight.bold,
+                  fontSize: 20,
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: emailEditingController,
-              decoration: InputDecoration(hintText: 'Email'),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: passwordEditingController,
-              decoration: InputDecoration(hintText: 'Password'),
-            ),
-            Spacer(),
-            ElevatedButton(
-              onPressed: () async => await performRegister(),
-              child: Text('Register'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                minimumSize: Size(double.infinity, 50),
+              const SizedBox(height: 24),
+              AppTextField(
+                textEditingController: nameEditingController,
+                hint: 'Full Name',
+                textInputType: TextInputType.name,
               ),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
+              const SizedBox(height: 16),
+              AppTextField(
+                textEditingController: emailEditingController,
+                hint: 'Email Address',
+                textInputType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+              AppTextField(
+                textEditingController: passwordEditingController,
+                hint: 'Password',
+                obscure: true,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () async => await performRegister(),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                );
-              },
-              child: Text('Have an account? Login'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RegisterWithMobileScreen2(),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: const Color(0xff5859F3),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
                   ),
-                );
-              },
-              child: Text('Register using mobile'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
-                UserCredential credential = await signInWithGoogle();
-                print('UserCredential:');
-                print(credential);
-              },
-              child: Text('Continue with Google'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                minimumSize: Size(double.infinity, 50),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
-                // await signInWithFacebook();
-              },
-              child: Text('Continue with Facebook'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                minimumSize: Size(double.infinity, 50),
+              const SizedBox(height: 24),
+              const Text(
+                'Or Sign Up With',
+                style: TextStyle(
+                  color: Color(0xff8A8A8E),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/google.svg',
+                        height: 35,
+                      ),
+                      const SizedBox(width: 15),
+                      const Text(
+                        'Continue with Google',
+                        style: TextStyle(
+                          color: Color(0xff5859F3),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent,
+                  minimumSize: const Size(double.infinity, 50),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: const BorderSide(
+                      color: Color(0xff5859F3),
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Already have an account ? ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Log In',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -125,15 +203,24 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
 
   Future<void> performRegister() async {
     if (checkData()) {
-      await register();
+      // await register();
+      await SharedPrefController()
+          .saveFullName(fullName: nameEditingController.text.toString());
     }
   }
 
   bool checkData() {
-    if (emailEditingController.text.isEmpty) {
+    if (nameEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Email!',
+        message: 'Enter Full Name!',
+        error: true,
+      );
+      return false;
+    } else if (emailEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: 'Enter Email Address!',
         error: true,
       );
       return false;

@@ -7,6 +7,7 @@ import 'package:Rehlati/Screens/launch_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefController().initSharedPref();
@@ -23,11 +24,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RestartWidget(
-      child: MultiProvider(providers: [
-        ChangeNotifierProvider<LangProvider>(
-          create: (context) => LangProvider(),
-        )
-      ], child: const MyMaterialApp()),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<LangProvider>(
+            create: (context) => LangProvider(),
+          )
+        ],
+        child: const MyMaterialApp(),
+      ),
     );
   }
 }

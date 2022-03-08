@@ -26,6 +26,14 @@ class SharedPrefController {
     _sharedPrefLibObj = await SharedPreferences.getInstance();
   }
 
+  Future<void> saveFullName({required String fullName}) async {
+    await _sharedPrefLibObj.setString(
+        SharedPrefKeys.fullName.toString(), fullName);
+  }
+
+  String get getFullName =>
+      _sharedPrefLibObj.getString(SharedPrefKeys.fullName.toString()) ?? '';
+
   Future<void> saveEmail({required String email}) async {
     await _sharedPrefLibObj.setString(SharedPrefKeys.email.toString(), email);
   }

@@ -1,35 +1,69 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   final TextEditingController textEditingController;
   final String hint;
-  final IconData prefixIcon;
   final TextInputType textInputType;
+  final bool obscure;
 
-  AppTextField({
+  const AppTextField({
+    Key? key,
     required this.textEditingController,
     required this.hint,
-    required this.prefixIcon,
     this.textInputType = TextInputType.text,
-  });
+    this.obscure = false,
+  }) : super(key: key);
+
+  @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  bool showPassword = false;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: textEditingController,
-      keyboardType: textInputType,
+      controller: widget.textEditingController,
+      keyboardType: widget.textInputType,
+      obscureText: showPassword == false ? widget.obscure : !widget.obscure,
       decoration: InputDecoration(
-        hintText: hint,
-        prefixIcon: Icon(prefixIcon),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            width: 1,
-            color: Colors.blue,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        hintText: widget.hint,
+        suffixIcon: widget.obscure
+            ? InkWell(
+                onTap: () {
+                  setState(() {
+                    showPassword == true
+                        ? showPassword = false
+                        : showPassword = true;
+                  });
+                },
+                child: Icon(
+                  showPassword ? Icons.visibility_off : Icons.visibility,
+                  color: const Color(0xff8E8E93),
+                ),
+              )
+            : const SizedBox.shrink(),
+        suffixIconColor: const Color(0xff8E8E93),
+        enabledBorder: myOutlineInputBorder(color: const Color(0xffB9B9BB)),
+        focusedBorder: myOutlineInputBorder(color: const Color(0xff63CEDA)),
+        errorBorder: myOutlineInputBorder(color: const Color(0xffFF4343)),
       ),
+    );
+  }
+
+  OutlineInputBorder myOutlineInputBorder({
+    required Color color,
+    double width = 1,
+    double radius = 8,
+  }) {
+    return OutlineInputBorder(
+      borderSide: BorderSide(
+        width: 1,
+        color: color,
+      ),
+      borderRadius: BorderRadius.circular(8),
     );
   }
 }
