@@ -1,4 +1,5 @@
 import 'package:Rehlati/Providers/lang_provider.dart';
+import 'package:Rehlati/Providers/trip_provider.dart';
 import 'package:Rehlati/database/db_controller.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<LangProvider>(
             create: (context) => LangProvider(),
+          ),
+          ChangeNotifierProvider<TripProvider>(
+            create: (context) => TripProvider(),
           )
         ],
         child: const MyMaterialApp(),
