@@ -1,5 +1,5 @@
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/favorites_screen.dart';
-import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/orders_screen.dart';
+import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/reservations_screen.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/profile_screen.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/trips_screen.dart';
 import 'package:Rehlati/models/bn_models/bn_screen.dart';
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<BnScreen> _bnScreens = <BnScreen>[
       BnScreen(title: 'Trips', widget: const TripsScreen()),
-      BnScreen(title: 'My Orders', widget: const OrdersScreen()),
+      BnScreen(title: 'My Reservations', widget: const ReservationsScreen()),
       BnScreen(title: 'Favorites', widget: const FavoritesScreen()),
       BnScreen(title: 'Profile', widget: const ProfileScreen()),
     ];
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-            label: 'My Orders',
+            label: 'Reservations',
             activeIcon: Icon(
               Icons.shopping_cart,
               color: Color(0xff5859F3),

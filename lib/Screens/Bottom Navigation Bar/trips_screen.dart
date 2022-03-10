@@ -1,7 +1,7 @@
 import 'package:Rehlati/Providers/trip_provider.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trips_screen_cities_list_view_item.dart';
-import 'package:Rehlati/widgets/trip_screen_trips_list_view_item.dart';
+import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trip_screen_trips_list_view_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +27,8 @@ class _TripsScreenState extends State<TripsScreen> {
     super.dispose();
   }
 
+  String selectedCity = 'All';
+
   List<String> citiesList = <String>[
     'All',
     'Hebron',
@@ -36,6 +38,121 @@ class _TripsScreenState extends State<TripsScreen> {
     'Jenin',
     'Jericho',
   ];
+
+  List<Trip> hebronTripsList = <Trip>[
+    Trip(
+      image: 'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg',
+      name: 'Trip 1 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 1 address',
+      price: '500',
+      rate: '4.2',
+      favorite: false,
+      city: 'Hebron',
+    ),
+    Trip(
+      image:
+          'https://webneel.com/wallpaper/sites/default/files/images/08-2018/3-nature-wallpaper-mountain.jpg',
+      name: 'Trip 2 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 2 address',
+      price: '299',
+      rate: '4.9',
+      favorite: false,
+      city: 'Hebron',
+    ),
+    Trip(
+      image:
+          'https://i.pinimg.com/originals/15/f6/a3/15f6a3aac562ee0fadbbad3d4cdf47bc.jpg',
+      name: 'Trip 3 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 3 address',
+      price: '152',
+      rate: '5',
+      favorite: false,
+      city: 'Hebron',
+    ),
+  ];
+  List<Trip> bethlehemTripsList = <Trip>[
+    Trip(
+      image: 'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg',
+      name: 'Trip 1 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 1 address',
+      price: '500',
+      rate: '4.2',
+      favorite: false,
+      city: 'Bethlehem',
+    ),
+    Trip(
+      image:
+          'https://i.pinimg.com/originals/15/f6/a3/15f6a3aac562ee0fadbbad3d4cdf47bc.jpg',
+      name: 'Trip 3 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 3 address',
+      price: '152',
+      rate: '5',
+      favorite: false,
+      city: 'Bethlehem',
+    ),
+  ];
+  List<Trip> jerichoTripsList = <Trip>[
+    Trip(
+      image: 'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg',
+      name: 'Trip 1 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 1 address',
+      price: '500',
+      rate: '4.2',
+      favorite: false,
+      city: 'Jericho',
+    ),
+    Trip(
+      image:
+          'https://webneel.com/wallpaper/sites/default/files/images/08-2018/3-nature-wallpaper-mountain.jpg',
+      name: 'Trip 2 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 2 address',
+      price: '299',
+      rate: '4.9',
+      favorite: false,
+      city: 'Jericho',
+    ),
+    Trip(
+      image:
+          'https://i.pinimg.com/originals/15/f6/a3/15f6a3aac562ee0fadbbad3d4cdf47bc.jpg',
+      name: 'Trip 3 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 3 address',
+      price: '152',
+      rate: '5',
+      favorite: false,
+      city: 'Jericho',
+    ),
+    Trip(
+      image:
+          'https://i.pinimg.com/originals/15/f6/a3/15f6a3aac562ee0fadbbad3d4cdf47bc.jpg',
+      name: 'Trip 3 name',
+      time: '12:30',
+      date: '2022-03-09',
+      address: 'Trip 3 address',
+      price: '152',
+      rate: '5',
+      favorite: false,
+      city: 'Jericho',
+    ),
+  ];
+
+  late List<Trip> allTripsList =
+      hebronTripsList + bethlehemTripsList + jerichoTripsList;
 
   @override
   Widget build(BuildContext context) {
@@ -83,40 +200,11 @@ class _TripsScreenState extends State<TripsScreen> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        setState(() {});
-                        Provider.of<TripProvider>(context, listen: false)
-                            .selectedCity = citiesList[index];
-                        if (Provider.of<TripProvider>(context, listen: false)
-                                .selectedCity ==
-                            'All') {
-                          print('here here');
-                          // for (int i = 0; i < tripsList.length; i++) {}
-                          Provider.of<TripProvider>(context, listen: false)
-                              .changeShownTrips(
-                                  list: Provider.of<TripProvider>(context,
-                                          listen: false)
-                                      .tripsList);
-                          print(
-                              Provider.of<TripProvider>(context, listen: false)
-                                  .shownTrips);
-                        } else if (Provider.of<TripProvider>(context,
-                                    listen: false)
-                                .selectedCity !=
-                            'All') {
-                          print('here 2');
-                          Provider.of<TripProvider>(context, listen: false)
-                              .shownTrips
-                              .clear();
-                          // shownTrips = tripsList.where((element) => element.city == selectedCity).toList();
+                        setState(() {
+                          selectedCity = citiesList[index];
+                        });
 
-                        }
-                        print(
-                            'Selected City => ${Provider.of<TripProvider>(context, listen: false).selectedCity}');
-                        print(
-                            'tripsList => ${Provider.of<TripProvider>(context, listen: false).tripsList.toString()}');
-                        // print('shownTrips => $shownTrips');
-
-                        setState(() {});
+                        print('Selected City => $selectedCity');
                       },
                       child: TripsScreenCitiesListViewItem(
                         city: citiesList[index],
@@ -127,38 +215,20 @@ class _TripsScreenState extends State<TripsScreen> {
               ),
               const SizedBox(height: 20),
               ListView.builder(
-                itemCount: Provider.of<TripProvider>(context, listen: false)
-                    .shownTrips
-                    .length,
+                itemCount: checkListType().length,
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return TripsScreenTripsListViewItem(
-                    image: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .image,
-                    name: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .name,
-                    time: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .time,
-                    date: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .date,
-                    address: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .address,
-                    price: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .price,
-                    rate: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .rate,
-                    favorite: Provider.of<TripProvider>(context, listen: false)
-                        .shownTrips[index]
-                        .favorite,
+                    image: checkListType()[index].image,
+                    name: checkListType()[index].name,
+                    time: checkListType()[index].time,
+                    date: checkListType()[index].date,
+                    address: checkListType()[index].address,
+                    price: checkListType()[index].price,
+                    rate: checkListType()[index].rate,
+                    favorite: checkListType()[index].favorite,
                   );
                 },
               ),
@@ -167,5 +237,19 @@ class _TripsScreenState extends State<TripsScreen> {
         ),
       ),
     );
+  }
+
+  List<Trip> checkListType() {
+    if (selectedCity == 'All') {
+      return allTripsList;
+    } else if (selectedCity == 'Hebron') {
+      return hebronTripsList;
+    } else if (selectedCity == 'Bethlehem') {
+      return bethlehemTripsList;
+    } else if (selectedCity == 'Jericho') {
+      return jerichoTripsList;
+    } else {
+      return [];
+    }
   }
 }
