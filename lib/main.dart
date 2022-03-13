@@ -67,6 +67,8 @@ class MyMaterialApp extends StatelessWidget {
     );
   }
 }
+
+// test
 // FOR RESTARTING APP
 // CALL IT FROM ANYWHERE USING => RestartWidget.restartApp(context)
 
