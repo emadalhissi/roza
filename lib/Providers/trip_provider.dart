@@ -15,6 +15,7 @@ class TripProvider extends ChangeNotifier {
       rate: '4.2',
       favorite: false,
       city: 'Hebron',
+      noOfOrders: '4',
     ),
   ];
 

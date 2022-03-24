@@ -16,14 +16,10 @@ class TripsScreenCitiesListViewItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 0.5,
-              blurRadius: 1.5,
-              offset: const Offset(0, 0.5),
-            ),
-          ],
+          border: Border.all(
+            color: const Color(0xff5859F3),
+            width: 0.5,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(

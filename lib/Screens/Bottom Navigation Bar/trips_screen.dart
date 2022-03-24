@@ -1,9 +1,10 @@
-import 'package:Rehlati/Providers/trip_provider.dart';
+
+import 'package:Rehlati/Screens/trip_screen.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trips_screen_cities_list_view_item.dart';
 import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trip_screen_trips_list_view_item.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 
 class TripsScreen extends StatefulWidget {
   const TripsScreen({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 1 address',
       price: '500',
-      rate: '4.2',
+      noOfOrders: '0',
       favorite: false,
       city: 'Hebron',
     ),
@@ -59,7 +60,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 2 address',
       price: '299',
-      rate: '4.9',
+      noOfOrders: '1',
       favorite: false,
       city: 'Hebron',
     ),
@@ -71,7 +72,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 3 address',
       price: '152',
-      rate: '5',
+      noOfOrders: '4',
       favorite: false,
       city: 'Hebron',
     ),
@@ -84,7 +85,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 1 address',
       price: '500',
-      rate: '4.2',
+      noOfOrders: '4',
       favorite: false,
       city: 'Bethlehem',
     ),
@@ -96,7 +97,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 3 address',
       price: '152',
-      rate: '5',
+      noOfOrders: '4',
       favorite: false,
       city: 'Bethlehem',
     ),
@@ -109,7 +110,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 1 address',
       price: '500',
-      rate: '4.2',
+      noOfOrders: '4',
       favorite: false,
       city: 'Jericho',
     ),
@@ -121,7 +122,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 2 address',
       price: '299',
-      rate: '4.9',
+      noOfOrders: '4',
       favorite: false,
       city: 'Jericho',
     ),
@@ -133,7 +134,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 3 address',
       price: '152',
-      rate: '5',
+      noOfOrders: '4',
       favorite: false,
       city: 'Jericho',
     ),
@@ -145,7 +146,7 @@ class _TripsScreenState extends State<TripsScreen> {
       date: '2022-03-09',
       address: 'Trip 3 address',
       price: '152',
-      rate: '5',
+      noOfOrders: '4',
       favorite: false,
       city: 'Jericho',
     ),
@@ -204,7 +205,7 @@ class _TripsScreenState extends State<TripsScreen> {
                           selectedCity = citiesList[index];
                         });
 
-                        print('Selected City => $selectedCity');
+                        // print('Selected City => $selectedCity');
                       },
                       child: TripsScreenCitiesListViewItem(
                         city: citiesList[index],
@@ -220,15 +221,25 @@ class _TripsScreenState extends State<TripsScreen> {
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return TripsScreenTripsListViewItem(
-                    image: checkListType()[index].image,
-                    name: checkListType()[index].name,
-                    time: checkListType()[index].time,
-                    date: checkListType()[index].date,
-                    address: checkListType()[index].address,
-                    price: checkListType()[index].price,
-                    rate: checkListType()[index].rate,
-                    favorite: checkListType()[index].favorite,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TripScreen(),
+                        ),
+                      );
+                    },
+                    child: TripsScreenTripsListViewItem(
+                      image: checkListType()[index].image,
+                      name: checkListType()[index].name,
+                      time: checkListType()[index].time,
+                      date: checkListType()[index].date,
+                      address: checkListType()[index].address,
+                      price: checkListType()[index].price,
+                      noOfOrders: checkListType()[index].noOfOrders,
+                      favorite: checkListType()[index].favorite,
+                    ),
                   );
                 },
               ),

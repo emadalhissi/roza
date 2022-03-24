@@ -6,6 +6,7 @@ class AppTextField extends StatefulWidget {
   final String hint;
   final TextInputType textInputType;
   final bool obscure;
+  final int lines;
 
   const AppTextField({
     Key? key,
@@ -13,6 +14,7 @@ class AppTextField extends StatefulWidget {
     required this.hint,
     this.textInputType = TextInputType.text,
     this.obscure = false,
+    this.lines = 1,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class _AppTextFieldState extends State<AppTextField> {
     return TextField(
       controller: widget.textEditingController,
       keyboardType: widget.textInputType,
+      maxLines: widget.lines,
       obscureText: showPassword == false ? widget.obscure : !widget.obscure,
       decoration: InputDecoration(
         hintText: widget.hint,

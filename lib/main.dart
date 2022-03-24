@@ -68,7 +68,6 @@ class MyMaterialApp extends StatelessWidget {
   }
 }
 
-// test emad
 // FOR RESTARTING APP
 // CALL IT FROM ANYWHERE USING => RestartWidget.restartApp(context)
 

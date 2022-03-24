@@ -1,16 +1,16 @@
-import 'package:Rehlati/models/trip.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TripsScreenTripsListViewItem extends StatefulWidget {
-
   final String image;
   final String name;
   final String time;
   final String date;
   final String address;
   final String price;
-  final String rate;
+  final String noOfOrders;
   bool favorite;
+
   TripsScreenTripsListViewItem({
     required this.image,
     required this.name,
@@ -18,16 +18,18 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
     required this.date,
     required this.address,
     required this.price,
-    required this.rate,
+    required this.noOfOrders,
     required this.favorite,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<TripsScreenTripsListViewItem> createState() => _TripsScreenTripsListViewItemState();
+  State<TripsScreenTripsListViewItem> createState() =>
+      _TripsScreenTripsListViewItemState();
 }
 
-class _TripsScreenTripsListViewItemState extends State<TripsScreenTripsListViewItem> {
+class _TripsScreenTripsListViewItemState
+    extends State<TripsScreenTripsListViewItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -58,10 +60,9 @@ class _TripsScreenTripsListViewItemState extends State<TripsScreenTripsListViewI
                   topEnd: Radius.circular(25),
                 ),
                 clipBehavior: Clip.hardEdge,
-                child: Image(
-                  image: NetworkImage(widget.image),
+                child: CachedNetworkImage(
+                  imageUrl: widget.image,
                   fit: BoxFit.cover,
-                  isAntiAlias: true,
                 ),
               ),
             ),
@@ -72,13 +73,11 @@ class _TripsScreenTripsListViewItemState extends State<TripsScreenTripsListViewI
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             widget.name,
@@ -149,10 +148,8 @@ class _TripsScreenTripsListViewItemState extends State<TripsScreenTripsListViewI
                         onTap: () {
                           setState(() {
                             widget.favorite == true
-                                ? widget.favorite =
-                                    false
-                                : widget.favorite =
-                                    true;
+                                ? widget.favorite = false
+                                : widget.favorite = true;
                           });
                         },
                         child: CircleAvatar(
@@ -160,10 +157,9 @@ class _TripsScreenTripsListViewItemState extends State<TripsScreenTripsListViewI
                           radius: 23,
                           child: Icon(
                             Icons.favorite,
-                            color:
-                                widget.favorite == true
-                                    ? const Color(0xff5859F3)
-                                    : Colors.white,
+                            color: widget.favorite == true
+                                ? const Color(0xff5859F3)
+                                : Colors.white,
                           ),
                         ),
                       ),
@@ -181,13 +177,21 @@ class _TripsScreenTripsListViewItemState extends State<TripsScreenTripsListViewI
                         ),
                       ),
                       const Spacer(),
-                      const Icon(
-                        Icons.star_border,
-                        color: Color(0xff5859F3),
-                        size: 20,
-                      ),
+                      widget.noOfOrders == '0'
+                          ? const SizedBox.shrink()
+                          : const Icon(
+                              Icons.supervisor_account,
+                              color: Color(0xff5859F3),
+                              size: 20,
+                            ),
                       const SizedBox(width: 5),
-                      Text('${widget.rate} / 5'),
+                      widget.noOfOrders == '0'
+                          ? const SizedBox.shrink()
+                          : Text(
+                              widget.noOfOrders == '1'
+                                  ? '${widget.noOfOrders} Order'
+                                  : '${widget.noOfOrders} Orders',
+                            ),
                     ],
                   ),
                   const SizedBox(height: 10),
