@@ -39,9 +39,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.login,
           style: const TextStyle(
@@ -50,169 +47,168 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             fontWeight: FontWeight.bold,
           ),
         ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 20,
-          right: 20,
-          left: 20,
-          top: 20,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/images/trip.png',
-                scale: 3.3,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context)!.welcome,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/images/trip.png',
+                  scale: 3.3,
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Please enter your email and password',
-                style: TextStyle(
-                  color: Color(0xff8A8A8E),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              AppTextField(
-                textEditingController: emailEditingController,
-                hint: 'Email Address',
-                textInputType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              AppTextField(
-                textEditingController: passwordEditingController,
-                hint: 'Password',
-                obscure: true,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(''),
-                  InkWell(
-                    onTap: () {},
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Color(0xff22292E),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () async => await performLogin(),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.welcome,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: const Color(0xff5859F3),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                const SizedBox(height: 16),
+                const Text(
+                  'Please enter your email and password',
+                  style: TextStyle(
+                    color: Color(0xff8A8A8E),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Or',
-                style: TextStyle(
-                  color: Color(0xff8A8A8E),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                const SizedBox(height: 24),
+                AppTextField(
+                  textEditingController: emailEditingController,
+                  hint: 'Email Address',
+                  textInputType: TextInputType.emailAddress,
                 ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/google.svg',
-                        height: 35,
-                      ),
-                      const SizedBox(width: 15),
-                      const Text(
-                        'Continue with Google',
+                const SizedBox(height: 16),
+                AppTextField(
+                  textEditingController: passwordEditingController,
+                  hint: 'Password',
+                  obscure: true,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: const Text(
+                        'Forgot Password?',
                         style: TextStyle(
-                          color: Color(0xff5859F3),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          color: Color(0xff22292E),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.transparent,
-                  minimumSize: const Size(double.infinity, 50),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    side: const BorderSide(
-                      color: Color(0xff5859F3),
-                      width: 1.5,
                     ),
-                  ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Don’t have an account? ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Sign Up',
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () async => await performLogin(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Login',
                       style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color(0xff5859F3),
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Or',
+                  style: TextStyle(
+                    color: Color(0xff8A8A8E),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/google.svg',
+                          height: 35,
+                        ),
+                        const SizedBox(width: 15),
+                        const Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            color: Color(0xff5859F3),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                    minimumSize: const Size(double.infinity, 50),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: const BorderSide(
+                        color: Color(0xff5859F3),
+                        width: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Don’t have an account? ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -221,8 +217,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
 
   Future<void> performLogin() async {
     if (checkData()) {
-      // await login();
-
       Navigator.push(
         context,
         MaterialPageRoute(

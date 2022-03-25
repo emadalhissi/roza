@@ -55,146 +55,148 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 20,
-          right: 20,
-          left: 20,
-          top: 20,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/images/trip.png',
-                scale: 3.3,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Join Our Community',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 20,
+            right: 20,
+            left: 20,
+            top: 20,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/images/trip.png',
+                  scale: 3.3,
                 ),
-              ),
-              const SizedBox(height: 24),
-              AppTextField(
-                textEditingController: nameEditingController,
-                hint: 'Full Name',
-                textInputType: TextInputType.name,
-              ),
-              const SizedBox(height: 16),
-              AppTextField(
-                textEditingController: emailEditingController,
-                hint: 'Email Address',
-                textInputType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              AppTextField(
-                textEditingController: passwordEditingController,
-                hint: 'Password',
-                obscure: true,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () async => await performRegister(),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Join Our Community',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: const Color(0xff5859F3),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
+                const SizedBox(height: 24),
+                AppTextField(
+                  textEditingController: nameEditingController,
+                  hint: 'Full Name',
+                  textInputType: TextInputType.name,
                 ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Or Sign Up With',
-                style: TextStyle(
-                  color: Color(0xff8A8A8E),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                const SizedBox(height: 16),
+                AppTextField(
+                  textEditingController: emailEditingController,
+                  hint: 'Email Address',
+                  textInputType: TextInputType.emailAddress,
                 ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/google.svg',
-                        height: 35,
-                      ),
-                      const SizedBox(width: 15),
-                      const Text(
-                        'Continue with Google',
-                        style: TextStyle(
-                          color: Color(0xff5859F3),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                const SizedBox(height: 16),
+                AppTextField(
+                  textEditingController: passwordEditingController,
+                  hint: 'Password',
+                  obscure: true,
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.transparent,
-                  minimumSize: const Size(double.infinity, 50),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    side: const BorderSide(
-                      color: Color(0xff5859F3),
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Already have an account ? ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Log In',
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () async => await performRegister(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Sign Up',
                       style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color(0xff5859F3),
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Or Sign Up With',
+                  style: TextStyle(
+                    color: Color(0xff8A8A8E),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/google.svg',
+                          height: 35,
+                        ),
+                        const SizedBox(width: 15),
+                        const Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            color: Color(0xff5859F3),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                    minimumSize: const Size(double.infinity, 50),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: const BorderSide(
+                        color: Color(0xff5859F3),
+                        width: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Already have an account ? ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Log In',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,8 +1,10 @@
 
+import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/Screens/trip_screen.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trips_screen_cities_list_view_item.dart';
 import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trip_screen_trips_list_view_item.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 
@@ -29,16 +31,6 @@ class _TripsScreenState extends State<TripsScreen> {
   }
 
   String selectedCity = 'All';
-
-  List<String> citiesList = <String>[
-    'All',
-    'Hebron',
-    'Nablus',
-    'Ramallah',
-    'Bethlehem',
-    'Jenin',
-    'Jericho',
-  ];
 
   List<Trip> hebronTripsList = <Trip>[
     Trip(
@@ -157,96 +149,106 @@ class _TripsScreenState extends State<TripsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 55,
-                child: PhysicalModel(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.white,
-                  elevation: 2.0,
-                  shadowColor: Colors.grey,
-                  child: TextField(
-                    controller: searchEditingController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Color(0xff5859F3),
-                      ),
-                      enabledBorder: OutlineInputBorder(
+    return StreamBuilder<QuerySnapshot>(
+      stream: CitiesFbController().readCities(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(),);
+        } else if(snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+          List<QueryDocumentSnapshot> citiesList_ = snapshot.data!.docs;
+          return SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 55,
+                      child: PhysicalModel(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Color(0xffB9B9BB)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Color(0xff63CEDA)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                height: 40,
-                child: ListView.builder(
-                  itemCount: citiesList.length,
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          selectedCity = citiesList[index];
-                        });
-
-                        // print('Selected City => $selectedCity');
-                      },
-                      child: TripsScreenCitiesListViewItem(
-                        city: citiesList[index],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
-              ListView.builder(
-                itemCount: checkListType().length,
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TripScreen(),
+                        color: Colors.white,
+                        elevation: 2.0,
+                        shadowColor: Colors.grey,
+                        child: TextField(
+                          controller: searchEditingController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Color(0xff5859F3),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              borderSide: const BorderSide(color: Color(0xffB9B9BB)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              borderSide: const BorderSide(color: Color(0xff63CEDA)),
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    child: TripsScreenTripsListViewItem(
-                      image: checkListType()[index].image,
-                      name: checkListType()[index].name,
-                      time: checkListType()[index].time,
-                      date: checkListType()[index].date,
-                      address: checkListType()[index].address,
-                      price: checkListType()[index].price,
-                      noOfOrders: checkListType()[index].noOfOrders,
-                      favorite: checkListType()[index].favorite,
+                      ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 40,
+                      child: ListView.builder(
+                        itemCount: citiesList_.length,
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedCity = citiesList_[index].get('name');
+                              });
+                            },
+                            child: TripsScreenCitiesListViewItem(
+                              city: citiesList_[index].get('name'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ListView.builder(
+                      itemCount: checkListType().length,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TripScreen(),
+                              ),
+                            );
+                          },
+                          child: TripsScreenTripsListViewItem(
+                            image: checkListType()[index].image,
+                            name: checkListType()[index].name,
+                            time: checkListType()[index].time,
+                            date: checkListType()[index].date,
+                            address: checkListType()[index].address,
+                            price: checkListType()[index].price,
+                            noOfOrders: checkListType()[index].noOfOrders,
+                            favorite: checkListType()[index].favorite,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return Center(child: Text('NO DATA'),);
+        }
+      }
     );
   }
 

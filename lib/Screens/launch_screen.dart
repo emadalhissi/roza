@@ -1,5 +1,8 @@
+import 'package:Rehlati/FireBase/cities_fb_controller.dart';
+import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LaunchScreen extends StatefulWidget {
   const LaunchScreen({Key? key}) : super(key: key);
@@ -12,9 +15,21 @@ class _LaunchScreenState extends State<LaunchScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), (){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => const LoginScreen()));
+    launchData();
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+      );
     });
+  }
+
+  void launchData() {
+
+    // List<QueryDocumentSnapshot> c = CitiesFbController().readCities();
+    // Provider.of<CitiesProvider>(context).changeCitiesList(city: cities);
   }
 
   @override

@@ -1,6 +1,6 @@
+import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Providers/lang_provider.dart';
 import 'package:Rehlati/Providers/trip_provider.dart';
-import 'package:Rehlati/database/db_controller.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefController().initSharedPref();
-  await DbController().initDatabase();
   await Firebase.initializeApp();
   runApp(
     const MyApp(),
@@ -32,7 +31,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<TripProvider>(
             create: (context) => TripProvider(),
-          )
+          ),ChangeNotifierProvider<CitiesProvider>(
+            create: (context) => CitiesProvider(),
+          ),
         ],
         child: const MyMaterialApp(),
       ),
