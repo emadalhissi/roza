@@ -1,6 +1,8 @@
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Providers/lang_provider.dart';
 import 'package:Rehlati/Providers/trip_provider.dart';
+import 'package:Rehlati/Screens/auth/login_screen.dart';
+import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +53,10 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const LaunchScreen(),
+      routes: {
+        '/home_screen' : (context) => const HomeScreen(),
+        '/login_screen' : (context) => const LoginScreen(),
+      },
       theme: ThemeData(
           fontFamily:
               SharedPrefController().getLang == 'en' ? 'Quicksand' : 'Tajawal'),

@@ -1,7 +1,11 @@
+import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_users_controller.dart';
 import 'package:Rehlati/Helpers/snack_bar.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/Screens/auth/register_with_mobile_screen.dart';
 import 'package:Rehlati/Screens/auth/register_with_mobile_screen2.dart';
+import 'package:Rehlati/models/office.dart';
+import 'package:Rehlati/models/user.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +22,21 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   late UserCredential userCredential;
+  User? user = FirebaseAuth.instance.currentUser;
   late TextEditingController nameEditingController;
+  late TextEditingController mobileEditingController;
   late TextEditingController emailEditingController;
   late TextEditingController passwordEditingController;
+
+  String accountType = '';
+
+  // String radioGroupValue = 'AccountType';
 
   @override
   void initState() {
     super.initState();
     nameEditingController = TextEditingController();
+    mobileEditingController = TextEditingController();
     emailEditingController = TextEditingController();
     passwordEditingController = TextEditingController();
   }
@@ -33,6 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   @override
   void dispose() {
     nameEditingController.dispose();
+    mobileEditingController.dispose();
     emailEditingController.dispose();
     passwordEditingController.dispose();
     super.dispose();
@@ -41,14 +53,13 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Create an Account',
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -85,19 +96,60 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                   hint: 'Full Name',
                   textInputType: TextInputType.name,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
+                AppTextField(
+                  textEditingController: mobileEditingController,
+                  hint: 'Mobile Number',
+                  textInputType: TextInputType.phone,
+                ),
+                const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: emailEditingController,
                   hint: 'Email Address',
                   textInputType: TextInputType.emailAddress,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: passwordEditingController,
                   hint: 'Password',
                   obscure: true,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        leading: Radio(
+                          value: 'user',
+                          groupValue: accountType,
+                          activeColor: const Color(0xff5859F3),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              accountType = newValue!;
+                            });
+                          },
+                        ),
+                        title: const Text('User'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        leading: Radio(
+                          value: 'office',
+                          groupValue: accountType,
+                          activeColor: const Color(0xff5859F3),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              accountType = newValue!;
+                            });
+                          },
+                        ),
+                        title: const Text('Office'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async => await performRegister(),
                   child: const Padding(
@@ -119,52 +171,52 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Or Sign Up With',
-                  style: TextStyle(
-                    color: Color(0xff8A8A8E),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/google.svg',
-                          height: 35,
-                        ),
-                        const SizedBox(width: 15),
-                        const Text(
-                          'Continue with Google',
-                          style: TextStyle(
-                            color: Color(0xff5859F3),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                    minimumSize: const Size(double.infinity, 50),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      side: const BorderSide(
-                        color: Color(0xff5859F3),
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                ),
+                // const SizedBox(height: 24),
+                // const Text(
+                //   'Or Sign Up With',
+                //   style: TextStyle(
+                //     color: Color(0xff8A8A8E),
+                //     fontWeight: FontWeight.w600,
+                //     fontSize: 16,
+                //   ),
+                // ),
+                // const SizedBox(height: 24),
+                // ElevatedButton(
+                //   onPressed: () {},
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         SvgPicture.asset(
+                //           'assets/icons/google.svg',
+                //           height: 35,
+                //         ),
+                //         const SizedBox(width: 15),
+                //         const Text(
+                //           'Continue with Google',
+                //           style: TextStyle(
+                //             color: Color(0xff5859F3),
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.transparent,
+                //     minimumSize: const Size(double.infinity, 50),
+                //     elevation: 0,
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(25),
+                //       side: const BorderSide(
+                //         color: Color(0xff5859F3),
+                //         width: 1.5,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -178,12 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
+                        goToLogin();
                       },
                       child: const Text(
                         'Log In',
@@ -205,10 +252,19 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
 
   Future<void> performRegister() async {
     if (checkData()) {
-      // await register();
-      await SharedPrefController()
-          .saveFullName(fullName: nameEditingController.text.toString());
+      await register();
+      // await SharedPrefController()
+      //     .saveFullName(fullName: nameEditingController.text.toString());
     }
+  }
+
+  void goToLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
   }
 
   bool checkData() {
@@ -216,6 +272,20 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
       showSnackBar(
         context,
         message: 'Enter Full Name!',
+        error: true,
+      );
+      return false;
+    } else if (mobileEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: 'Enter Mobile Number!',
+        error: true,
+      );
+      return false;
+    } else if (mobileEditingController.text.length != 10) {
+      showSnackBar(
+        context,
+        message: 'Mobile Number Must Be 10 Digits!',
         error: true,
       );
       return false;
@@ -233,6 +303,13 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
         error: true,
       );
       return false;
+    } else if (accountType == '') {
+      showSnackBar(
+        context,
+        message: 'Choose Account Type!',
+        error: true,
+      );
+      return false;
     }
     return true;
   }
@@ -244,6 +321,21 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
         email: emailEditingController.text.toString(),
         password: passwordEditingController.text.toString(),
       );
+      if (userCredential.user!.emailVerified == false) {
+        print('emailVerified == false');
+        await user!.sendEmailVerification();
+      }
+      showSnackBar(
+        context,
+        message: 'Please Check your email for verification link!',
+        error: false,
+      );
+      if (accountType == 'user') {
+        await createNewUser();
+      } else {
+        await createNewOffice();
+      }
+      goToLogin();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showSnackBar(
@@ -264,8 +356,38 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
         message: 'Something went wrong, please try again!',
         error: true,
       );
-      print(e);
     }
+  }
+
+  UserModel get userModel {
+    UserModel user = UserModel();
+    user.uId = userCredential.user!.uid;
+    user.name = nameEditingController.text.toString();
+    user.mobile = mobileEditingController.text.toString();
+    user.email = emailEditingController.text.toString();
+    user.type = accountType;
+    user.profileImage = '';
+    return user;
+  }
+
+  OfficeModel get office {
+    OfficeModel office = OfficeModel();
+    office.uId = userCredential.user!.uid;
+    office.name = nameEditingController.text.toString();
+    office.mobile = mobileEditingController.text.toString();
+    office.email = emailEditingController.text.toString();
+    office.type = accountType;
+    office.profileImage = '';
+    return office;
+  }
+
+  Future<void> createNewUser() async {
+    bool status = await FbFireStoreUsersController().createUser(user: userModel);
+  }
+
+  Future<void> createNewOffice() async {
+    bool status =
+        await FbFireStoreOfficesController().createOffice(office: office);
   }
 
   Future<UserCredential> signInWithGoogle() async {

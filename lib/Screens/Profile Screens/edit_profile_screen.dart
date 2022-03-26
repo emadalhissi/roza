@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:Rehlati/FireBase/fb_storage_controller.dart';
+import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -8,15 +16,27 @@ class EditProfileScreen extends StatefulWidget {
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends State<EditProfileScreen>
+    with SnackBarHelper {
+  CollectionReference usersCollectionReference =
+      FirebaseFirestore.instance.collection('users');
+  CollectionReference officesCollectionReference =
+      FirebaseFirestore.instance.collection('offices');
+
   late TextEditingController nameEditingController;
   late TextEditingController mobileEditingController;
+
+  var imagePicker = ImagePicker();
+  File? file_;
+  XFile? xFile_;
 
   @override
   void initState() {
     super.initState();
-    nameEditingController = TextEditingController();
-    mobileEditingController = TextEditingController();
+    nameEditingController =
+        TextEditingController(text: SharedPrefController().getFullName);
+    mobileEditingController =
+        TextEditingController(text: SharedPrefController().getMobile);
   }
 
   @override
@@ -69,24 +89,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     height: 110,
                     child: Stack(
                       children: [
-                        const CircleAvatar(
-                          radius: 55,
-                          backgroundColor: Color(0xff5859F3),
-                        ),
+                        profileImage(),
                         PositionedDirectional(
                           end: 0,
                           bottom: 0,
-                          child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(50),
-                              border:
-                                  Border.all(color: const Color(0xffDBDBDB)),
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.photo_camera),
+                          child: InkWell(
+                            onTap: () async {
+                              await pickImage();
+                            },
+                            child: Container(
+                              width: 35,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(50),
+                                border:
+                                    Border.all(color: const Color(0xffDBDBDB)),
+                              ),
+                              child: const Center(
+                                child: Icon(Icons.photo_camera),
+                              ),
                             ),
                           ),
                         ),
@@ -114,7 +136,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fontSize: 22,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await preformEditProfile();
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 60),
                     padding: EdgeInsets.zero,
@@ -130,5 +154,149 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> pickImage() async {
+    var pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
+    File file = File(pickedImage!.path);
+    setState(() {
+      file_ = file;
+    });
+  }
+
+  Future<void> preformEditProfile() async {
+    if (checkData()) {
+      await edit();
+    }
+  }
+
+  bool checkData() {
+    if (nameEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: 'Enter Name',
+        error: true,
+      );
+      return false;
+    } else if (mobileEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: 'Enter Mobile',
+        error: true,
+      );
+      return false;
+    } else if (mobileEditingController.text.length != 10) {
+      showSnackBar(
+        context,
+        message: 'Mobile Number Must Be 10 Digits!',
+        error: true,
+      );
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> uploadImage() async {
+    await FbStorageController().uploadProfileImage(
+      file: file_!,
+      context: context,
+      callBackUrl: ({
+        required String url,
+        required bool status,
+      }) async {
+        print('status => $status');
+        if (SharedPrefController().getAccountType == 'user') {
+          await usersCollectionReference
+              .doc(SharedPrefController().getUId)
+              .update(
+            {
+              'profileImage': url,
+            },
+          );
+          await SharedPrefController().setProfileImage(image: url);
+
+          setState(() {});
+          Navigator.pop(context, () {
+            setState(() {});
+          });
+        } else {
+          await officesCollectionReference
+              .doc(SharedPrefController().getUId)
+              .update(
+            {
+              'profileImage': url,
+            },
+          );
+          await SharedPrefController().setProfileImage(image: url);
+          setState(() {});
+          Navigator.pop(context, () {
+            setState(() {});
+          });
+        }
+      },
+    );
+  }
+
+  Future<void> edit() async {
+    if (SharedPrefController().getAccountType == 'user') {
+      await usersCollectionReference.doc(SharedPrefController().getUId).update({
+        'name': nameEditingController.text.toString(),
+        'mobile': mobileEditingController.text.toString(),
+      }).then((value) {
+        SharedPrefController()
+            .setFullName(name: nameEditingController.text.toString());
+        SharedPrefController()
+            .setMobile(mobile: mobileEditingController.text.toString());
+        if (file_ != null) {
+          uploadImage();
+        }
+      }).catchError((onError) {});
+    } else {
+      await officesCollectionReference
+          .doc(SharedPrefController().getUId)
+          .update({
+        'name': nameEditingController.text.toString(),
+        'mobile': mobileEditingController.text.toString(),
+      }).then((value) {
+        SharedPrefController()
+            .setFullName(name: nameEditingController.text.toString());
+        SharedPrefController()
+            .setMobile(mobile: mobileEditingController.text.toString());
+        if (file_ != null) {
+          uploadImage();
+        }
+      }).catchError((onError) {});
+    }
+  }
+
+  Widget profileImage() {
+    if (SharedPrefController().getProfileImage == '' && file_ == null) {
+      return const CircleAvatar(
+        radius: 55,
+        backgroundColor: Color(0xff5859F3),
+      );
+    } else if (SharedPrefController().getProfileImage == '' && file_ != null) {
+      return CircleAvatar(
+        radius: 55,
+        backgroundColor: Colors.transparent,
+        backgroundImage: FileImage(File(file_!.path)),
+      );
+    } else if (SharedPrefController().getProfileImage.isNotEmpty &&
+        file_ == null) {
+      return CircleAvatar(
+        radius: 55,
+        backgroundColor: Colors.transparent,
+        backgroundImage:
+            CachedNetworkImageProvider(SharedPrefController().getProfileImage),
+      );
+    } else if (SharedPrefController().getProfileImage.isNotEmpty &&
+        file_ != null) {
+      return CircleAvatar(
+        radius: 55,
+        backgroundColor: Colors.transparent,
+        backgroundImage: FileImage(File(file_!.path)),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

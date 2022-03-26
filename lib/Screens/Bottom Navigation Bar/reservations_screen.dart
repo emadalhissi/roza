@@ -37,8 +37,8 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
             tabs: const [
               Tab(text: 'All'),
-              Tab(text: 'Accepted'),
               Tab(text: 'Waiting'),
+              Tab(text: 'Accepted'),
               Tab(text: 'Rejected'),
             ],
           ),
@@ -82,6 +82,24 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             Center(
               child: Padding(
                 padding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: ListView(
+                  children: const [
+                    ReservationsScreenListViewItem(
+                      image: 'assets/images/my_photo.jpg',
+                      city: 'Hebron',
+                      status: 'Waiting',
+                      name: 'Event Name',
+                      time: '12:30',
+                      date: '2022-03-09',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding:
                     const EdgeInsets.all(20),
                 child: ListView(
                   children: const [
@@ -97,24 +115,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 ),
               ),
             ),
-            Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: ListView(
-                  children: const [
-                    ReservationsScreenListViewItem(
-                      image: 'assets/images/my_photo.jpg',
-                      city: 'Hebron',
-                      status: 'Waiting',
-                      name: 'Event Name',
-                      time: '12:30',
-                      date: '2022-03-09',
-                    ),
-                  ],
-                ),
-              ),
-            ),
+
             Center(
               child: Padding(
                 padding:

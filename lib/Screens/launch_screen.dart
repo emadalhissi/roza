@@ -1,6 +1,8 @@
 import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
+import 'package:Rehlati/Screens/home_screen.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,17 +19,14 @@ class _LaunchScreenState extends State<LaunchScreen> {
     super.initState();
     launchData();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
-      );
+      String route = SharedPrefController().checkLoggedIn
+          ? '/home_screen'
+          : '/login_screen';
+      Navigator.pushReplacementNamed(context, route);
     });
   }
 
   void launchData() {
-
     // List<QueryDocumentSnapshot> c = CitiesFbController().readCities();
     // Provider.of<CitiesProvider>(context).changeCitiesList(city: cities);
   }

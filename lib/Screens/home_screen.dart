@@ -3,6 +3,7 @@ import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/reservations_screen.da
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/profile_screen.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/trips_screen.dart';
 import 'package:Rehlati/models/bn_models/bn_screen.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,7 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<BnScreen> _bnScreens = <BnScreen>[
       BnScreen(title: 'Trips', widget: const TripsScreen()),
-      BnScreen(title: 'My Reservations', widget: const ReservationsScreen()),
+      BnScreen(
+          title: SharedPrefController().getAccountType == 'user'
+              ? 'My Reservations'
+              : 'My Orders',
+          widget: const ReservationsScreen()),
       BnScreen(title: 'Favorites', widget: const FavoritesScreen()),
       BnScreen(title: 'Profile', widget: const ProfileScreen()),
     ];
@@ -54,8 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
             activeIcon: Icon(
@@ -64,14 +69,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Reservations',
-            activeIcon: Icon(
+            icon: const Icon(Icons.shopping_cart),
+            label: SharedPrefController().getAccountType == 'user'
+                ? 'Reservations'
+                : 'Orders',
+            activeIcon: const Icon(
               Icons.shopping_cart,
               color: Color(0xff5859F3),
             ),
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorites',
             activeIcon: Icon(
@@ -79,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Color(0xff5859F3),
             ),
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Profile',
             activeIcon: Icon(

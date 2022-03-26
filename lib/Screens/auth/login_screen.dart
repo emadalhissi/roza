@@ -1,7 +1,9 @@
 import 'package:Rehlati/Screens/auth/register_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +19,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
   late UserCredential userCredential;
   User? user = FirebaseAuth.instance.currentUser;
+
+  CollectionReference usersCollectionReference =
+      FirebaseFirestore.instance.collection('users');
+  CollectionReference officesCollectionReference =
+      FirebaseFirestore.instance.collection('offices');
+
   late TextEditingController emailEditingController;
   late TextEditingController passwordEditingController;
 
@@ -37,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.login,
@@ -86,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   hint: 'Email Address',
                   textInputType: TextInputType.emailAddress,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: passwordEditingController,
                   hint: 'Password',
@@ -131,52 +138,52 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Or',
-                  style: TextStyle(
-                    color: Color(0xff8A8A8E),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/google.svg',
-                          height: 35,
-                        ),
-                        const SizedBox(width: 15),
-                        const Text(
-                          'Continue with Google',
-                          style: TextStyle(
-                            color: Color(0xff5859F3),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                    minimumSize: const Size(double.infinity, 50),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      side: const BorderSide(
-                        color: Color(0xff5859F3),
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                ),
+                // const SizedBox(height: 24),
+                // const Text(
+                //   'Or',
+                //   style: TextStyle(
+                //     color: Color(0xff8A8A8E),
+                //     fontWeight: FontWeight.w600,
+                //     fontSize: 16,
+                //   ),
+                // ),
+                // const SizedBox(height: 24),
+                // ElevatedButton(
+                //   onPressed: () {},
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         SvgPicture.asset(
+                //           'assets/icons/google.svg',
+                //           height: 35,
+                //         ),
+                //         const SizedBox(width: 15),
+                //         const Text(
+                //           'Continue with Google',
+                //           style: TextStyle(
+                //             color: Color(0xff5859F3),
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.transparent,
+                //     minimumSize: const Size(double.infinity, 50),
+                //     elevation: 0,
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(25),
+                //       side: const BorderSide(
+                //         color: Color(0xff5859F3),
+                //         width: 1.5,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -217,12 +224,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
 
   Future<void> performLogin() async {
     if (checkData()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
+      await login();
     }
   }
 
@@ -251,10 +253,44 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
         email: emailEditingController.text.toString(),
         password: passwordEditingController.text.toString(),
       );
-      print(userCredential.user!.emailVerified);
-      if (userCredential.user!.emailVerified == false) {
-        await user!.sendEmailVerification();
-      }
+      await SharedPrefController().login();
+      await SharedPrefController().setUId(uId: userCredential.user!.uid);
+      await SharedPrefController().setEmail(email: userCredential.user!.email!);
+      await usersCollectionReference
+          .doc(userCredential.user!.uid)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          SharedPrefController().setAccountType(type: 'user');
+          SharedPrefController().setFullName(name: doc.get('name'));
+          SharedPrefController().setMobile(mobile: doc.get('mobile'));
+          SharedPrefController()
+              .setProfileImage(image: doc.get('profileImage'));
+        }
+      });
+      await officesCollectionReference
+          .doc(userCredential.user!.uid)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          SharedPrefController().setAccountType(type: 'office');
+          SharedPrefController().setFullName(name: doc.get('name'));
+          SharedPrefController().setMobile(mobile: doc.get('mobile'));
+          SharedPrefController()
+              .setProfileImage(image: doc.get('profileImage'));
+        }
+      });
+      showSnackBar(
+        context,
+        message: 'You are Logged In!',
+        error: false,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackBar(
@@ -275,7 +311,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
         message: 'Something went wrong, please try again!',
         error: true,
       );
-      print(e);
     }
   }
 }
