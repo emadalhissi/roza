@@ -9,7 +9,7 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
   final String address;
   final String price;
   final String noOfOrders;
-  bool favorite;
+  bool? favorite;
 
   TripsScreenTripsListViewItem({
     required this.image,
@@ -19,7 +19,7 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
     required this.address,
     required this.price,
     required this.noOfOrders,
-    required this.favorite,
+    this.favorite = false,
     Key? key,
   }) : super(key: key);
 
