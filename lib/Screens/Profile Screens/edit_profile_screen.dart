@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
@@ -8,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -26,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
   late TextEditingController nameEditingController;
   late TextEditingController mobileEditingController;
 
+  bool loading = false;
   var imagePicker = ImagePicker();
   File? file_;
   XFile? xFile_;
@@ -128,14 +131,18 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
-                  child: const Text(
-                    'Edit',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22,
-                    ),
-                  ),
+                  child: loading
+                      ? const Center(
+                          child: CircularProgressIndicator(color: Colors.white),
+                        )
+                      : const Text(
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                          ),
+                        ),
                   onPressed: () async {
                     await preformEditProfile();
                   },
@@ -197,6 +204,9 @@ class _EditProfileScreenState extends State<EditProfileScreen>
   }
 
   Future<void> uploadImage() async {
+    setState(() {
+      loading = true;
+    });
     await FbStorageController().uploadProfileImage(
       file: file_!,
       context: context,
@@ -213,7 +223,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
               'profileImage': url,
             },
           );
-          await SharedPrefController().setProfileImage(image: url);
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setProfileImage_(url);
 
           setState(() {});
           Navigator.pop(context, () {
@@ -227,7 +238,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
               'profileImage': url,
             },
           );
-          await SharedPrefController().setProfileImage(image: url);
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setProfileImage_(url);
           setState(() {});
           Navigator.pop(context, () {
             setState(() {});
@@ -243,12 +255,15 @@ class _EditProfileScreenState extends State<EditProfileScreen>
         'name': nameEditingController.text.toString(),
         'mobile': mobileEditingController.text.toString(),
       }).then((value) {
-        SharedPrefController()
-            .setFullName(name: nameEditingController.text.toString());
-        SharedPrefController()
-            .setMobile(mobile: mobileEditingController.text.toString());
+        Provider.of<ProfileProvider>(context, listen: false)
+            .setName_(nameEditingController.text.toString());
+        Provider.of<ProfileProvider>(context, listen: false)
+            .setMobile_(mobileEditingController.text.toString());
         if (file_ != null) {
+          setState(() {});
           uploadImage();
+        } else {
+          Navigator.pop(context);
         }
       }).catchError((onError) {});
     } else {
@@ -258,38 +273,42 @@ class _EditProfileScreenState extends State<EditProfileScreen>
         'name': nameEditingController.text.toString(),
         'mobile': mobileEditingController.text.toString(),
       }).then((value) {
-        SharedPrefController()
-            .setFullName(name: nameEditingController.text.toString());
-        SharedPrefController()
-            .setMobile(mobile: mobileEditingController.text.toString());
+        Provider.of<ProfileProvider>(context, listen: false)
+            .setName_(nameEditingController.text.toString());
+        Provider.of<ProfileProvider>(context, listen: false)
+            .setMobile_(mobileEditingController.text.toString());
         if (file_ != null) {
           uploadImage();
+        } else {
+          Navigator.pop(context);
         }
       }).catchError((onError) {});
     }
   }
 
   Widget profileImage() {
-    if (SharedPrefController().getProfileImage == '' && file_ == null) {
+    if (Provider.of<ProfileProvider>(context).profileImage_ == '' &&
+        file_ == null) {
       return const CircleAvatar(
         radius: 55,
         backgroundColor: Color(0xff5859F3),
       );
-    } else if (SharedPrefController().getProfileImage == '' && file_ != null) {
+    } else if (Provider.of<ProfileProvider>(context).profileImage_ == '' &&
+        file_ != null) {
       return CircleAvatar(
         radius: 55,
         backgroundColor: Colors.transparent,
         backgroundImage: FileImage(File(file_!.path)),
       );
-    } else if (SharedPrefController().getProfileImage.isNotEmpty &&
+    } else if (Provider.of<ProfileProvider>(context).profileImage_.isNotEmpty &&
         file_ == null) {
       return CircleAvatar(
         radius: 55,
         backgroundColor: Colors.transparent,
-        backgroundImage:
-            CachedNetworkImageProvider(SharedPrefController().getProfileImage),
+        backgroundImage: CachedNetworkImageProvider(
+            Provider.of<ProfileProvider>(context).profileImage_),
       );
-    } else if (SharedPrefController().getProfileImage.isNotEmpty &&
+    } else if (Provider.of<ProfileProvider>(context).profileImage_.isNotEmpty &&
         file_ != null) {
       return CircleAvatar(
         radius: 55,

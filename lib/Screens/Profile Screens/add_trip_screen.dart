@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
+import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/models/city.dart';
 import 'package:Rehlati/models/image.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
@@ -12,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:provider/provider.dart';
 
 class AddTripScreen extends StatefulWidget {
   const AddTripScreen({Key? key}) : super(key: key);
@@ -45,6 +49,8 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
 
   List<XFile>? tripImages = [];
 
+  bool loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -69,16 +75,9 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
   String time_ = 'Choose Time';
   String date_ = 'Choose Date';
 
-  String dropDownCityValue = 'Hebron';
+  City? dropDownCityValue;
 
-  List<String> citiesList = <String>[
-    'Hebron',
-    'Nablus',
-    'Ramallah',
-    'Bethlehem',
-    'Jenin',
-    'Jericho',
-  ];
+  List<City> citiesList = <City>[];
 
   @override
   Widget build(BuildContext context) {
@@ -226,12 +225,14 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                     color: Colors.grey.shade400,
                   ),
                 ),
-                child: DropdownButton<String>(
+                child: DropdownButton<City>(
                   isExpanded: true,
                   itemHeight: 60,
                   underline: const SizedBox.shrink(),
-                  value: dropDownCityValue,
-                  items: citiesList
+                  value: dropDownCityValue ??
+                      Provider.of<CitiesProvider>(context).citiesList[0],
+                  items: Provider.of<CitiesProvider>(context)
+                      .citiesList
                       .map(
                         (city) => DropdownMenuItem(
                           value: city,
@@ -241,7 +242,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                               vertical: 15,
                             ),
                             child: Text(
-                              city,
+                              city.name,
                               style: TextStyle(
                                 color: Colors.grey.shade700,
                                 fontSize: 16,
@@ -251,7 +252,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                         ),
                       )
                       .toList(),
-                  onChanged: (newValue) {
+                  onChanged: (City? newValue) {
                     setState(() {
                       dropDownCityValue = newValue!;
                     });
@@ -263,7 +264,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Payment Images',
+                    'Trip Images',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -378,14 +379,18 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                     ),
               const SizedBox(height: 30),
               ElevatedButton(
-                child: const Text(
-                  'Add Trip',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                  ),
-                ),
+                child: loading
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : const Text(
+                        'Add Trip',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 22,
+                        ),
+                      ),
                 onPressed: () async {
                   await performAddTrip();
                 },
@@ -469,13 +474,6 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
         error: true,
       );
       return false;
-    } else if (dropDownCityValue == '') {
-      showSnackBar(
-        context,
-        message: 'Choose City!',
-        error: true,
-      );
-      return false;
     } else if (tripImages!.isEmpty) {
       showSnackBar(
         context,
@@ -502,34 +500,44 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
       description: tripDescriptionEditingController.text.toString(),
       time: time_,
       date: date_,
-      addressCity: dropDownCityValue,
+      addressCityId:
+          dropDownCityValue == null ? citiesList[0].id : dropDownCityValue!.id,
+      addressCityName: dropDownCityValue == null
+          ? citiesList[0].name
+          : dropDownCityValue!.name,
+      addressCityNameAr: dropDownCityValue == null
+          ? citiesList[0].nameAr
+          : dropDownCityValue!.nameAr,
       images: [],
+      orders: [],
     );
     return trip;
   }
 
   Future<void> addTrip() async {
-    bool createTripInOfficeStatus =
-        await FbFireStoreTripsController().createTripInOffice(trip: trip);
-    bool createTripInCityStatus =
-        await FbFireStoreTripsController().createTripInCity(trip: trip);
-    print(
-        '(createTripInOfficeStatus) add trip screen ===>>> $createTripInOfficeStatus');
-    print(
-        '(createTripInCityStatus) add trip screen ===>>> $createTripInCityStatus');
-    await uploadImages();
+    setState(() {
+      loading = true;
+    });
+    await FbFireStoreTripsController().createTripInOffice(trip: trip);
+    await FbFireStoreTripsController().createTripInCity(trip: trip);
+    for (int i = 0; i < tripImages!.length; i++) {
+      await uploadImages(tripImages![i].path);
+    }
+    setState(() {
+      loading = false;
+    });
+    Navigator.pop(context);
   }
 
-  Future<void> uploadImages() async {
+  Future<void> uploadImages(String path) async {
     await FbStorageController().uploadTripImages(
-      file: File(tripImages![0].path),
+      file: File(path),
       context: context,
       tripId: createTripId(),
       callBackUrl: ({
         required String url,
         required bool status,
       }) async {
-        print('xxxx status xxxx => $status');
         await officeTripsCollectionReference
             .doc(trip.tripId)
             .update({
@@ -542,40 +550,16 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
 
         await FirebaseFirestore.instance
             .collection('cities')
-            .doc(trip.addressCity)
+            .doc(trip.addressCityName)
             .collection('trips')
             .doc(trip.tripId)
             .update({
-          'images': FieldValue.arrayUnion([
-            url,
-          ]),
-        }).then((value) {
-          print('zzzzzzzzzzzz');
-        }).catchError((onError) {});
-        // var x = FirebaseFirestore.instance
-        //     .collection('offices')
-        //     .doc(SharedPrefController().getUId)
-        //     .get()
-        //     .then((doc) {
-        //       print(doc.get('trips'));
-        //
-        //   print('truuuuuuue');
-        // }).catchError((onError) {
-        //   print('faaaaaaalse');
-        // });
-        // await officesCollectionReference
-        //     .doc(SharedPrefController().getUId)
-        //     .update({
-        //   'trips': FieldValue.arrayUnion([
-        //     trip
-        //   ]),
-        // });
-        setState(() {});
-
-        print('truuuuuuue');
-        // Navigator.pop(context, () {
-        //   setState(() {});
-        // });
+              'images': FieldValue.arrayUnion([
+                url,
+              ]),
+            })
+            .then((value) {})
+            .catchError((onError) {});
       },
     );
   }

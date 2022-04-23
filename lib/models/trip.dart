@@ -3,16 +3,17 @@ import 'package:Rehlati/models/order.dart';
 
 class Trip {
   late String? tripId;
-  late String name;
-  late String description;
-  late String time;
-  late String date;
-  late String addressCity;
-  late String price;
-  late String minPayment;
+  late String? name;
+  late String? description;
+  late String? time;
+  late String? date;
+  late int? addressCityId;
+  late String? addressCityName;
+  late String? addressCityNameAr;
+  late String? price;
+  late String? minPayment;
   late List<Order>? orders;
   late List<String>? images;
-  // late List<ImageModel>? images;
 
   Trip({
     required this.tripId,
@@ -20,7 +21,9 @@ class Trip {
     required this.description,
     required this.time,
     required this.date,
-    required this.addressCity,
+    required this.addressCityId,
+    required this.addressCityName,
+    required this.addressCityNameAr,
     required this.price,
     required this.minPayment,
     this.orders,
@@ -33,7 +36,9 @@ class Trip {
     description = json['description'];
     time = json['time'];
     date = json['date'];
-    addressCity = json['addressCity'];
+    addressCityId = json['addressCityId'];
+    addressCityName = json['addressCityName'];
+    addressCityNameAr = json['addressCityNameAr'];
     price = json['price'];
     minPayment = json['minPayment'];
     if (json['orders'] != null) {
@@ -63,7 +68,9 @@ class Trip {
     data['description'] = description;
     data['time'] = time;
     data['date'] = date;
-    data['addressCity'] = addressCity;
+    data['addressCityId'] = addressCityId;
+    data['addressCityName'] = addressCityName;
+    data['addressCityNameAr'] = addressCityNameAr;
     data['price'] = price;
     data['minPayment'] = minPayment;
     if (orders != null) {

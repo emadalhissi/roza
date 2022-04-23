@@ -40,7 +40,7 @@ class FbStorageController {
     required String tripId,
   }) async {
     UploadTask uploadTask = _firebaseStorage
-        .ref('Trips Images/${SharedPrefController().getUId}/$tripId/' +
+        .ref('Trips Images/${SharedPrefController().getEmail}/$tripId/' +
             DateTime.now().toString() +
             'image')
         .putFile(file);

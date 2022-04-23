@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class MyTripsScreenListViewItem extends StatefulWidget {
@@ -6,16 +7,14 @@ class MyTripsScreenListViewItem extends StatefulWidget {
   final String time;
   final String date;
   final String address;
-  bool favorite;
   final String price;
 
-  MyTripsScreenListViewItem({
+  const MyTripsScreenListViewItem({
     required this.image,
     required this.name,
     required this.time,
     required this.date,
     required this.address,
-    required this.favorite,
     required this.price,
     Key? key,
   }) : super(key: key);
@@ -29,7 +28,12 @@ class _MyTripsScreenListViewItemState extends State<MyTripsScreenListViewItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.only(
+        bottom: 15,
+        left: 3,
+        right: 3,
+        top: 3,
+      ),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -55,7 +59,7 @@ class _MyTripsScreenListViewItemState extends State<MyTripsScreenListViewItem> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
-                      image: AssetImage(widget.image),
+                      image: CachedNetworkImageProvider(widget.image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -66,105 +70,102 @@ class _MyTripsScreenListViewItemState extends State<MyTripsScreenListViewItem> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.name,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      Expanded(
+                        child: Text(
+                          widget.name,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 8),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(
-                            Icons.timer,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            widget.time,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.date_range,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            widget.date,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.place,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              widget.address,
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.timer,
+                                    color: Colors.grey,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    widget.time,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                              const SizedBox(height: 3),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.date_range,
+                                    color: Colors.grey,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    widget.date,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 3),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.place,
+                                    color: Colors.grey,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    widget.address,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '\$${widget.price}',
+                                style: const TextStyle(
+                                  color: Color(0xff5859F3),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: const CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 23,
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.redAccent,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '\$${widget.price}',
-                      style: const TextStyle(
-                        color: Color(0xff5859F3),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

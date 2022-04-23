@@ -2,15 +2,11 @@ import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_users_controller.dart';
 import 'package:Rehlati/Helpers/snack_bar.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
-import 'package:Rehlati/Screens/auth/register_with_mobile_screen.dart';
-import 'package:Rehlati/Screens/auth/register_with_mobile_screen2.dart';
 import 'package:Rehlati/models/office.dart';
 import 'package:Rehlati/models/user.dart';
-import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class RegisterScreen extends StatefulWidget {

@@ -23,16 +23,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<BnScreen> _bnScreens = <BnScreen>[
-      BnScreen(title: 'Trips', widget: const TripsScreen()),
-      BnScreen(
-          title: SharedPrefController().getAccountType == 'user'
-              ? 'My Reservations'
-              : 'My Orders',
-          widget: const ReservationsScreen()),
-      BnScreen(title: 'Favorites', widget: const FavoritesScreen()),
-      BnScreen(title: 'Profile', widget: const ProfileScreen()),
-    ];
+    final List<BnScreen> _bnScreens = SharedPrefController().getAccountType ==
+            'admin'
+        ? <BnScreen>[
+            BnScreen(title: 'Trips', widget: const TripsScreen()),
+            BnScreen(title: 'Reservations', widget: const ReservationsScreen()),
+            BnScreen(title: 'Profile', widget: const ProfileScreen()),
+          ]
+        : <BnScreen>[
+            BnScreen(title: 'Trips', widget: const TripsScreen()),
+            BnScreen(
+                title: SharedPrefController().getAccountType == 'user'
+                    ? 'My Reservations'
+                    : 'My Orders',
+                widget: const ReservationsScreen()),
+            BnScreen(title: 'Favorites', widget: const FavoritesScreen()),
+            BnScreen(title: 'Profile', widget: const ProfileScreen()),
+          ];
 
     return Scaffold(
       appBar: AppBar(
@@ -59,42 +66,69 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            activeIcon: Icon(
-              Icons.home,
-              color: Color(0xff5859F3),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.shopping_cart),
-            label: SharedPrefController().getAccountType == 'user'
-                ? 'Reservations'
-                : 'Orders',
-            activeIcon: const Icon(
-              Icons.shopping_cart,
-              color: Color(0xff5859F3),
-            ),
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-            activeIcon: Icon(
-              Icons.favorite,
-              color: Color(0xff5859F3),
-            ),
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-            activeIcon: Icon(
-              Icons.account_circle,
-              color: Color(0xff5859F3),
-            ),
-          ),
-        ],
+        items: SharedPrefController().getAccountType == 'admin'
+            ? [
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Trips',
+                  activeIcon: Icon(
+                    Icons.home,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart),
+                  label: 'Reservations',
+                  activeIcon: Icon(
+                    Icons.shopping_cart,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.account_circle),
+                  label: 'Profile',
+                  activeIcon: Icon(
+                    Icons.account_circle,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+              ]
+            : [
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Trips',
+                  activeIcon: Icon(
+                    Icons.home,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.shopping_cart),
+                  label: SharedPrefController().getAccountType == 'user'
+                      ? 'Reservations'
+                      : 'Orders',
+                  activeIcon: const Icon(
+                    Icons.shopping_cart,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite),
+                  label: 'Favorites',
+                  activeIcon: Icon(
+                    Icons.favorite,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.account_circle),
+                  label: 'Profile',
+                  activeIcon: Icon(
+                    Icons.account_circle,
+                    color: Color(0xff5859F3),
+                  ),
+                ),
+              ],
       ),
     );
   }

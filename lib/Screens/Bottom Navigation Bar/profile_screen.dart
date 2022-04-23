@@ -1,3 +1,4 @@
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/Profile%20Screens/add_trip_screen.dart';
 import 'package:Rehlati/Screens/Profile%20Screens/edit_profile_screen.dart';
 import 'package:Rehlati/Screens/Profile%20Screens/my_trips_screen.dart';
@@ -7,6 +8,7 @@ import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Profile%20Screen%20Widgets/profile_list_tile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -25,20 +27,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              SharedPrefController().getProfileImage == ''
+              Provider.of<ProfileProvider>(context).profileImage_ == ''
                   ? const CircleAvatar(
-                radius: 50,
-                backgroundColor: Color(0xff5859F3),
-              )
+                      radius: 50,
+                      backgroundColor: Color(0xff5859F3),
+                    )
                   : CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.transparent,
-                backgroundImage: CachedNetworkImageProvider(
-                    SharedPrefController().getProfileImage),
-              ),
+                      radius: 50,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage: CachedNetworkImageProvider(
+                          Provider.of<ProfileProvider>(context).profileImage_),
+                    ),
               const SizedBox(height: 10),
               Text(
-                SharedPrefController().getFullName,
+                Provider.of<ProfileProvider>(context).name_,
                 style: const TextStyle(
                   color: Color(0xff5859F3),
                   fontWeight: FontWeight.bold,
@@ -46,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Text(SharedPrefController().getEmail),
+              Text(Provider.of<ProfileProvider>(context).email_),
               const SizedBox(height: 100),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -55,21 +57,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditProfileScreen(),
+                    Provider.of<ProfileProvider>(context).accountType_ == 'admin'
+                        ? const SizedBox.shrink()
+                        : InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditProfileScreen(),
+                                ),
+                              );
+                            },
+                            child: const ProfileListTile(
+                              title: 'Edit Profile',
+                              leadingIcon: Icons.person_outline,
+                            ),
                           ),
-                        );
-                      },
-                      child: const ProfileListTile(
-                        title: 'Edit Profile',
-                        leadingIcon: Icons.person_outline,
-                      ),
-                    ),
-                    SharedPrefController().getAccountType == 'office'
+                    Provider.of<ProfileProvider>(context).accountType_ == 'office'
                         ? InkWell(
                             onTap: () {
                               Navigator.push(
@@ -85,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           )
                         : const SizedBox.shrink(),
-                    SharedPrefController().getAccountType == 'office'
+                    Provider.of<ProfileProvider>(context).accountType_ == 'office'
                         ? InkWell(
                             onTap: () {
                               Navigator.push(

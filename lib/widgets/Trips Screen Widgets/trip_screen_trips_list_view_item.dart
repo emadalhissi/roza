@@ -1,24 +1,28 @@
+import 'package:Rehlati/models/order.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class TripsScreenTripsListViewItem extends StatefulWidget {
+  final String tripId;
   final String image;
   final String name;
   final String time;
   final String date;
   final String address;
+  final String addressAr;
   final String price;
-  final String noOfOrders;
   bool? favorite;
 
   TripsScreenTripsListViewItem({
+    required this.tripId,
     required this.image,
     required this.name,
     required this.time,
     required this.date,
     required this.address,
+    required this.addressAr,
     required this.price,
-    required this.noOfOrders,
     this.favorite = false,
     Key? key,
   }) : super(key: key);
@@ -30,6 +34,34 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
 
 class _TripsScreenTripsListViewItemState
     extends State<TripsScreenTripsListViewItem> {
+  String noOfOrders = '0';
+
+  @override
+  void initState() {
+    super.initState();
+    getOrders();
+  }
+
+  Future<void> getOrders() async {
+    List<Order> orders = [];
+    var ordersFromFirebase = await FirebaseFirestore.instance
+        .collection('cities')
+        .doc(widget.address)
+        .collection('trips')
+        .doc(widget.tripId)
+        .collection('orders')
+        .get();
+
+    if (ordersFromFirebase.docs.isNotEmpty) {
+      for (var doc in ordersFromFirebase.docs) {
+        orders.add(Order.fromMap(doc.data()));
+      }
+      setState(() {
+        noOfOrders = orders.length.toString();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -76,73 +108,76 @@ class _TripsScreenTripsListViewItemState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.name,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.timer,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.time,
-                                style: const TextStyle(
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.timer,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.date_range,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.date,
-                                style: const TextStyle(
+                                const SizedBox(width: 5),
+                                Text(
+                                  widget.time,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.date_range,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.place,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.address,
-                                style: const TextStyle(
+                                const SizedBox(width: 5),
+                                Text(
+                                  widget.date,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.place,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                const SizedBox(width: 5),
+                                Text(
+                                  widget.address,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       InkWell(
                         onTap: () {
@@ -177,7 +212,7 @@ class _TripsScreenTripsListViewItemState
                         ),
                       ),
                       const Spacer(),
-                      widget.noOfOrders == '0'
+                      noOfOrders == '0'
                           ? const SizedBox.shrink()
                           : const Icon(
                               Icons.supervisor_account,
@@ -185,12 +220,12 @@ class _TripsScreenTripsListViewItemState
                               size: 20,
                             ),
                       const SizedBox(width: 5),
-                      widget.noOfOrders == '0'
+                      noOfOrders == '0'
                           ? const SizedBox.shrink()
                           : Text(
-                              widget.noOfOrders == '1'
-                                  ? '${widget.noOfOrders} Order'
-                                  : '${widget.noOfOrders} Orders',
+                              noOfOrders == '1'
+                                  ? '$noOfOrders Order'
+                                  : '$noOfOrders Orders',
                             ),
                     ],
                   ),

@@ -1,3 +1,4 @@
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/auth/register_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -24,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
       FirebaseFirestore.instance.collection('users');
   CollectionReference officesCollectionReference =
       FirebaseFirestore.instance.collection('offices');
+  CollectionReference adminCollectionReference =
+      FirebaseFirestore.instance.collection('admins');
 
   late TextEditingController emailEditingController;
   late TextEditingController passwordEditingController;
@@ -120,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                 ElevatedButton(
                   onPressed: () async => await performLogin(),
                   child: const Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8),
                     child: Text(
                       'Login',
                       style: TextStyle(
@@ -248,69 +252,115 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
   }
 
   Future<void> login() async {
-    try {
-      userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailEditingController.text.toString(),
-        password: passwordEditingController.text.toString(),
-      );
-      await SharedPrefController().login();
-      await SharedPrefController().setUId(uId: userCredential.user!.uid);
-      await SharedPrefController().setEmail(email: userCredential.user!.email!);
-      await usersCollectionReference
-          .doc(userCredential.user!.uid)
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          SharedPrefController().setAccountType(type: 'user');
-          SharedPrefController().setFullName(name: doc.get('name'));
-          SharedPrefController().setMobile(mobile: doc.get('mobile'));
-          SharedPrefController()
-              .setProfileImage(image: doc.get('profileImage'));
+    await adminCollectionReference
+        .doc(emailEditingController.text)
+        .get()
+        .then((value) async {
+      if (value.exists) {
+        if (emailEditingController.text == value.get('email') &&
+            passwordEditingController.text == value.get('password')) {
+          await SharedPrefController().login();
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setUserId_(value.get('email'));
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setEmail_(value.get('email'));
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setAccountType_('admin');
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setName_(value.get('name'));
+          showSnackBar(
+            context,
+            message: 'Admin Logged In!',
+            error: false,
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+        } else {
+          showSnackBar(
+            context,
+            message: 'Wrong admin password!',
+            error: true,
+          );
         }
-      });
-      await officesCollectionReference
-          .doc(userCredential.user!.uid)
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          SharedPrefController().setAccountType(type: 'office');
-          SharedPrefController().setFullName(name: doc.get('name'));
-          SharedPrefController().setMobile(mobile: doc.get('mobile'));
-          SharedPrefController()
-              .setProfileImage(image: doc.get('profileImage'));
+      } else {
+        try {
+          userCredential =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailEditingController.text.toString(),
+            password: passwordEditingController.text.toString(),
+          );
+          await SharedPrefController().login();
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setUserId_(userCredential.user!.uid);
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setEmail_(userCredential.user!.email!);
+          await usersCollectionReference
+              .doc(userCredential.user!.uid)
+              .get()
+              .then((userDoc) {
+            if (userDoc.exists) {
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setAccountType_('user');
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setName_(userDoc.get('name'));
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setMobile_(userDoc.get('mobile'));
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setProfileImage_(userDoc.get('profileImage'));
+            }
+          });
+          await officesCollectionReference
+              .doc(userCredential.user!.uid)
+              .get()
+              .then((officeDoc) {
+            if (officeDoc.exists) {
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setAccountType_('office');
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setName_(officeDoc.get('name'));
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setMobile_(officeDoc.get('mobile'));
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setProfileImage_(officeDoc.get('profileImage'));
+            }
+          });
+          showSnackBar(
+            context,
+            message: 'You are Logged In!',
+            error: false,
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            showSnackBar(
+              context,
+              message: 'User not found!',
+              error: true,
+            );
+          } else if (e.code == 'wrong-password') {
+            showSnackBar(
+              context,
+              message: 'Wrong password!',
+              error: true,
+            );
+          }
+        } catch (e) {
+          showSnackBar(
+            context,
+            message: 'Something went wrong, please try again!',
+            error: true,
+          );
         }
-      });
-      showSnackBar(
-        context,
-        message: 'You are Logged In!',
-        error: false,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showSnackBar(
-          context,
-          message: 'User not found!',
-          error: true,
-        );
-      } else if (e.code == 'wrong-password') {
-        showSnackBar(
-          context,
-          message: 'Wrong password!',
-          error: true,
-        );
       }
-    } catch (e) {
-      showSnackBar(
-        context,
-        message: 'Something went wrong, please try again!',
-        error: true,
-      );
-    }
+    }).catchError((onError) {});
   }
 }

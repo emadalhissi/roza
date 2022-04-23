@@ -7,6 +7,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FbFireStoreTripsController {
   final FirebaseFirestore _firebaseFireStoreUsers = FirebaseFirestore.instance;
 
+  Stream<QuerySnapshot> readMyTrips() async* {
+    yield* _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('trips')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> readTrips(String city) async* {
+    yield* _firebaseFireStoreUsers
+        .collection('cities')
+        .doc(city)
+        .collection('trips')
+        .snapshots();
+  }
+
   Future<bool> createTripInOffice({required Trip trip}) async {
     return _firebaseFireStoreUsers
         .collection('offices')
@@ -21,7 +37,7 @@ class FbFireStoreTripsController {
   Future<bool> createTripInCity({required Trip trip}) async {
     return _firebaseFireStoreUsers
         .collection('cities')
-        .doc(trip.addressCity)
+        .doc(trip.addressCityName)
         .collection('trips')
         .doc(trip.tripId)
         .set(trip.toMap())

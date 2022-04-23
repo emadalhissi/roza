@@ -1,5 +1,6 @@
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Providers/lang_provider.dart';
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Providers/trip_provider.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
@@ -33,8 +34,12 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<TripProvider>(
             create: (context) => TripProvider(),
-          ),ChangeNotifierProvider<CitiesProvider>(
+          ),
+          ChangeNotifierProvider<CitiesProvider>(
             create: (context) => CitiesProvider(),
+          ),
+          ChangeNotifierProvider<ProfileProvider>(
+            create: (context) => ProfileProvider(),
           ),
         ],
         child: const MyMaterialApp(),
@@ -54,8 +59,8 @@ class MyMaterialApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const LaunchScreen(),
       routes: {
-        '/home_screen' : (context) => const HomeScreen(),
-        '/login_screen' : (context) => const LoginScreen(),
+        '/home_screen': (context) => const HomeScreen(),
+        '/login_screen': (context) => const LoginScreen(),
       },
       theme: ThemeData(
           fontFamily:

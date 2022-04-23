@@ -2,7 +2,9 @@ import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
+import 'package:Rehlati/models/city.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,9 +28,19 @@ class _LaunchScreenState extends State<LaunchScreen> {
     });
   }
 
-  void launchData() {
-    // List<QueryDocumentSnapshot> c = CitiesFbController().readCities();
-    // Provider.of<CitiesProvider>(context).changeCitiesList(city: cities);
+  Future<void> launchData() async {
+    List<City> cities = [];
+    var citiesFromFirebase =
+        await FirebaseFirestore.instance.collection('cities').get();
+
+    if (citiesFromFirebase.docs.isNotEmpty) {
+      for (var doc in citiesFromFirebase.docs) {
+        cities.add(City.fromMap(doc.data()));
+      }
+    }
+
+    Provider.of<CitiesProvider>(context, listen: false)
+        .changeCitiesList(city: cities);
   }
 
   @override

@@ -12,11 +12,11 @@ mixin SnackBarHelper {
         backgroundColor: error ? Colors.red : Colors.green,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 3),
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 100,
-          right: 20,
-          left: 20,
-        ),
+        // margin: EdgeInsets.only(
+        //   bottom: MediaQuery.of(context).size.height - 100,
+        //   right: 20,
+        //   left: 20,
+        // ),
       ),
     );
   }
