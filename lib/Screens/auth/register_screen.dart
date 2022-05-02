@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
 
   String accountType = '';
 
-  // String radioGroupValue = 'AccountType';
+  bool loading = false;
 
   @override
   void initState() {
@@ -148,16 +148,22 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async => await performRegister(),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: !loading
+                        ? const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: const Color(0xff5859F3),
@@ -167,52 +173,6 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                     ),
                   ),
                 ),
-                // const SizedBox(height: 24),
-                // const Text(
-                //   'Or Sign Up With',
-                //   style: TextStyle(
-                //     color: Color(0xff8A8A8E),
-                //     fontWeight: FontWeight.w600,
-                //     fontSize: 16,
-                //   ),
-                // ),
-                // const SizedBox(height: 24),
-                // ElevatedButton(
-                //   onPressed: () {},
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         SvgPicture.asset(
-                //           'assets/icons/google.svg',
-                //           height: 35,
-                //         ),
-                //         const SizedBox(width: 15),
-                //         const Text(
-                //           'Continue with Google',
-                //           style: TextStyle(
-                //             color: Color(0xff5859F3),
-                //             fontSize: 16,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                //   style: ElevatedButton.styleFrom(
-                //     primary: Colors.transparent,
-                //     minimumSize: const Size(double.infinity, 50),
-                //     elevation: 0,
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(25),
-                //       side: const BorderSide(
-                //         color: Color(0xff5859F3),
-                //         width: 1.5,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -311,6 +271,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   }
 
   Future<void> register() async {
+    setState(() {
+      loading = true;
+    });
     try {
       userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -318,7 +281,6 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
         password: passwordEditingController.text.toString(),
       );
       if (userCredential.user!.emailVerified == false) {
-        print('emailVerified == false');
         await user!.sendEmailVerification();
       }
       showSnackBar(
@@ -331,6 +293,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
       } else {
         await createNewOffice();
       }
+      setState(() {
+        loading = false;
+      });
       goToLogin();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -346,12 +311,18 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
           error: true,
         );
       }
+      setState(() {
+        loading = false;
+      });
     } catch (e) {
       showSnackBar(
         context,
         message: 'Something went wrong, please try again!',
         error: true,
       );
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -378,7 +349,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   }
 
   Future<void> createNewUser() async {
-    bool status = await FbFireStoreUsersController().createUser(user: userModel);
+    bool status =
+        await FbFireStoreUsersController().createUser(user: userModel);
   }
 
   Future<void> createNewOffice() async {

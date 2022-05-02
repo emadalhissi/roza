@@ -7,6 +7,7 @@ import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -213,6 +214,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
       callBackUrl: ({
         required String url,
         required bool status,
+        required TaskState taskState,
       }) async {
         print('status => $status');
         if (SharedPrefController().getAccountType == 'user') {

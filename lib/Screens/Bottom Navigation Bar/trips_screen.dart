@@ -1,6 +1,7 @@
 import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
+import 'package:Rehlati/Screens/Office%20Screens/office_trip_screen.dart';
 import 'package:Rehlati/Screens/trip_screen.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
@@ -130,12 +131,90 @@ class _TripsScreenState extends State<TripsScreen> {
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TripScreen(),
-                              ),
-                            );
+                            if (SharedPrefController().getAccountType ==
+                                'admin') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TripScreen(
+                                    tripName: searchedTrips[index].get('name'),
+                                    tripTime: searchedTrips[index].get('time'),
+                                    tripDate: searchedTrips[index].get('date'),
+                                    tripAddress: searchedTrips[index]
+                                        .get('addressCityName'),
+                                    tripAddressAr: searchedTrips[index]
+                                        .get('addressCityNameAr'),
+                                    price: searchedTrips[index].get('price'),
+                                    tripId: searchedTrips[index].id,
+                                    tripDescription:
+                                        searchedTrips[index].get('description'),
+                                    minPayment:
+                                        searchedTrips[index].get('minPayment'),
+                                    tripImages:
+                                        searchedTrips[index].get('images'),
+                                    tripAddressId: searchedTrips[index].get('addressCityId'),
+                                    officeName: searchedTrips[index].get('officeName'),
+                                    officeEmail: searchedTrips[index].get('officeEmail'),
+                                    officeId: searchedTrips[index].get('officeId'),
+                                    isAdmin: true,
+                                  ),
+                                ),
+                              );
+                            } else if (searchedTrips[index]
+                                    .get('officeEmail') ==
+                                SharedPrefController().getEmail) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OfficeTripScreen(
+                                    tripName: searchedTrips[index].get('name'),
+                                    tripTime: searchedTrips[index].get('time'),
+                                    tripDate: searchedTrips[index].get('date'),
+                                    tripAddress: searchedTrips[index]
+                                        .get('addressCityName'),
+                                    tripAddressAr: searchedTrips[index]
+                                        .get('addressCityNameAr'),
+                                    price: searchedTrips[index].get('price'),
+                                    tripId: searchedTrips[index].id,
+                                    tripDescription:
+                                    searchedTrips[index].get('description'),
+                                    minPayment:
+                                    searchedTrips[index].get('minPayment'),
+                                    tripImages:
+                                    searchedTrips[index].get('images'),
+                                    tripCityId: searchedTrips[index].get('addressCityId'),
+                                    officeId: searchedTrips[index].get('officeId'),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TripScreen(
+                                    tripName: searchedTrips[index].get('name'),
+                                    tripTime: searchedTrips[index].get('time'),
+                                    tripDate: searchedTrips[index].get('date'),
+                                    tripAddress: searchedTrips[index]
+                                        .get('addressCityName'),
+                                    tripAddressAr: searchedTrips[index]
+                                        .get('addressCityNameAr'),
+                                    price: searchedTrips[index].get('price'),
+                                    tripId: searchedTrips[index].id,
+                                    tripDescription:
+                                        searchedTrips[index].get('description'),
+                                    minPayment:
+                                        searchedTrips[index].get('minPayment'),
+                                    tripImages:
+                                        searchedTrips[index].get('images'),
+                                    tripAddressId: searchedTrips[index].get('addressCityId'),
+                                    officeName: searchedTrips[index].get('officeName'),
+                                    officeEmail: searchedTrips[index].get('officeEmail'),
+                                    officeId: searchedTrips[index].get('officeId'),
+                                  ),
+                                ),
+                              );
+                            }
                           },
                           child: TripsScreenTripsListViewItem(
                             image: searchedTrips[index].get('images')[0],
@@ -148,6 +227,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                 searchedTrips[index].get('addressCityNameAr'),
                             price: searchedTrips[index].get('price'),
                             tripId: searchedTrips[index].id,
+                            officeId: searchedTrips[index].get('officeId'),
                           ),
                         );
                       },
@@ -172,12 +252,87 @@ class _TripsScreenState extends State<TripsScreen> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const TripScreen(),
-                                    ),
-                                  );
+                                  if(SharedPrefController().getAccountType ==
+                                      'admin') {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TripScreen(
+                                          tripName: trips[index].get('name'),
+                                          tripTime: trips[index].get('time'),
+                                          tripDate: trips[index].get('date'),
+                                          tripAddress:
+                                          trips[index].get('addressCityName'),
+                                          tripAddressAr: trips[index]
+                                              .get('addressCityNameAr'),
+                                          price: trips[index].get('price'),
+                                          tripId: trips[index].id,
+                                          tripDescription:
+                                          trips[index].get('description'),
+                                          minPayment:
+                                          trips[index].get('minPayment'),
+                                          tripImages: trips[index].get('images'),
+                                          tripAddressId: trips[index].get('addressCityId'),
+                                          officeName: trips[index].get('officeName'),
+                                          officeEmail: trips[index].get('officeEmail'),
+                                          officeId: trips[index].get('officeId'),
+                                          isAdmin: true,
+                                        ),
+                                      ),
+                                    );
+                                  } else if(trips[index]
+                                      .get('officeEmail') ==
+                                      SharedPrefController().getEmail) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OfficeTripScreen(
+                                          tripName: trips[index].get('name'),
+                                          tripTime: trips[index].get('time'),
+                                          tripDate: trips[index].get('date'),
+                                          tripAddress:
+                                          trips[index].get('addressCityName'),
+                                          tripAddressAr: trips[index]
+                                              .get('addressCityNameAr'),
+                                          price: trips[index].get('price'),
+                                          tripId: trips[index].id,
+                                          tripDescription:
+                                          trips[index].get('description'),
+                                          minPayment:
+                                          trips[index].get('minPayment'),
+                                          tripImages: trips[index].get('images'),
+                                          tripCityId: trips[index].get('addressCityId'),
+                                          officeId: trips[index].get('officeId'),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TripScreen(
+                                          tripName: trips[index].get('name'),
+                                          tripTime: trips[index].get('time'),
+                                          tripDate: trips[index].get('date'),
+                                          tripAddress:
+                                          trips[index].get('addressCityName'),
+                                          tripAddressAr: trips[index]
+                                              .get('addressCityNameAr'),
+                                          price: trips[index].get('price'),
+                                          tripId: trips[index].id,
+                                          tripDescription:
+                                          trips[index].get('description'),
+                                          minPayment:
+                                          trips[index].get('minPayment'),
+                                          tripImages: trips[index].get('images'),
+                                          tripAddressId: trips[index].get('addressCityId'),
+                                          officeName: trips[index].get('officeName'),
+                                          officeEmail: trips[index].get('officeEmail'),
+                                          officeId: trips[index].get('officeId'),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: TripsScreenTripsListViewItem(
                                   image: trips[index].get('images')[0],
@@ -189,6 +344,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                       trips[index].get('addressCityNameAr'),
                                   price: trips[index].get('price'),
                                   tripId: trips[index].id,
+                                  officeId: trips[index].get('officeId'),
                                 ),
                               );
                             },

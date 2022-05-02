@@ -12,6 +12,7 @@ import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -48,8 +49,17 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
       .collection('trips');
 
   List<XFile>? tripImages = [];
+  int imagesUploaded = 0;
 
   bool loading = false;
+
+  TimeOfDay time = TimeOfDay.now();
+  DateTime date = DateTime.now();
+
+  String time_ = 'Choose Time';
+  String date_ = 'Choose Date';
+
+  City? dropDownCityValue;
 
   @override
   void initState() {
@@ -68,16 +78,6 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
     tripMinPaymentEditingController.dispose();
     super.dispose();
   }
-
-  TimeOfDay time = TimeOfDay.now();
-  DateTime date = DateTime.now();
-
-  String time_ = 'Choose Time';
-  String date_ = 'Choose Date';
-
-  City? dropDownCityValue;
-
-  List<City> citiesList = <City>[];
 
   @override
   Widget build(BuildContext context) {
@@ -258,6 +258,18 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                     });
                   },
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  Text(
+                    'Trip City Can\'t Be Changed.',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               Row(
@@ -500,16 +512,23 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
       description: tripDescriptionEditingController.text.toString(),
       time: time_,
       date: date_,
-      addressCityId:
-          dropDownCityValue == null ? citiesList[0].id : dropDownCityValue!.id,
+      addressCityId: dropDownCityValue == null
+          ? Provider.of<CitiesProvider>(context, listen: false).citiesList[0].id
+          : dropDownCityValue!.id,
       addressCityName: dropDownCityValue == null
-          ? citiesList[0].name
+          ? Provider.of<CitiesProvider>(context, listen: false)
+              .citiesList[0]
+              .name
           : dropDownCityValue!.name,
       addressCityNameAr: dropDownCityValue == null
-          ? citiesList[0].nameAr
+          ? Provider.of<CitiesProvider>(context, listen: false)
+              .citiesList[0]
+              .nameAr
           : dropDownCityValue!.nameAr,
+      officeEmail: SharedPrefController().getEmail,
+      officeName: SharedPrefController().getFullName,
+      officeId: SharedPrefController().getUId,
       images: [],
-      orders: [],
     );
     return trip;
   }
@@ -518,15 +537,10 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
     setState(() {
       loading = true;
     });
-    await FbFireStoreTripsController().createTripInOffice(trip: trip);
-    await FbFireStoreTripsController().createTripInCity(trip: trip);
+    await FbFireStoreTripsController().createTrip(trip: trip);
     for (int i = 0; i < tripImages!.length; i++) {
       await uploadImages(tripImages![i].path);
     }
-    setState(() {
-      loading = false;
-    });
-    Navigator.pop(context);
   }
 
   Future<void> uploadImages(String path) async {
@@ -537,29 +551,39 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
       callBackUrl: ({
         required String url,
         required bool status,
+        required TaskState taskState,
       }) async {
-        await officeTripsCollectionReference
-            .doc(trip.tripId)
-            .update({
-              'images': FieldValue.arrayUnion([
-                url,
-              ]),
-            })
-            .then((value) {})
-            .catchError((onError) {});
+        if (taskState == TaskState.success) {
+          await officeTripsCollectionReference
+              .doc(trip.tripId)
+              .update({
+                'images': FieldValue.arrayUnion([
+                  url,
+                ]),
+              })
+              .then((value) {})
+              .catchError((onError) {});
 
-        await FirebaseFirestore.instance
-            .collection('cities')
-            .doc(trip.addressCityName)
-            .collection('trips')
-            .doc(trip.tripId)
-            .update({
-              'images': FieldValue.arrayUnion([
-                url,
-              ]),
-            })
-            .then((value) {})
-            .catchError((onError) {});
+          await FirebaseFirestore.instance
+              .collection('cities')
+              .doc(trip.addressCityName)
+              .collection('trips')
+              .doc(trip.tripId)
+              .update({
+                'images': FieldValue.arrayUnion([
+                  url,
+                ]),
+              })
+              .then((value) {})
+              .catchError((onError) {});
+          imagesUploaded++;
+          if (imagesUploaded == tripImages!.length) {
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          }
+        }
       },
     );
   }

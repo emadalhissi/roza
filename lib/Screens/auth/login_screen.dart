@@ -1,3 +1,5 @@
+import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
+import 'package:Rehlati/Providers/favorites_provider.dart';
 import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/auth/register_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
@@ -8,7 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -31,6 +32,8 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
 
   late TextEditingController emailEditingController;
   late TextEditingController passwordEditingController;
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -123,16 +126,22 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () async => await performLogin(),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: !loading
+                        ? const Text(
+                            'Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: const Color(0xff5859F3),
@@ -142,52 +151,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                     ),
                   ),
                 ),
-                // const SizedBox(height: 24),
-                // const Text(
-                //   'Or',
-                //   style: TextStyle(
-                //     color: Color(0xff8A8A8E),
-                //     fontWeight: FontWeight.w600,
-                //     fontSize: 16,
-                //   ),
-                // ),
-                // const SizedBox(height: 24),
-                // ElevatedButton(
-                //   onPressed: () {},
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         SvgPicture.asset(
-                //           'assets/icons/google.svg',
-                //           height: 35,
-                //         ),
-                //         const SizedBox(width: 15),
-                //         const Text(
-                //           'Continue with Google',
-                //           style: TextStyle(
-                //             color: Color(0xff5859F3),
-                //             fontSize: 16,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                //   style: ElevatedButton.styleFrom(
-                //     primary: Colors.transparent,
-                //     minimumSize: const Size(double.infinity, 50),
-                //     elevation: 0,
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(25),
-                //       side: const BorderSide(
-                //         color: Color(0xff5859F3),
-                //         width: 1.5,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -252,6 +215,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
   }
 
   Future<void> login() async {
+    setState(() {
+      loading = true;
+    });
     await adminCollectionReference
         .doc(emailEditingController.text)
         .get()
@@ -268,6 +234,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
               .setAccountType_('admin');
           Provider.of<ProfileProvider>(context, listen: false)
               .setName_(value.get('name'));
+          setState(() {
+            loading = false;
+          });
           showSnackBar(
             context,
             message: 'Admin Logged In!',
@@ -280,6 +249,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             ),
           );
         } else {
+          setState(() {
+            loading = false;
+          });
           showSnackBar(
             context,
             message: 'Wrong admin password!',
@@ -301,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
           await usersCollectionReference
               .doc(userCredential.user!.uid)
               .get()
-              .then((userDoc) {
+              .then((userDoc) async {
             if (userDoc.exists) {
               Provider.of<ProfileProvider>(context, listen: false)
                   .setAccountType_('user');
@@ -312,11 +284,16 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
               Provider.of<ProfileProvider>(context, listen: false)
                   .setProfileImage_(userDoc.get('profileImage'));
             }
+            var favorites = await FbFireStoreFavoritesController()
+                .readFavorites(type: 'user');
+            await Provider.of<FavoritesProvider>(context, listen: false)
+                .storeFavorites_(favorites: favorites);
           });
+
           await officesCollectionReference
               .doc(userCredential.user!.uid)
               .get()
-              .then((officeDoc) {
+              .then((officeDoc) async {
             if (officeDoc.exists) {
               Provider.of<ProfileProvider>(context, listen: false)
                   .setAccountType_('office');
@@ -327,6 +304,14 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
               Provider.of<ProfileProvider>(context, listen: false)
                   .setProfileImage_(officeDoc.get('profileImage'));
             }
+
+            var favorites = await FbFireStoreFavoritesController()
+                .readFavorites(type: 'office');
+            await Provider.of<FavoritesProvider>(context, listen: false)
+                .storeFavorites_(favorites: favorites);
+          });
+          setState(() {
+            loading = false;
           });
           showSnackBar(
             context,
@@ -340,6 +325,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             ),
           );
         } on FirebaseAuthException catch (e) {
+          setState(() {
+            loading = false;
+          });
           if (e.code == 'user-not-found') {
             showSnackBar(
               context,

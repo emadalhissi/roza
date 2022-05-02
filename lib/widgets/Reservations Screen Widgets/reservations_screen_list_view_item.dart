@@ -1,3 +1,5 @@
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ReservationsScreenListViewItem extends StatelessWidget {
@@ -47,7 +49,7 @@ class ReservationsScreenListViewItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
-                    image: AssetImage(image),
+                    image: CachedNetworkImageProvider(image),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -64,7 +66,7 @@ class ReservationsScreenListViewItem extends StatelessWidget {
                         Text(city),
                         Chip(
                           label: Text(
-                            status,
+                            orderStatus(),
                             style: TextStyle(color: statusColor()),
                           ),
                           backgroundColor: statusColor().withOpacity(0.09),
@@ -98,12 +100,24 @@ class ReservationsScreenListViewItem extends StatelessWidget {
     );
   }
 
+  String orderStatus() {
+    if (status == 'accepted') {
+      return SharedPrefController().getLang == 'en' ? 'Accepted' : 'مقبول';
+    } else if (status == 'waiting') {
+      return SharedPrefController().getLang == 'en' ? 'Waiting' : 'قيد الإنتظار';
+    } else if (status == 'rejected') {
+      return SharedPrefController().getLang == 'en' ? 'Rejected' : 'مرفوض';
+    } else {
+      return '';
+    }
+  }
+
   Color statusColor() {
-    if (status == 'Accepted') {
+    if (status == 'accepted') {
       return const Color(0xff11A38D);
-    } else if (status == 'Waiting') {
+    } else if (status == 'waiting') {
       return const Color(0xff3F6DEB);
-    } else if (status == 'Rejected') {
+    } else if (status == 'rejected') {
       return const Color(0xffF2533F);
     } else {
       return const Color(0xff000000);

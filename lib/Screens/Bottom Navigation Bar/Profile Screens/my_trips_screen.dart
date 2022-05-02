@@ -1,6 +1,6 @@
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
+import 'package:Rehlati/Screens/Office%20Screens/office_trip_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
-import 'package:Rehlati/widgets/Favorites%20Screen%20Widgets/favorites_screen_list_view_item.dart';
 import 'package:Rehlati/widgets/Profile%20Screen%20Widgets/my_trips_screen_list_view_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -56,15 +56,41 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
                   itemCount: myTrips.length,
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
-                    return MyTripsScreenListViewItem(
-                      image: myTrips[index].get('images')[0],
-                      name: myTrips[index].get('name'),
-                      time: myTrips[index].get('time'),
-                      date: myTrips[index].get('date'),
-                      address: SharedPrefController().getLang == 'en'
-                          ? myTrips[index].get('addressCityName')
-                          : myTrips[index].get('addressCityNameAr'),
-                      price: myTrips[index].get('price'),
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OfficeTripScreen(
+                              tripName: myTrips[index].get('name'),
+                              tripTime: myTrips[index].get('time'),
+                              tripDate: myTrips[index].get('date'),
+                              tripCityId: myTrips[index].get('addressCityId'),
+                              tripAddress:
+                                  myTrips[index].get('addressCityName'),
+                              tripAddressAr:
+                                  myTrips[index].get('addressCityNameAr'),
+                              price: myTrips[index].get('price'),
+                              tripId: myTrips[index].get('tripId'),
+                              tripDescription:
+                                  myTrips[index].get('description'),
+                              minPayment: myTrips[index].get('minPayment'),
+                              tripImages: myTrips[index].get('images'),
+                              officeId: myTrips[index].get('officeId'),
+                            ),
+                          ),
+                        );
+                      },
+                      child: MyTripsScreenListViewItem(
+                        image: myTrips[index].get('images')[0],
+                        name: myTrips[index].get('name'),
+                        time: myTrips[index].get('time'),
+                        date: myTrips[index].get('date'),
+                        address: SharedPrefController().getLang == 'en'
+                            ? myTrips[index].get('addressCityName')
+                            : myTrips[index].get('addressCityNameAr'),
+                        price: myTrips[index].get('price'),
+                      ),
                     );
                   },
                 );

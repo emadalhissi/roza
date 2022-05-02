@@ -8,8 +8,6 @@ class OfficeModel {
   late String email;
   late String type;
   late String profileImage;
-  late List<Trip>? trips;
-  late List<Order>? orders;
 
   OfficeModel();
 
@@ -20,18 +18,6 @@ class OfficeModel {
     mobile = documentMap['mobile'];
     type = documentMap['type'];
     profileImage = documentMap['profileImage'];
-    if (documentMap['trips'] != null) {
-      trips = <Trip>[];
-      documentMap['trips'].forEach((v) {
-        trips!.add(Trip.fromMap(v));
-      });
-    }
-    if (documentMap['orders'] != null) {
-      orders = <Order>[];
-      documentMap['orders'].forEach((v) {
-        orders!.add(Order.fromMap(v));
-      });
-    }
   }
 
   Map<String, dynamic> toMap() {
@@ -42,12 +28,6 @@ class OfficeModel {
     map['mobile'] = mobile;
     map['type'] = type;
     map['profileImage'] = profileImage;
-    if (trips != null) {
-      map['trips'] = trips!.map((v) => v.toMap()).toList();
-    }
-    if (orders != null) {
-      map['orders'] = orders!.map((v) => v.toMap()).toList();
-    }
     return map;
   }
 }

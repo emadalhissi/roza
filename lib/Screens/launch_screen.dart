@@ -1,5 +1,7 @@
 import 'package:Rehlati/FireBase/cities_fb_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
+import 'package:Rehlati/Providers/favorites_provider.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/models/city.dart';
@@ -41,6 +43,14 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
     Provider.of<CitiesProvider>(context, listen: false)
         .changeCitiesList(city: cities);
+
+    if (SharedPrefController().checkLoggedIn &&
+        SharedPrefController().getAccountType != 'admin') {
+      var favorites = await FbFireStoreFavoritesController()
+          .readFavorites(type: SharedPrefController().getAccountType);
+      await Provider.of<FavoritesProvider>(context, listen: false)
+          .storeFavorites_(favorites: favorites);
+    }
   }
 
   @override

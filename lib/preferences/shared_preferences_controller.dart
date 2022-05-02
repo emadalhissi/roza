@@ -84,8 +84,16 @@ class SharedPrefController {
   String get getProfileImage =>
       _sharedPrefLibObj.getString(SharedPrefKeys.profileImage.toString()) ?? '';
 
-  Future<bool> logout() async {
-    return await _sharedPrefLibObj.clear();
+  Future<void> logout() async {
+    await _sharedPrefLibObj.setBool(SharedPrefKeys.loggedIn.toString(), false);
+    await _sharedPrefLibObj.setString(SharedPrefKeys.fullName.toString(), '');
+    await _sharedPrefLibObj.setString(SharedPrefKeys.email.toString(), '');
+    await _sharedPrefLibObj.setString(SharedPrefKeys.mobile.toString(), '');
+    await _sharedPrefLibObj.setString(SharedPrefKeys.uId.toString(), '');
+    await _sharedPrefLibObj.setString(
+        SharedPrefKeys.accountType.toString(), '');
+    await _sharedPrefLibObj.setString(
+        SharedPrefKeys.profileImage.toString(), '');
   }
 
   Future<bool> changeLang({required String lang}) async {

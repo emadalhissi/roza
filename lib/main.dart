@@ -1,14 +1,14 @@
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Providers/lang_provider.dart';
 import 'package:Rehlati/Providers/profile_provider.dart';
-import 'package:Rehlati/Providers/trip_provider.dart';
+import 'package:Rehlati/Providers/favorites_provider.dart';
+import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/Profile%20Screens/my_trips_screen.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:Rehlati/Screens/launch_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<LangProvider>(
             create: (context) => LangProvider(),
           ),
-          ChangeNotifierProvider<TripProvider>(
-            create: (context) => TripProvider(),
+          ChangeNotifierProvider<FavoritesProvider>(
+            create: (context) => FavoritesProvider(),
           ),
           ChangeNotifierProvider<CitiesProvider>(
             create: (context) => CitiesProvider(),
@@ -61,6 +61,7 @@ class MyMaterialApp extends StatelessWidget {
       routes: {
         '/home_screen': (context) => const HomeScreen(),
         '/login_screen': (context) => const LoginScreen(),
+        '/my_trips_screen': (context) => const MyTripsScreen(),
       },
       theme: ThemeData(
           fontFamily:

@@ -1,10 +1,17 @@
+import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
+import 'package:Rehlati/Providers/favorites_provider.dart';
+import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/order.dart';
+import 'package:Rehlati/models/trip.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
 class TripsScreenTripsListViewItem extends StatefulWidget {
   final String tripId;
+  final String officeId;
   final String image;
   final String name;
   final String time;
@@ -12,10 +19,10 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
   final String address;
   final String addressAr;
   final String price;
-  bool? favorite;
 
-  TripsScreenTripsListViewItem({
+  const TripsScreenTripsListViewItem({
     required this.tripId,
+    required this.officeId,
     required this.image,
     required this.name,
     required this.time,
@@ -23,7 +30,6 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
     required this.address,
     required this.addressAr,
     required this.price,
-    this.favorite = false,
     Key? key,
   }) : super(key: key);
 
@@ -33,7 +39,7 @@ class TripsScreenTripsListViewItem extends StatefulWidget {
 }
 
 class _TripsScreenTripsListViewItemState
-    extends State<TripsScreenTripsListViewItem> {
+    extends State<TripsScreenTripsListViewItem> with SnackBarHelper {
   String noOfOrders = '0';
 
   @override
@@ -179,25 +185,7 @@ class _TripsScreenTripsListViewItemState
                           ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            widget.favorite == true
-                                ? widget.favorite = false
-                                : widget.favorite = true;
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.grey.shade300,
-                          radius: 23,
-                          child: Icon(
-                            Icons.favorite,
-                            color: widget.favorite == true
-                                ? const Color(0xff5859F3)
-                                : Colors.white,
-                          ),
-                        ),
-                      ),
+                      favoriteOption(),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -236,6 +224,72 @@ class _TripsScreenTripsListViewItemState
           ],
         ),
       ),
+    );
+  }
+
+  Widget favoriteOption() {
+    if (SharedPrefController().getAccountType == 'admin' ||
+        (SharedPrefController().getAccountType == 'office' &&
+            widget.officeId == SharedPrefController().getUId)) {
+      return const SizedBox.shrink();
+    } else {
+      return InkWell(
+        onTap: () async {
+          await favorite();
+        },
+        child: CircleAvatar(
+          backgroundColor: Colors.grey.shade300,
+          radius: 23,
+          child: Icon(
+            Icons.favorite,
+            color: Provider.of<FavoritesProvider>(context)
+                    .checkFavorite(tripId: widget.tripId)
+                ? const Color(0xff5859F3)
+                : Colors.white,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> favorite() async {
+    await FbFireStoreFavoritesController().favorite(
+      type: SharedPrefController().getAccountType,
+      tripId: widget.tripId,
+      officeId: widget.officeId,
+      callBackUrl: ({
+        required bool status,
+        required bool favorite,
+        required Trip trip,
+      }) async {
+        if (status && favorite) {
+          Provider.of<FavoritesProvider>(context, listen: false).favorite_(
+            trip: trip,
+            status: true,
+          );
+          showSnackBar(
+            context,
+            message: 'Trip Added to Favorites!',
+            error: false,
+          );
+        } else if (status && !favorite) {
+          Provider.of<FavoritesProvider>(context, listen: false).favorite_(
+            trip: trip,
+            status: false,
+          );
+          showSnackBar(
+            context,
+            message: 'Trip Removed from Favorites!',
+            error: false,
+          );
+        } else {
+          showSnackBar(
+            context,
+            message: 'Something went wrong, try again!',
+            error: true,
+          );
+        }
+      },
     );
   }
 }

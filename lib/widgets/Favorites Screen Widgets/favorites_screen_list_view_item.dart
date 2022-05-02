@@ -1,22 +1,17 @@
+import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
+import 'package:Rehlati/Providers/favorites_provider.dart';
+import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/models/trip.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FavoritesScreenListViewItem extends StatefulWidget {
-  final String image;
-  final String name;
-  final String time;
-  final String date;
-  final String address;
-  bool favorite;
-  final String price;
+  final Trip trip;
 
-  FavoritesScreenListViewItem({
-    required this.image,
-    required this.name,
-    required this.time,
-    required this.date,
-    required this.address,
-    required this.favorite,
-    required this.price,
+  const FavoritesScreenListViewItem({
+    required this.trip,
     Key? key,
   }) : super(key: key);
 
@@ -26,7 +21,7 @@ class FavoritesScreenListViewItem extends StatefulWidget {
 }
 
 class _FavoritesScreenListViewItemState
-    extends State<FavoritesScreenListViewItem> {
+    extends State<FavoritesScreenListViewItem> with SnackBarHelper {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -56,7 +51,8 @@ class _FavoritesScreenListViewItemState
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
-                      image: AssetImage(widget.image),
+                      image:
+                          CachedNetworkImageProvider(widget.trip.images!.first),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -68,7 +64,7 @@ class _FavoritesScreenListViewItemState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.name,
+                        widget.trip.name!,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -87,7 +83,7 @@ class _FavoritesScreenListViewItemState
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            widget.time,
+                            widget.trip.time!,
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
@@ -106,7 +102,7 @@ class _FavoritesScreenListViewItemState
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            widget.date,
+                            widget.trip.date!,
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
@@ -127,7 +123,9 @@ class _FavoritesScreenListViewItemState
                           const SizedBox(width: 5),
                           Expanded(
                             child: Text(
-                              widget.address,
+                              SharedPrefController().getLang == 'en'
+                                  ? widget.trip.addressCityName!
+                                  : widget.trip.addressCityNameAr!,
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w400,
@@ -146,26 +144,23 @@ class _FavoritesScreenListViewItemState
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () {
-                        setState(() {
-                          widget.favorite == true
-                              ? widget.favorite = false
-                              : widget.favorite = true;
-                        });
+                      onTap: () async {
+                        await favorite();
                       },
                       child: CircleAvatar(
                         backgroundColor: Colors.grey.shade300,
                         radius: 23,
                         child: Icon(
                           Icons.favorite,
-                          color: widget.favorite
+                          color: Provider.of<FavoritesProvider>(context)
+                                  .checkFavorite(tripId: widget.trip.tripId!)
                               ? const Color(0xff5859F3)
                               : Colors.white,
                         ),
                       ),
                     ),
                     Text(
-                      '\$${widget.price}',
+                      '\$${widget.trip.price}',
                       style: const TextStyle(
                         color: Color(0xff5859F3),
                         fontWeight: FontWeight.bold,
@@ -179,6 +174,47 @@ class _FavoritesScreenListViewItemState
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> favorite() async {
+    await FbFireStoreFavoritesController().favorite(
+      type: SharedPrefController().getAccountType,
+      tripId: widget.trip.tripId!,
+      officeId: widget.trip.officeId!,
+      callBackUrl: ({
+        required bool status,
+        required bool favorite,
+        required Trip trip,
+      }) async {
+        if (status && favorite) {
+          Provider.of<FavoritesProvider>(context, listen: false).favorite_(
+            trip: trip,
+            status: true,
+          );
+          showSnackBar(
+            context,
+            message: 'Trip Added to Favorites!',
+            error: false,
+          );
+        } else if (status && !favorite) {
+          Provider.of<FavoritesProvider>(context, listen: false).favorite_(
+            trip: trip,
+            status: false,
+          );
+          showSnackBar(
+            context,
+            message: 'Trip Removed from Favorites!',
+            error: false,
+          );
+        } else {
+          showSnackBar(
+            context,
+            message: 'Something went wrong, try again!',
+            error: true,
+          );
+        }
+      },
     );
   }
 }

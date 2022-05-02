@@ -1,12 +1,13 @@
 import 'package:Rehlati/Providers/profile_provider.dart';
-import 'package:Rehlati/Screens/Profile%20Screens/add_trip_screen.dart';
-import 'package:Rehlati/Screens/Profile%20Screens/edit_profile_screen.dart';
-import 'package:Rehlati/Screens/Profile%20Screens/my_trips_screen.dart';
-import 'package:Rehlati/Screens/Profile%20Screens/settings_screen.dart';
+import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/Profile%20Screens/add_trip_screen.dart';
+import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/Profile%20Screens/edit_profile_screen.dart';
+import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/Profile%20Screens/my_trips_screen.dart';
+import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/Profile%20Screens/settings_screen.dart';
 import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Profile%20Screen%20Widgets/profile_list_tile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -129,8 +130,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 endIndent: 16,
               ),
               InkWell(
-                onTap: () {
-                  SharedPrefController().logout();
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  await SharedPrefController().logout();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

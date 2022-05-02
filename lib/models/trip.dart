@@ -12,8 +12,10 @@ class Trip {
   late String? addressCityNameAr;
   late String? price;
   late String? minPayment;
-  late List<Order>? orders;
-  late List<String>? images;
+  late List<dynamic>? images;
+  late String? officeEmail;
+  late String? officeName;
+  late String? officeId;
 
   Trip({
     required this.tripId,
@@ -26,8 +28,10 @@ class Trip {
     required this.addressCityNameAr,
     required this.price,
     required this.minPayment,
-    this.orders,
     this.images,
+    required this.officeEmail,
+    required this.officeName,
+    required this.officeId,
   });
 
   Trip.fromMap(Map<String, dynamic> json) {
@@ -41,18 +45,15 @@ class Trip {
     addressCityNameAr = json['addressCityNameAr'];
     price = json['price'];
     minPayment = json['minPayment'];
-    if (json['orders'] != null) {
-      orders = <Order>[];
-      json['orders'].forEach((v) {
-        orders!.add(Order.fromMap(v));
-      });
-    }
     if (json['images'] != null) {
       images = <String>[];
       json['images'].forEach((v) {
         images!.add(v);
       });
     }
+    officeEmail = json['officeEmail'];
+    officeName = json['officeName'];
+    officeId = json['officeId'];
     // if (json['images'] != null) {
     //   images = <ImageModel>[];
     //   json['images'].forEach((v) {
@@ -73,12 +74,12 @@ class Trip {
     data['addressCityNameAr'] = addressCityNameAr;
     data['price'] = price;
     data['minPayment'] = minPayment;
-    if (orders != null) {
-      data['orders'] = orders!.map((v) => v.toMap()).toList();
-    }
     if (images != null) {
       data['images'] = images!.map((v) => v).toList();
     }
+    data['officeEmail'] = officeEmail;
+    data['officeName'] = officeName;
+    data['officeId'] = officeId;
     // if (images != null) {
     //   data['images'] = images!.map((v) => v.toMap()).toList();
     // }

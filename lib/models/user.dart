@@ -8,8 +8,6 @@ class UserModel {
   late String email;
   late String type;
   late String profileImage;
-  late List<Trip>? favorites;
-  late List<Order>? orders;
 
   UserModel();
 
@@ -20,18 +18,6 @@ class UserModel {
     mobile = documentMap['mobile'];
     type = documentMap['type'];
     profileImage = documentMap['profileImage'];
-    if (documentMap['favorites'] != null) {
-      favorites = <Trip>[];
-      documentMap['favorites'].forEach((v) {
-        favorites!.add(Trip.fromMap(v));
-      });
-    }
-    if (documentMap['orders'] != null) {
-      orders = <Order>[];
-      documentMap['orders'].forEach((v) {
-        orders!.add(Order.fromMap(v));
-      });
-    }
   }
 
   Map<String, dynamic> toMap() {
@@ -42,12 +28,6 @@ class UserModel {
     map['mobile'] = mobile;
     map['type'] = type;
     map['profileImage'] = profileImage;
-    if (favorites != null) {
-      map['favorites'] = favorites!.map((v) => v.toMap()).toList();
-    }
-    if (orders != null) {
-      map['orders'] = orders!.map((v) => v.toMap()).toList();
-    }
     return map;
   }
 }

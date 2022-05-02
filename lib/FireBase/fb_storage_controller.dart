@@ -6,8 +6,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
-typedef CallBackUrl = void Function(
-    {required String url, required bool status});
+typedef CallBackUrl = void Function({
+  required String url,
+  required bool status,
+  required TaskState taskState,
+});
 
 class FbStorageController {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
@@ -28,7 +31,11 @@ class FbStorageController {
       } else if (event.state == TaskState.success) {
         Reference imageReference = event.ref;
         var url = await imageReference.getDownloadURL();
-        callBackUrl(url: url, status: true);
+        callBackUrl(
+          url: url,
+          status: true,
+          taskState: event.state,
+        );
       } else if (event.state == TaskState.error) {}
     });
   }
@@ -49,7 +56,11 @@ class FbStorageController {
       } else if (event.state == TaskState.success) {
         Reference imageReference = event.ref;
         var url = await imageReference.getDownloadURL();
-        callBackUrl(url: url, status: true);
+        callBackUrl(
+          url: url,
+          status: true,
+          taskState: event.state,
+        );
       } else if (event.state == TaskState.error) {}
     });
   }

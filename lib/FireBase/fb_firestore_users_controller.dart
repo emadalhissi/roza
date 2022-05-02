@@ -6,7 +6,9 @@ class FbFireStoreUsersController {
 
   // CRUD
 
-  Future<bool> createUser({required UserModel user}) async {
+  Future<bool> createUser({
+    required UserModel user,
+  }) async {
     return _firebaseFireStoreUsers
         .collection('users')
         .doc(user.uId)

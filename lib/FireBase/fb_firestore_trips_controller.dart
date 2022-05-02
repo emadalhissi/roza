@@ -23,25 +23,84 @@ class FbFireStoreTripsController {
         .snapshots();
   }
 
-  Future<bool> createTripInOffice({required Trip trip}) async {
-    return _firebaseFireStoreUsers
+  Future<void> createTrip({required Trip trip}) async {
+    await _firebaseFireStoreUsers
         .collection('offices')
         .doc(SharedPrefController().getUId)
         .collection('trips')
         .doc(trip.tripId)
-        .set(trip.toMap())
-        .then((value) => true)
-        .catchError((onError) => false);
-  }
+        .set(trip.toMap());
 
-  Future<bool> createTripInCity({required Trip trip}) async {
-    return _firebaseFireStoreUsers
+    await _firebaseFireStoreUsers
         .collection('cities')
         .doc(trip.addressCityName)
         .collection('trips')
         .doc(trip.tripId)
-        .set(trip.toMap())
-        .then((value) => true)
-        .catchError((onError) => false);
+        .set(trip.toMap());
+  }
+
+  Future<void> editTrip({
+    required Trip trip,
+  }) async {
+    await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('trips')
+        .doc(trip.tripId)
+        .update(trip.toMap());
+
+    await _firebaseFireStoreUsers
+        .collection('cities')
+        .doc(trip.addressCityName)
+        .collection('trips')
+        .doc(trip.tripId)
+        .update(trip.toMap());
+  }
+
+  Future<void> deleteTrip({
+    required String tripId,
+    required String tripCity,
+  }) async {
+    await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('trips')
+        .doc(tripId)
+        .delete();
+
+    await _firebaseFireStoreUsers
+        .collection('cities')
+        .doc(tripCity)
+        .collection('trips')
+        .doc(tripId)
+        .delete();
+  }
+
+  Future<void> deleteTripImage({
+    required String tripId,
+    required String tripCity,
+    required String imageUrl,
+  }) async {
+    await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('trips')
+        .doc(tripId)
+        .update({
+          'images': FieldValue.arrayRemove([imageUrl])
+        })
+        .then((value) {})
+        .catchError((error) {});
+
+    await _firebaseFireStoreUsers
+        .collection('cities')
+        .doc(tripCity)
+        .collection('trips')
+        .doc(tripId)
+        .update({
+          'images': FieldValue.arrayRemove([imageUrl])
+        })
+        .then((value) {})
+        .catchError((error) {});
   }
 }
