@@ -1,13 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-
-import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/city.dart';
-import 'package:Rehlati/models/image.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
@@ -34,7 +31,6 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
   var random = Random().nextInt(1000000);
 
   var imagePicker = ImagePicker();
-  File? file_;
 
   CollectionReference officesCollectionReference =
       FirebaseFirestore.instance.collection('offices');
@@ -346,6 +342,16 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                       ),
                     )
                   : GridView.builder(
+                      itemCount: tripImages!.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                      ),
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Container(
                           height: 150,
@@ -378,16 +384,6 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                           ),
                         );
                       },
-                      itemCount: tripImages!.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                      ),
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
                     ),
               const SizedBox(height: 30),
               ElevatedButton(
@@ -423,7 +419,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
   }
 
   Future<void> performAddTrip() async {
-    if (checkData()) {
+    if (checkData() == true) {
       await addTrip();
     }
   }
@@ -589,7 +585,6 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
   }
 
   Future<void> pickImage() async {
-    // var pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
     List<XFile>? pickedImages = await imagePicker.pickMultiImage();
     if (pickedImages!.isNotEmpty) {
       tripImages!.addAll(pickedImages);

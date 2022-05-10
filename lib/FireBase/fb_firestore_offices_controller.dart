@@ -7,7 +7,9 @@ class FbFireStoreOfficesController {
 
   // CRUD
 
-  Future<bool> createOffice({required OfficeModel office}) async {
+  Future<bool> createOffice({
+    required OfficeModel office,
+  }) async {
     return _firebaseFireStoreUsers
         .collection('offices')
         .doc(office.uId)

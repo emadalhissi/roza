@@ -125,7 +125,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () async => await performLogin(),
+                  onPressed: () async {
+                    await performLogin();
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: !loading
@@ -234,6 +236,8 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
               .setAccountType_('admin');
           Provider.of<ProfileProvider>(context, listen: false)
               .setName_(value.get('name'));
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setProfileImage_(value.get('profileImage'));
           setState(() {
             loading = false;
           });
@@ -242,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             message: 'Admin Logged In!',
             error: false,
           );
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const HomeScreen(),

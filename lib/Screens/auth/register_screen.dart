@@ -147,7 +147,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () async => await performRegister(),
+                  onPressed: () async {
+                    await performRegister();
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: !loading
@@ -207,10 +209,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   }
 
   Future<void> performRegister() async {
-    if (checkData()) {
+    if (checkData() == true) {
       await register();
-      // await SharedPrefController()
-      //     .saveFullName(fullName: nameEditingController.text.toString());
     }
   }
 
@@ -280,14 +280,14 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
         email: emailEditingController.text.toString(),
         password: passwordEditingController.text.toString(),
       );
-      if (userCredential.user!.emailVerified == false) {
-        await user!.sendEmailVerification();
-      }
-      showSnackBar(
-        context,
-        message: 'Please Check your email for verification link!',
-        error: false,
-      );
+      // if (userCredential.user!.emailVerified == false) {
+      //   await user!.sendEmailVerification();
+      //   showSnackBar(
+      //     context,
+      //     message: 'Please Check your email for verification link!',
+      //     error: false,
+      //   );
+      // }
       if (accountType == 'user') {
         await createNewUser();
       } else {
@@ -329,9 +329,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   UserModel get userModel {
     UserModel user = UserModel();
     user.uId = userCredential.user!.uid;
-    user.name = nameEditingController.text.toString();
-    user.mobile = mobileEditingController.text.toString();
-    user.email = emailEditingController.text.toString();
+    user.name = nameEditingController.text;
+    user.mobile = mobileEditingController.text;
+    user.email = emailEditingController.text;
     user.type = accountType;
     user.profileImage = '';
     return user;
@@ -349,13 +349,11 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   }
 
   Future<void> createNewUser() async {
-    bool status =
-        await FbFireStoreUsersController().createUser(user: userModel);
+    await FbFireStoreUsersController().createUser(user: userModel);
   }
 
   Future<void> createNewOffice() async {
-    bool status =
-        await FbFireStoreOfficesController().createOffice(office: office);
+    await FbFireStoreOfficesController().createOffice(office: office);
   }
 
   Future<UserCredential> signInWithGoogle() async {
