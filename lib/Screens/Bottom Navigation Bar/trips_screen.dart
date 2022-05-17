@@ -1,12 +1,11 @@
-import 'package:Rehlati/FireBase/cities_fb_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Screens/Office%20Screens/office_trip_screen.dart';
 import 'package:Rehlati/Screens/trip_screen.dart';
-import 'package:Rehlati/models/trip.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trips_screen_cities_list_view_item.dart';
-import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trip_screen_trips_list_view_item.dart';
+import 'package:Rehlati/widgets/Trips%20Screen%20Widgets/trips_screen_trips_list_view_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +56,7 @@ class _TripsScreenState extends State<TripsScreen> {
                     controller: searchEditingController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      hintText: 'Search',
+                      hintText: AppLocalizations.of(context)!.search,
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Color(0xff5859F3),
@@ -152,10 +151,14 @@ class _TripsScreenState extends State<TripsScreen> {
                                         searchedTrips[index].get('minPayment'),
                                     tripImages:
                                         searchedTrips[index].get('images'),
-                                    tripAddressId: searchedTrips[index].get('addressCityId'),
-                                    officeName: searchedTrips[index].get('officeName'),
-                                    officeEmail: searchedTrips[index].get('officeEmail'),
-                                    officeId: searchedTrips[index].get('officeId'),
+                                    tripAddressId: searchedTrips[index]
+                                        .get('addressCityId'),
+                                    officeName:
+                                        searchedTrips[index].get('officeName'),
+                                    officeEmail:
+                                        searchedTrips[index].get('officeEmail'),
+                                    officeId:
+                                        searchedTrips[index].get('officeId'),
                                     isAdmin: true,
                                   ),
                                 ),
@@ -177,13 +180,15 @@ class _TripsScreenState extends State<TripsScreen> {
                                     price: searchedTrips[index].get('price'),
                                     tripId: searchedTrips[index].id,
                                     tripDescription:
-                                    searchedTrips[index].get('description'),
+                                        searchedTrips[index].get('description'),
                                     minPayment:
-                                    searchedTrips[index].get('minPayment'),
+                                        searchedTrips[index].get('minPayment'),
                                     tripImages:
-                                    searchedTrips[index].get('images'),
-                                    tripCityId: searchedTrips[index].get('addressCityId'),
-                                    officeId: searchedTrips[index].get('officeId'),
+                                        searchedTrips[index].get('images'),
+                                    tripCityId: searchedTrips[index]
+                                        .get('addressCityId'),
+                                    officeId:
+                                        searchedTrips[index].get('officeId'),
                                   ),
                                 ),
                               );
@@ -207,10 +212,14 @@ class _TripsScreenState extends State<TripsScreen> {
                                         searchedTrips[index].get('minPayment'),
                                     tripImages:
                                         searchedTrips[index].get('images'),
-                                    tripAddressId: searchedTrips[index].get('addressCityId'),
-                                    officeName: searchedTrips[index].get('officeName'),
-                                    officeEmail: searchedTrips[index].get('officeEmail'),
-                                    officeId: searchedTrips[index].get('officeId'),
+                                    tripAddressId: searchedTrips[index]
+                                        .get('addressCityId'),
+                                    officeName:
+                                        searchedTrips[index].get('officeName'),
+                                    officeEmail:
+                                        searchedTrips[index].get('officeEmail'),
+                                    officeId:
+                                        searchedTrips[index].get('officeId'),
                                   ),
                                 ),
                               );
@@ -252,7 +261,7 @@ class _TripsScreenState extends State<TripsScreen> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  if(SharedPrefController().getAccountType ==
+                                  if (SharedPrefController().getAccountType ==
                                       'admin') {
                                     Navigator.push(
                                       context,
@@ -261,27 +270,31 @@ class _TripsScreenState extends State<TripsScreen> {
                                           tripName: trips[index].get('name'),
                                           tripTime: trips[index].get('time'),
                                           tripDate: trips[index].get('date'),
-                                          tripAddress:
-                                          trips[index].get('addressCityName'),
+                                          tripAddress: trips[index]
+                                              .get('addressCityName'),
                                           tripAddressAr: trips[index]
                                               .get('addressCityNameAr'),
                                           price: trips[index].get('price'),
                                           tripId: trips[index].id,
                                           tripDescription:
-                                          trips[index].get('description'),
+                                              trips[index].get('description'),
                                           minPayment:
-                                          trips[index].get('minPayment'),
-                                          tripImages: trips[index].get('images'),
-                                          tripAddressId: trips[index].get('addressCityId'),
-                                          officeName: trips[index].get('officeName'),
-                                          officeEmail: trips[index].get('officeEmail'),
-                                          officeId: trips[index].get('officeId'),
+                                              trips[index].get('minPayment'),
+                                          tripImages:
+                                              trips[index].get('images'),
+                                          tripAddressId:
+                                              trips[index].get('addressCityId'),
+                                          officeName:
+                                              trips[index].get('officeName'),
+                                          officeEmail:
+                                              trips[index].get('officeEmail'),
+                                          officeId:
+                                              trips[index].get('officeId'),
                                           isAdmin: true,
                                         ),
                                       ),
                                     );
-                                  } else if(trips[index]
-                                      .get('officeEmail') ==
+                                  } else if (trips[index].get('officeEmail') ==
                                       SharedPrefController().getEmail) {
                                     Navigator.push(
                                       context,
@@ -290,19 +303,22 @@ class _TripsScreenState extends State<TripsScreen> {
                                           tripName: trips[index].get('name'),
                                           tripTime: trips[index].get('time'),
                                           tripDate: trips[index].get('date'),
-                                          tripAddress:
-                                          trips[index].get('addressCityName'),
+                                          tripAddress: trips[index]
+                                              .get('addressCityName'),
                                           tripAddressAr: trips[index]
                                               .get('addressCityNameAr'),
                                           price: trips[index].get('price'),
                                           tripId: trips[index].id,
                                           tripDescription:
-                                          trips[index].get('description'),
+                                              trips[index].get('description'),
                                           minPayment:
-                                          trips[index].get('minPayment'),
-                                          tripImages: trips[index].get('images'),
-                                          tripCityId: trips[index].get('addressCityId'),
-                                          officeId: trips[index].get('officeId'),
+                                              trips[index].get('minPayment'),
+                                          tripImages:
+                                              trips[index].get('images'),
+                                          tripCityId:
+                                              trips[index].get('addressCityId'),
+                                          officeId:
+                                              trips[index].get('officeId'),
                                         ),
                                       ),
                                     );
@@ -314,21 +330,26 @@ class _TripsScreenState extends State<TripsScreen> {
                                           tripName: trips[index].get('name'),
                                           tripTime: trips[index].get('time'),
                                           tripDate: trips[index].get('date'),
-                                          tripAddress:
-                                          trips[index].get('addressCityName'),
+                                          tripAddress: trips[index]
+                                              .get('addressCityName'),
                                           tripAddressAr: trips[index]
                                               .get('addressCityNameAr'),
                                           price: trips[index].get('price'),
                                           tripId: trips[index].id,
                                           tripDescription:
-                                          trips[index].get('description'),
+                                              trips[index].get('description'),
                                           minPayment:
-                                          trips[index].get('minPayment'),
-                                          tripImages: trips[index].get('images'),
-                                          tripAddressId: trips[index].get('addressCityId'),
-                                          officeName: trips[index].get('officeName'),
-                                          officeEmail: trips[index].get('officeEmail'),
-                                          officeId: trips[index].get('officeId'),
+                                              trips[index].get('minPayment'),
+                                          tripImages:
+                                              trips[index].get('images'),
+                                          tripAddressId:
+                                              trips[index].get('addressCityId'),
+                                          officeName:
+                                              trips[index].get('officeName'),
+                                          officeEmail:
+                                              trips[index].get('officeEmail'),
+                                          officeId:
+                                              trips[index].get('officeId'),
                                         ),
                                       ),
                                     );
@@ -350,10 +371,10 @@ class _TripsScreenState extends State<TripsScreen> {
                             },
                           );
                         } else {
-                          return const Center(
+                          return Center(
                             child: Text(
-                              'No Trips No Show!',
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.noTrips,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,

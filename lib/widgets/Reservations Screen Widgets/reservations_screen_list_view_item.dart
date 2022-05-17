@@ -1,8 +1,8 @@
-import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ReservationsScreenListViewItem extends StatelessWidget {
+class ReservationsScreenListViewItem extends StatefulWidget {
   final String image;
   final String city;
   final String status;
@@ -20,6 +20,11 @@ class ReservationsScreenListViewItem extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<ReservationsScreenListViewItem> createState() => _ReservationsScreenListViewItemState();
+}
+
+class _ReservationsScreenListViewItemState extends State<ReservationsScreenListViewItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -49,7 +54,7 @@ class ReservationsScreenListViewItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
-                    image: CachedNetworkImageProvider(image),
+                    image: CachedNetworkImageProvider(widget.image),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -63,7 +68,7 @@ class ReservationsScreenListViewItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(city),
+                        Text(widget.city),
                         Chip(
                           label: Text(
                             orderStatus(),
@@ -74,7 +79,7 @@ class ReservationsScreenListViewItem extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      name,
+                      widget.name,
                       style: const TextStyle(
                         color: Color(0xff222222),
                         fontWeight: FontWeight.w600,
@@ -86,8 +91,8 @@ class ReservationsScreenListViewItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(time),
-                        Text(date),
+                        Text(widget.time),
+                        Text(widget.date),
                       ],
                     ),
                   ],
@@ -101,23 +106,23 @@ class ReservationsScreenListViewItem extends StatelessWidget {
   }
 
   String orderStatus() {
-    if (status == 'accepted') {
-      return SharedPrefController().getLang == 'en' ? 'Accepted' : 'مقبول';
-    } else if (status == 'waiting') {
-      return SharedPrefController().getLang == 'en' ? 'Waiting' : 'قيد الإنتظار';
-    } else if (status == 'rejected') {
-      return SharedPrefController().getLang == 'en' ? 'Rejected' : 'مرفوض';
+    if (widget.status == 'accepted') {
+      return AppLocalizations.of(context)!.accepted;
+    } else if (widget.status == 'waiting') {
+      return AppLocalizations.of(context)!.waiting;
+    } else if (widget.status == 'rejected') {
+      return AppLocalizations.of(context)!.rejected;
     } else {
       return '';
     }
   }
 
   Color statusColor() {
-    if (status == 'accepted') {
+    if (widget.status == 'accepted') {
       return const Color(0xff11A38D);
-    } else if (status == 'waiting') {
+    } else if (widget.status == 'waiting') {
       return const Color(0xff3F6DEB);
-    } else if (status == 'rejected') {
+    } else if (widget.status == 'rejected') {
       return const Color(0xffF2533F);
     } else {
       return const Color(0xff000000);

@@ -1,9 +1,8 @@
-import 'package:Rehlati/FireBase/cities_fb_controller.dart';
+import 'package:Rehlati/FireBase/fb_notifications.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
 import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/Providers/favorites_provider.dart';
-import 'package:Rehlati/Screens/auth/login_screen.dart';
-import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/models/city.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,11 +16,14 @@ class LaunchScreen extends StatefulWidget {
   _LaunchScreenState createState() => _LaunchScreenState();
 }
 
-class _LaunchScreenState extends State<LaunchScreen> {
+class _LaunchScreenState extends State<LaunchScreen> with FbNotifications {
   @override
   void initState() {
     super.initState();
     launchData();
+    requestNotificationPermissions();
+    // initializeForegroundNotificationForAndroid();
+    manageNotificationAction();
     Future.delayed(const Duration(seconds: 3), () {
       String route = SharedPrefController().checkLoggedIn
           ? '/home_screen'
@@ -65,9 +67,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
               scale: 2.1,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Rehlati',
-              style: TextStyle(
+           Text(
+              AppLocalizations.of(context)!.appName,
+              style:  const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 36,
               ),

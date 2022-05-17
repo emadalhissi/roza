@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TripsScreenTripsListViewItem extends StatefulWidget {
   final String tripId;
@@ -173,7 +174,9 @@ class _TripsScreenTripsListViewItemState
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  widget.address,
+                                  SharedPrefController().getLang == 'en'
+                                      ? widget.address
+                                      : widget.addressAr,
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w400,
@@ -211,9 +214,8 @@ class _TripsScreenTripsListViewItemState
                       noOfOrders == '0'
                           ? const SizedBox.shrink()
                           : Text(
-                              noOfOrders == '1'
-                                  ? '$noOfOrders Order'
-                                  : '$noOfOrders Orders',
+                              AppLocalizations.of(context)!.noOfOrders +
+                                  noOfOrders,
                             ),
                     ],
                   ),
@@ -269,7 +271,7 @@ class _TripsScreenTripsListViewItemState
           );
           showSnackBar(
             context,
-            message: 'Trip Added to Favorites!',
+            message: AppLocalizations.of(context)!.favoriteAdded,
             error: false,
           );
         } else if (status && !favorite) {
@@ -279,13 +281,13 @@ class _TripsScreenTripsListViewItemState
           );
           showSnackBar(
             context,
-            message: 'Trip Removed from Favorites!',
+            message: AppLocalizations.of(context)!.favoriteRemoved,
             error: false,
           );
         } else {
           showSnackBar(
             context,
-            message: 'Something went wrong, try again!',
+            message: AppLocalizations.of(context)!.somethingWentWrong,
             error: true,
           );
         }

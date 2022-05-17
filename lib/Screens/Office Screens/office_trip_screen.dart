@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OfficeTripScreen extends StatefulWidget {
   final String tripName;
@@ -46,7 +47,8 @@ class OfficeTripScreen extends StatefulWidget {
   _OfficeTripScreenState createState() => _OfficeTripScreenState();
 }
 
-class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper{
+class _OfficeTripScreenState extends State<OfficeTripScreen>
+    with SnackBarHelper {
   String noOfOrders = '0';
 
   @override
@@ -94,9 +96,9 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Back',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.back,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -139,8 +141,8 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
                           end: 15,
                           child: Chip(
                             label: Text(
-                              noOfOrders +
-                                  (noOfOrders == '1' ? ' Order' : ' Orders'),
+                              AppLocalizations.of(context)!.noOfOrders +
+                                  noOfOrders,
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -262,7 +264,7 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
                               const SizedBox(width: 5),
                               Expanded(
                                 child: Text(
-                                  'Min. Payment: \$${widget.minPayment}',
+                                  '${AppLocalizations.of(context)!.minPayment}: ${widget.minPayment}',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w400,
@@ -277,9 +279,9 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Trip Details',
-                    style: TextStyle(fontSize: 18),
+                  Text(
+                    AppLocalizations.of(context)!.tripDetails,
+                    style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -304,9 +306,9 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
             children: [
               Expanded(
                 child: ElevatedButton(
-                  child: const Text(
-                    'Edit',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.edit,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 22,
@@ -345,9 +347,9 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
               const SizedBox(width: 8),
               Expanded(
                 child: ElevatedButton(
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.delete,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 22,
@@ -390,7 +392,7 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
           );
           showSnackBar(
             context,
-            message: 'Trip Added to Favorites!',
+            message: AppLocalizations.of(context)!.favoriteAdded,
             error: false,
           );
         } else if (status && !favorite) {
@@ -400,13 +402,13 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
           );
           showSnackBar(
             context,
-            message: 'Trip Removed from Favorites!',
+            message: AppLocalizations.of(context)!.favoriteRemoved,
             error: false,
           );
         } else {
           showSnackBar(
             context,
-            message: 'Something went wrong, try again!',
+            message: AppLocalizations.of(context)!.somethingWentWrong,
             error: true,
           );
         }
@@ -430,7 +432,7 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
           child: Icon(
             Icons.favorite,
             color: Provider.of<FavoritesProvider>(context)
-                .checkFavorite(tripId: widget.tripId)
+                    .checkFavorite(tripId: widget.tripId)
                 ? const Color(0xff5859F3)
                 : Colors.white,
           ),
@@ -449,9 +451,9 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
 
   showDeleteTripAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
-      child: const Text(
-        'No',
-        style: TextStyle(color: Colors.black),
+      child: Text(
+        AppLocalizations.of(context)!.no,
+        style:const  TextStyle(color: Colors.black),
       ),
       onPressed: () {
         Navigator.pop(context, () {
@@ -460,9 +462,9 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
       },
     );
     Widget continueButton = TextButton(
-      child: const Text(
-        'Yes',
-        style: TextStyle(color: Colors.black),
+      child: Text(
+        AppLocalizations.of(context)!.yes,
+        style: const TextStyle(color: Colors.black),
       ),
       onPressed: () async {
         Navigator.pop(context);
@@ -471,8 +473,8 @@ class _OfficeTripScreenState extends State<OfficeTripScreen> with SnackBarHelper
     );
 
     AlertDialog alert = AlertDialog(
-      title: const Text('Delete Trip!'),
-      content: const Text('Are you sure you want to delete this trip?'),
+      title: Text(AppLocalizations.of(context)!.deleteTrip),
+      content: Text(AppLocalizations.of(context)!.sureDeleteTrip),
       actions: [
         cancelButton,
         continueButton,

@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
-import 'package:Rehlati/Providers/cities_provider.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
-import 'package:Rehlati/models/city.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
@@ -13,7 +11,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditTripScreen extends StatefulWidget {
   final String tripName;
@@ -133,9 +131,9 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Trip Details',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.tripDetails,
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -144,24 +142,24 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
               const SizedBox(height: 20),
               AppTextField(
                 textEditingController: tripNameEditingController,
-                hint: 'Trip Name',
+                hint: AppLocalizations.of(context)!.tripName,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: tripPriceEditingController,
-                hint: 'Trip Price',
+                hint: AppLocalizations.of(context)!.tripPrice,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: tripMinPaymentEditingController,
-                hint: 'Min Payment',
+                hint: AppLocalizations.of(context)!.minPayment,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: tripDescriptionEditingController,
-                hint: 'Description',
+                hint: AppLocalizations.of(context)!.description,
                 lines: 3,
               ),
               const SizedBox(height: 10),
@@ -241,9 +239,9 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Trip Images',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.tripImages,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -295,7 +293,8 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
                                   image: FileImage(
-                                      File(newTripImages![index].path)),
+                                    File(newTripImages![index].path),
+                                  ),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -331,9 +330,9 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
                     ? const Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       )
-                    : const Text(
-                        'Edit Trip',
-                        style: TextStyle(
+                    : Text(
+                        AppLocalizations.of(context)!.editTrip,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 22,
@@ -377,15 +376,15 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       Icons.camera_alt,
                       color: Colors.grey,
                       size: 50,
                     ),
                     Text(
-                      'Add Image',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.addImage,
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
@@ -459,28 +458,28 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     if (tripNameEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Trip Name!',
+        message: AppLocalizations.of(context)!.enterTripName,
         error: true,
       );
       return false;
     } else if (tripPriceEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Trip Price!',
+        message: AppLocalizations.of(context)!.enterTripPrice,
         error: true,
       );
       return false;
     } else if (num.parse(tripPriceEditingController.text) == 0) {
       showSnackBar(
         context,
-        message: 'Trip Price Can\'t be zero!',
+        message: AppLocalizations.of(context)!.tripPriceCantBeZero,
         error: true,
       );
       return false;
     } else if (tripMinPaymentEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Min Payment!',
+        message: AppLocalizations.of(context)!.enterMinPayment,
         error: true,
       );
       return false;
@@ -488,35 +487,36 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
         num.parse(tripPriceEditingController.text)) {
       showSnackBar(
         context,
-        message: 'Min Payment Can\'t be more than trip price!',
+        message:
+            AppLocalizations.of(context)!.minPaymentCantBeMoreThanTripPrice,
         error: true,
       );
       return false;
     } else if (tripDescriptionEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Trip Description!',
+        message: AppLocalizations.of(context)!.enterTripDescription,
         error: true,
       );
       return false;
     } else if (time_ == 'Choose Time') {
       showSnackBar(
         context,
-        message: 'Choose Trip Time!',
+        message: AppLocalizations.of(context)!.chooseTripTime,
         error: true,
       );
       return false;
     } else if (date_ == 'Choose Date') {
       showSnackBar(
         context,
-        message: 'Choose Trip Date!',
+        message: AppLocalizations.of(context)!.chooseTripDate,
         error: true,
       );
       return false;
     } else if (oldTripImages.isEmpty && newTripImages!.isEmpty) {
       showSnackBar(
         context,
-        message: 'Choose Trip Images!',
+        message: AppLocalizations.of(context)!.chooseTripImages,
         error: true,
       );
       return false;
@@ -628,9 +628,9 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     required String url,
   }) {
     Widget cancelButton = TextButton(
-      child: const Text(
-        'No',
-        style: TextStyle(color: Colors.black),
+      child: Text(
+        AppLocalizations.of(context)!.no,
+        style: const TextStyle(color: Colors.black),
       ),
       onPressed: () {
         Navigator.pop(context, () {
@@ -639,9 +639,9 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
       },
     );
     Widget continueButton = TextButton(
-      child: const Text(
-        'Yes',
-        style: TextStyle(color: Colors.black),
+      child:Text(
+        AppLocalizations.of(context)!.yes,
+        style:  const TextStyle(color: Colors.black),
       ),
       onPressed: () async {
         Navigator.pop(context);
@@ -653,8 +653,8 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     );
 
     AlertDialog alert = AlertDialog(
-      title: const Text('Delete Image!'),
-      content: const Text('Are you sure you want to delete this image?'),
+      title: Text(AppLocalizations.of(context)!.deleteImage),
+      content: Text(AppLocalizations.of(context)!.sureDeleteImage),
       actions: [
         cancelButton,
         continueButton,
@@ -670,7 +670,6 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
   }
 
   Future<void> pickImage() async {
-    // var pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
     List<XFile>? pickedImages = await imagePicker.pickMultiImage();
     if (pickedImages!.isNotEmpty) {
       newTripImages!.addAll(pickedImages);

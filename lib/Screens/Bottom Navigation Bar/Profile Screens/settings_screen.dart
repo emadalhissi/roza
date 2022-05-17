@@ -1,5 +1,10 @@
+import 'package:Rehlati/Providers/lang_provider.dart';
+import 'package:Rehlati/main.dart';
+import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Profile%20Screen%20Widgets/profile_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -27,9 +32,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Settings',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.settings,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -43,9 +48,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: EdgeInsets.zero,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  showAlertDialog(context);
+                },
                 child: ProfileListTile(
-                  title: 'Language',
+                  title: AppLocalizations.of(context)!.language,
                   leadingIcon: Icons.language,
                 ),
               ),
@@ -53,6 +60,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: const Text(
+        'No',
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        Navigator.pop(context, () {
+          setState(() {});
+        });
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text(
+        'Yes',
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () async {
+        // await
+      },
+    );
+    Widget mainButton = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        InkWell(
+          onTap: () {
+            if (SharedPrefController().getLang == 'ar') {
+              Provider.of<LangProvider>(context, listen: false).changeLang();
+              RestartWidget.restartApp(context);
+            }
+          },
+          child: const Text(
+            'English',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            if (SharedPrefController().getLang == 'en') {
+              Provider.of<LangProvider>(context, listen: false).changeLang();
+              RestartWidget.restartApp(context);
+            }
+          },
+          child: const Text(
+            'العربية',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(AppLocalizations.of(context)!.language),
+      // content: Text('TEST 2'),
+      actions: [
+        // cancelButton,
+        // continueButton,
+        mainButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Profile%20Screen%20Widgets/my_trips_screen_list_view_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyTripsScreen extends StatefulWidget {
   const MyTripsScreen({Key? key}) : super(key: key);
@@ -31,9 +32,9 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'My Trips',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.myTrips,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -95,10 +96,10 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
                   },
                 );
               } else {
-                return const Center(
+                return Center(
                   child: Text(
-                    'You have no trips yet!',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.youHaveNoTrips,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,

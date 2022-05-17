@@ -17,4 +17,18 @@ class FbFireStoreOfficesController {
         .then((value) => true)
         .catchError((error) => false);
   }
+
+  Future<bool> updateFcmToken({
+    required String uId,
+    required String fcm,
+  }) async {
+    return _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(uId)
+        .update({
+          'fcmToken': fcm,
+        })
+        .then((value) => true)
+        .catchError((error) => false);
+  }
 }

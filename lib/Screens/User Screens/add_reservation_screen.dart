@@ -1,11 +1,11 @@
 import 'dart:math';
-
 import 'package:Rehlati/FireBase/fb_firestore_orders_controller.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/order.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddReservationScreen extends StatefulWidget {
   final String? tripId;
@@ -114,9 +114,9 @@ class _AddReservationScreenState extends State<AddReservationScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Trip Details',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.tripDetails,
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -218,7 +218,7 @@ class _AddReservationScreenState extends State<AddReservationScreen>
                           const SizedBox(width: 5),
                           Expanded(
                             child: Text(
-                              'Min. Payment: \$${widget.minPayment!}',
+                              '${AppLocalizations.of(context)!.minPayment}: ${widget.minPayment!}',
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w400,
@@ -233,9 +233,9 @@ class _AddReservationScreenState extends State<AddReservationScreen>
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Your Details',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.yourInfo,
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -244,24 +244,24 @@ class _AddReservationScreenState extends State<AddReservationScreen>
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: fullNameEditingController,
-                hint: 'Your Name',
+                hint: AppLocalizations.of(context)!.fullName,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: userDocIdEditingController,
-                hint: 'Document ID #',
+                hint: AppLocalizations.of(context)!.docIdNo,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: mobileEditingController,
-                hint: 'Your Mobile',
+                hint: AppLocalizations.of(context)!.mobileNumber,
                 textInputType: TextInputType.phone,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Payment Details',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.paymentDetails,
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -270,13 +270,14 @@ class _AddReservationScreenState extends State<AddReservationScreen>
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: firstPaymentEditingController,
-                hint: 'Min. Payment: ${widget.minPayment}',
+                hint:
+                    '${AppLocalizations.of(context)!.minPayment}: ${widget.minPayment}',
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Other Details',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.otherDetails,
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -285,13 +286,13 @@ class _AddReservationScreenState extends State<AddReservationScreen>
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: noOfPeopleEditingController,
-                hint: '# of People',
+                hint: AppLocalizations.of(context)!.noOfPeople,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: userNoteEditingController,
-                hint: 'Notes (Optional)',
+                hint: AppLocalizations.of(context)!.optionalNotes,
                 lines: 3,
               ),
               const SizedBox(height: 60),
@@ -300,9 +301,9 @@ class _AddReservationScreenState extends State<AddReservationScreen>
                     ? const Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       )
-                    : const Text(
-                        'Add Reservation',
-                        style: TextStyle(
+                    : Text(
+                        AppLocalizations.of(context)!.addReservation,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 22,
@@ -348,28 +349,28 @@ class _AddReservationScreenState extends State<AddReservationScreen>
     if (fullNameEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Your Name!',
+        message: AppLocalizations.of(context)!.enterFullName,
         error: true,
       );
       return false;
     } else if (userDocIdEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Your Document ID!',
+        message: AppLocalizations.of(context)!.enterDocId,
         error: true,
       );
       return false;
     } else if (mobileEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Your Mobile Number!',
+        message: AppLocalizations.of(context)!.enterMobile,
         error: true,
       );
       return false;
     } else if (firstPaymentEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter First Payment!',
+        message: AppLocalizations.of(context)!.enterFirstPayment,
         error: true,
       );
       return false;
@@ -377,7 +378,7 @@ class _AddReservationScreenState extends State<AddReservationScreen>
         num.parse(widget.minPayment!)) {
       showSnackBar(
         context,
-        message: 'First Payment Con\'nt Be Less Than Trip Min. Payment!',
+        message: AppLocalizations.of(context)!.firstPaymentCantBeLessThanTripMinPayment,
         error: true,
       );
       return false;
@@ -385,7 +386,7 @@ class _AddReservationScreenState extends State<AddReservationScreen>
         num.parse(widget.price!)) {
       showSnackBar(
         context,
-        message: 'First Payment Con\'nt Be Greater Than Trip Price!',
+        message: AppLocalizations.of(context)!.firstPaymentCantBeGreaterThanTripPrice,
         error: true,
       );
       return false;
@@ -393,7 +394,7 @@ class _AddReservationScreenState extends State<AddReservationScreen>
         noOfPeopleEditingController.text.toString() == '0') {
       showSnackBar(
         context,
-        message: 'Enter No. of People!',
+        message: AppLocalizations.of(context)!.enterNoOfPeople,
         error: true,
       );
       return false;

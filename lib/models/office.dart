@@ -8,6 +8,8 @@ class OfficeModel {
   late String email;
   late String type;
   late String profileImage;
+  late String fcmToken;
+  late String balance;
 
   OfficeModel();
 
@@ -18,6 +20,8 @@ class OfficeModel {
     mobile = documentMap['mobile'];
     type = documentMap['type'];
     profileImage = documentMap['profileImage'];
+    fcmToken = documentMap['fcmToken'];
+    balance = documentMap['balance'];
   }
 
   Map<String, dynamic> toMap() {
@@ -28,6 +32,8 @@ class OfficeModel {
     map['mobile'] = mobile;
     map['type'] = type;
     map['profileImage'] = profileImage;
+    map['fcmToken'] = fcmToken;
+    map['balance'] = balance;
     return map;
   }
 }

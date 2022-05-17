@@ -3,6 +3,7 @@ import 'package:Rehlati/Screens/trip_screen.dart';
 import 'package:Rehlati/widgets/Favorites%20Screen%20Widgets/favorites_screen_list_view_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -58,10 +59,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     );
                   },
                 )
-              : const Center(
+              : Center(
                   child: Text(
-                    'You have no favorites yet!',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.youHaveNoFavorites,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,

@@ -1,4 +1,6 @@
 import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_users_controller.dart';
 import 'package:Rehlati/Providers/favorites_provider.dart';
 import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/auth/register_screen.dart';
@@ -7,6 +9,7 @@ import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -85,9 +88,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Please enter your email and password',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.pleaseEnterEmailPassword,
+                  style: const TextStyle(
                     color: Color(0xff8A8A8E),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -97,13 +100,13 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                 const SizedBox(height: 24),
                 AppTextField(
                   textEditingController: emailEditingController,
-                  hint: 'Email Address',
+                  hint: AppLocalizations.of(context)!.email,
                   textInputType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: passwordEditingController,
-                  hint: 'Password',
+                  hint: AppLocalizations.of(context)!.password,
                   obscure: true,
                 ),
                 const SizedBox(height: 16),
@@ -112,9 +115,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context)!.forgotPassword,
+                        style: const TextStyle(
                           color: Color(0xff22292E),
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -131,9 +134,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: !loading
-                        ? const Text(
-                            'Login',
-                            style: TextStyle(
+                        ? Text(
+                            AppLocalizations.of(context)!.login,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -157,9 +160,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Don’t have an account? ',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.dontHaveAnAccount,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
@@ -173,9 +176,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                           ),
                         );
                       },
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context)!.signUp,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -201,14 +204,14 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
     if (emailEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Email Address!',
+        message: AppLocalizations.of(context)!.enterEmailAddress,
         error: true,
       );
       return false;
     } else if (passwordEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Password!',
+        message: AppLocalizations.of(context)!.enterPassword,
         error: true,
       );
       return false;
@@ -243,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
           });
           showSnackBar(
             context,
-            message: 'Admin Logged In!',
+            message: AppLocalizations.of(context)!.adminLogin,
             error: false,
           );
           Navigator.pushReplacement(
@@ -258,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
           });
           showSnackBar(
             context,
-            message: 'Wrong admin password!',
+            message: AppLocalizations.of(context)!.adminWrongPassword,
             error: true,
           );
         }
@@ -274,25 +277,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
               .setUserId_(userCredential.user!.uid);
           Provider.of<ProfileProvider>(context, listen: false)
               .setEmail_(userCredential.user!.email!);
-          await usersCollectionReference
-              .doc(userCredential.user!.uid)
-              .get()
-              .then((userDoc) async {
-            if (userDoc.exists) {
-              Provider.of<ProfileProvider>(context, listen: false)
-                  .setAccountType_('user');
-              Provider.of<ProfileProvider>(context, listen: false)
-                  .setName_(userDoc.get('name'));
-              Provider.of<ProfileProvider>(context, listen: false)
-                  .setMobile_(userDoc.get('mobile'));
-              Provider.of<ProfileProvider>(context, listen: false)
-                  .setProfileImage_(userDoc.get('profileImage'));
-            }
-            var favorites = await FbFireStoreFavoritesController()
-                .readFavorites(type: 'user');
-            await Provider.of<FavoritesProvider>(context, listen: false)
-                .storeFavorites_(favorites: favorites);
-          });
 
           await officesCollectionReference
               .doc(userCredential.user!.uid)
@@ -307,19 +291,62 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   .setMobile_(officeDoc.get('mobile'));
               Provider.of<ProfileProvider>(context, listen: false)
                   .setProfileImage_(officeDoc.get('profileImage'));
-            }
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setBalance_(int.parse(officeDoc.get('balance')));
 
-            var favorites = await FbFireStoreFavoritesController()
-                .readFavorites(type: 'office');
-            await Provider.of<FavoritesProvider>(context, listen: false)
-                .storeFavorites_(favorites: favorites);
+              var favorites = await FbFireStoreFavoritesController()
+                  .readFavorites(type: 'office');
+              await Provider.of<FavoritesProvider>(context, listen: false)
+                  .storeFavorites_(favorites: favorites);
+
+              var fcmToken = await FirebaseMessaging.instance.getToken();
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setFcmToken_(fcmToken!);
+              await FbFireStoreOfficesController().updateFcmToken(
+                uId: userCredential.user!.uid,
+                fcm: fcmToken,
+              );
+            }
           });
+
+          await usersCollectionReference
+              .doc(userCredential.user!.uid)
+              .get()
+              .then((userDoc) async {
+            if (userDoc.exists) {
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setAccountType_('user');
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setName_(userDoc.get('name'));
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setMobile_(userDoc.get('mobile'));
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setProfileImage_(userDoc.get('profileImage'));
+              print('CHECK');
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setBalance_(int.parse(userDoc.get('balance')));
+
+              var favorites = await FbFireStoreFavoritesController()
+                  .readFavorites(type: 'user');
+              await Provider.of<FavoritesProvider>(context, listen: false)
+                  .storeFavorites_(favorites: favorites);
+
+              var fcmToken = await FirebaseMessaging.instance.getToken();
+              Provider.of<ProfileProvider>(context, listen: false)
+                  .setFcmToken_(fcmToken!);
+              await FbFireStoreUsersController().updateFcmToken(
+                uId: userCredential.user!.uid,
+                fcm: fcmToken,
+              );
+            }
+          });
+
           setState(() {
             loading = false;
           });
           showSnackBar(
             context,
-            message: 'You are Logged In!',
+            message: AppLocalizations.of(context)!.loggedInSuccess,
             error: false,
           );
           Navigator.push(
@@ -335,20 +362,23 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
           if (e.code == 'user-not-found') {
             showSnackBar(
               context,
-              message: 'User not found!',
+              message: AppLocalizations.of(context)!.userNotFound,
               error: true,
             );
           } else if (e.code == 'wrong-password') {
             showSnackBar(
               context,
-              message: 'Wrong password!',
+              message: AppLocalizations.of(context)!.wrongPassword,
               error: true,
             );
           }
         } catch (e) {
+          setState(() {
+            loading = false;
+          });
           showSnackBar(
             context,
-            message: 'Something went wrong, please try again!',
+            message: AppLocalizations.of(context)!.somethingWentWrong,
             error: true,
           );
         }

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
 import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
@@ -68,9 +68,9 @@ class _EditProfileScreenState extends State<EditProfileScreen>
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.editProfile,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -123,12 +123,12 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                 const SizedBox(height: 60),
                 AppTextField(
                   textEditingController: nameEditingController,
-                  hint: 'Full Name',
+                  hint: AppLocalizations.of(context)!.fullName,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: mobileEditingController,
-                  hint: 'Mobile',
+                  hint: AppLocalizations.of(context)!.mobileNumber,
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
@@ -136,9 +136,9 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                       ? const Center(
                           child: CircularProgressIndicator(color: Colors.white),
                         )
-                      : const Text(
-                          'Edit',
-                          style: TextStyle(
+                      : Text(
+                          AppLocalizations.of(context)!.edit,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                             fontSize: 22,
@@ -182,21 +182,21 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     if (nameEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Name',
+        message: AppLocalizations.of(context)!.enterFullName,
         error: true,
       );
       return false;
     } else if (mobileEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Mobile',
+        message: AppLocalizations.of(context)!.enterMobile,
         error: true,
       );
       return false;
     } else if (mobileEditingController.text.length != 10) {
       showSnackBar(
         context,
-        message: 'Mobile Number Must Be 10 Digits!',
+        message: AppLocalizations.of(context)!.mobileMustBe10Digits,
         error: true,
       );
       return false;
@@ -216,7 +216,6 @@ class _EditProfileScreenState extends State<EditProfileScreen>
         required bool status,
         required TaskState taskState,
       }) async {
-        print('status => $status');
         if (SharedPrefController().getAccountType == 'user') {
           await usersCollectionReference
               .doc(SharedPrefController().getUId)

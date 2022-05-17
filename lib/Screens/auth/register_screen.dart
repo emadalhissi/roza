@@ -8,6 +8,7 @@ import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -53,9 +54,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
         elevation: 0,
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: const Text(
-          'Create an Account',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.signUp,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -79,9 +80,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                   scale: 3.3,
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Join Our Community',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.joinOurCommunity,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                   ),
@@ -89,25 +90,25 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                 const SizedBox(height: 24),
                 AppTextField(
                   textEditingController: nameEditingController,
-                  hint: 'Full Name',
+                  hint: AppLocalizations.of(context)!.fullName,
                   textInputType: TextInputType.name,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: mobileEditingController,
-                  hint: 'Mobile Number',
+                  hint: AppLocalizations.of(context)!.mobileNumber,
                   textInputType: TextInputType.phone,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: emailEditingController,
-                  hint: 'Email Address',
+                  hint: AppLocalizations.of(context)!.email,
                   textInputType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
                   textEditingController: passwordEditingController,
-                  hint: 'Password',
+                  hint: AppLocalizations.of(context)!.password,
                   obscure: true,
                 ),
                 const SizedBox(height: 10),
@@ -125,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                             });
                           },
                         ),
-                        title: const Text('User'),
+                        title: Text(AppLocalizations.of(context)!.user),
                       ),
                     ),
                     Expanded(
@@ -140,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                             });
                           },
                         ),
-                        title: const Text('Office'),
+                        title: Text(AppLocalizations.of(context)!.office),
                       ),
                     ),
                   ],
@@ -153,9 +154,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: !loading
-                        ? const Text(
-                            'Sign Up',
-                            style: TextStyle(
+                        ? Text(
+                            AppLocalizations.of(context)!.signUp,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -179,9 +180,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Already have an account ? ',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.alreadyHaveAnAccount,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
@@ -190,9 +191,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
                       onTap: () {
                         goToLogin();
                       },
-                      child: const Text(
-                        'Log In',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context)!.login,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -227,42 +228,42 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     if (nameEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Full Name!',
+        message: AppLocalizations.of(context)!.enterFullName,
         error: true,
       );
       return false;
     } else if (mobileEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Mobile Number!',
+        message: AppLocalizations.of(context)!.enterMobile,
         error: true,
       );
       return false;
     } else if (mobileEditingController.text.length != 10) {
       showSnackBar(
         context,
-        message: 'Mobile Number Must Be 10 Digits!',
+        message: AppLocalizations.of(context)!.mobileMustBe10Digits,
         error: true,
       );
       return false;
     } else if (emailEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Email Address!',
+        message: AppLocalizations.of(context)!.enterEmailAddress,
         error: true,
       );
       return false;
     } else if (passwordEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Password!',
+        message: AppLocalizations.of(context)!.enterPassword,
         error: true,
       );
       return false;
     } else if (accountType == '') {
       showSnackBar(
         context,
-        message: 'Choose Account Type!',
+        message: AppLocalizations.of(context)!.chooseAccountType,
         error: true,
       );
       return false;
@@ -301,13 +302,13 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
       if (e.code == 'weak-password') {
         showSnackBar(
           context,
-          message: 'The password provided is too weak!',
+          message: AppLocalizations.of(context)!.weakPassword,
           error: true,
         );
       } else if (e.code == 'email-already-in-use') {
         showSnackBar(
           context,
-          message: 'The account already exists for that email!',
+          message: AppLocalizations.of(context)!.accountExists,
           error: true,
         );
       }
@@ -317,7 +318,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     } catch (e) {
       showSnackBar(
         context,
-        message: 'Something went wrong, please try again!',
+        message: AppLocalizations.of(context)!.somethingWentWrong,
         error: true,
       );
       setState(() {
@@ -334,6 +335,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     user.email = emailEditingController.text;
     user.type = accountType;
     user.profileImage = '';
+    user.balance = '0';
+    user.fcmToken = '';
     return user;
   }
 
@@ -345,6 +348,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     office.email = emailEditingController.text.toString();
     office.type = accountType;
     office.profileImage = '';
+    office.balance = '0';
+    office.fcmToken = '';
     return office;
   }
 

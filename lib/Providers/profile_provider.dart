@@ -9,6 +9,8 @@ class ProfileProvider extends ChangeNotifier {
   String uId_ = SharedPrefController().getUId;
   String profileImage_ = SharedPrefController().getProfileImage;
   String accountType_ = SharedPrefController().getAccountType;
+  int balance_ = SharedPrefController().getBalance;
+  String fcmToken_ = SharedPrefController().getFcmToken;
 
   void setName_(String name) {
     name_ = name;
@@ -43,6 +45,18 @@ class ProfileProvider extends ChangeNotifier {
   void setAccountType_(String accountType) {
     accountType_ = accountType;
     SharedPrefController().setAccountType(type: accountType);
+    notifyListeners();
+  }
+
+  void setBalance_(int balance) {
+    balance_ = balance;
+    SharedPrefController().setBalance(balance: balance);
+    notifyListeners();
+  }
+
+  void setFcmToken_(String fcm) {
+    fcmToken_ = fcm;
+    SharedPrefController().setFcmToken(fcm: fcm);
     notifyListeners();
   }
 }

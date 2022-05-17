@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -58,7 +59,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    Provider.of<ProfileProvider>(context).accountType_ == 'admin'
+                    Provider.of<ProfileProvider>(context).accountType_ ==
+                            'admin'
+                        ? const SizedBox.shrink()
+                        : ProfileListTile(
+                            title:
+                                '${AppLocalizations.of(context)!.balance}: ${Provider.of<ProfileProvider>(context).balance_}',
+                            leadingIcon: Icons.attach_money,
+                            hasIcon: false,
+                          ),
+                    Provider.of<ProfileProvider>(context).accountType_ ==
+                            'admin'
                         ? const SizedBox.shrink()
                         : InkWell(
                             onTap: () {
@@ -70,12 +81,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               );
                             },
-                            child: const ProfileListTile(
-                              title: 'Edit Profile',
+                            child: ProfileListTile(
+                              title: AppLocalizations.of(context)!.editProfile,
                               leadingIcon: Icons.person_outline,
                             ),
                           ),
-                    Provider.of<ProfileProvider>(context).accountType_ == 'office'
+                    Provider.of<ProfileProvider>(context).accountType_ ==
+                            'office'
                         ? InkWell(
                             onTap: () {
                               Navigator.push(
@@ -85,13 +97,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               );
                             },
-                            child: const ProfileListTile(
-                              title: 'Add Trip',
+                            child: ProfileListTile(
+                              title: AppLocalizations.of(context)!.addTrip,
                               leadingIcon: Icons.add_a_photo_outlined,
                             ),
                           )
                         : const SizedBox.shrink(),
-                    Provider.of<ProfileProvider>(context).accountType_ == 'office'
+                    Provider.of<ProfileProvider>(context).accountType_ ==
+                            'office'
                         ? InkWell(
                             onTap: () {
                               Navigator.push(
@@ -101,8 +114,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               );
                             },
-                            child: const ProfileListTile(
-                              title: 'My Trips',
+                            child: ProfileListTile(
+                              title: AppLocalizations.of(context)!.myTrips,
                               leadingIcon: Icons.map,
                             ),
                           )
@@ -116,8 +129,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       },
-                      child: const ProfileListTile(
-                        title: 'Settings',
+                      child: ProfileListTile(
+                        title: AppLocalizations.of(context)!.settings,
                         leadingIcon: Icons.settings,
                       ),
                     ),
@@ -142,16 +155,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       Icons.logout,
                       color: Color(0xff5859F3),
                       size: 28,
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Text(
-                      'LOGOUT',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.logout.toUpperCase(),
+                      style: const TextStyle(
                         color: Color(0xff5859F3),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

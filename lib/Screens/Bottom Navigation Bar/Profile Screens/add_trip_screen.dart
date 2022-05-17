@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddTripScreen extends StatefulWidget {
   const AddTripScreen({Key? key}) : super(key: key);
@@ -52,8 +53,10 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
   TimeOfDay time = TimeOfDay.now();
   DateTime date = DateTime.now();
 
-  String time_ = 'Choose Time';
-  String date_ = 'Choose Date';
+  String time_ =
+      SharedPrefController().getLang == 'en' ? 'Choose Time' : 'اختر الوقت';
+  String date_ =
+      SharedPrefController().getLang == 'en' ? 'Choose Date' : 'اختر التاريخ';
 
   City? dropDownCityValue;
 
@@ -93,9 +96,9 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Add Trip',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.addTrip,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -108,9 +111,9 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Trip Details',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.tripDetails,
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -119,24 +122,24 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
               const SizedBox(height: 20),
               AppTextField(
                 textEditingController: tripNameEditingController,
-                hint: 'Trip Name',
+                hint: AppLocalizations.of(context)!.tripName,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: tripPriceEditingController,
-                hint: 'Trip Price',
+                hint: AppLocalizations.of(context)!.tripPrice,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: tripMinPaymentEditingController,
-                hint: 'Min Payment',
+                hint: AppLocalizations.of(context)!.minPayment,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
                 textEditingController: tripDescriptionEditingController,
-                hint: 'Description',
+                hint: AppLocalizations.of(context)!.description,
                 lines: 3,
               ),
               const SizedBox(height: 10),
@@ -238,7 +241,9 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                               vertical: 15,
                             ),
                             child: Text(
-                              city.name,
+                              SharedPrefController().getLang == 'en'
+                                  ? city.name
+                                  : city.nameAr,
                               style: TextStyle(
                                 color: Colors.grey.shade700,
                                 fontSize: 16,
@@ -257,10 +262,10 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
+                children: [
                   Text(
-                    'Trip City Can\'t Be Changed.',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.cityCantBeChanged,
+                    style: const TextStyle(
                       fontSize: 11,
                       fontStyle: FontStyle.italic,
                     ),
@@ -271,9 +276,9 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Trip Images',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.tripImages,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -320,15 +325,15 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                             child: Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Icons.camera_alt,
                                     color: Colors.grey,
                                     size: 50,
                                   ),
                                   Text(
-                                    'Add Image',
-                                    style: TextStyle(
+                                    AppLocalizations.of(context)!.addImage,
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 20,
@@ -391,9 +396,9 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
                     ? const Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       )
-                    : const Text(
-                        'Add Trip',
-                        style: TextStyle(
+                    : Text(
+                        AppLocalizations.of(context)!.addTrip,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 22,
@@ -428,28 +433,28 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
     if (tripNameEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Trip Name!',
+        message: AppLocalizations.of(context)!.enterTripName,
         error: true,
       );
       return false;
     } else if (tripPriceEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Trip Price!',
+        message: AppLocalizations.of(context)!.enterTripPrice,
         error: true,
       );
       return false;
     } else if (num.parse(tripPriceEditingController.text) == 0) {
       showSnackBar(
         context,
-        message: 'Trip Price Can\'t be zero!',
+        message: AppLocalizations.of(context)!.tripPriceCantBeZero,
         error: true,
       );
       return false;
     } else if (tripMinPaymentEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Min Payment!',
+        message: AppLocalizations.of(context)!.enterMinPayment,
         error: true,
       );
       return false;
@@ -457,35 +462,36 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
         num.parse(tripPriceEditingController.text)) {
       showSnackBar(
         context,
-        message: 'Min Payment Can\'t be more than trip price!',
+        message:
+            AppLocalizations.of(context)!.minPaymentCantBeMoreThanTripPrice,
         error: true,
       );
       return false;
     } else if (tripDescriptionEditingController.text.isEmpty) {
       showSnackBar(
         context,
-        message: 'Enter Trip Description!',
+        message: AppLocalizations.of(context)!.enterTripDescription,
         error: true,
       );
       return false;
-    } else if (time_ == 'Choose Time') {
+    } else if (time_ == 'Choose Time' || time_ == 'اختر الوقت') {
       showSnackBar(
         context,
-        message: 'Choose Trip Time!',
+        message: AppLocalizations.of(context)!.chooseTripTime,
         error: true,
       );
       return false;
-    } else if (date_ == 'Choose Date') {
+    } else if (date_ == 'Choose Date' || date_ == 'اختر التاريخ') {
       showSnackBar(
         context,
-        message: 'Choose Trip Date!',
+        message: AppLocalizations.of(context)!.chooseTripDate,
         error: true,
       );
       return false;
     } else if (tripImages!.isEmpty) {
       showSnackBar(
         context,
-        message: 'Choose Trip Images!',
+        message: AppLocalizations.of(context)!.chooseTripImages,
         error: true,
       );
       return false;

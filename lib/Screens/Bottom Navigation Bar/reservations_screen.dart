@@ -4,6 +4,7 @@ import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Reservations%20Screen%20Widgets/reservations_screen_list_view_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReservationsScreen extends StatefulWidget {
   const ReservationsScreen({Key? key}) : super(key: key);
@@ -39,11 +40,11 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             unselectedLabelColor: Colors.black,
             labelStyle: const TextStyle(fontWeight: FontWeight.w600),
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
-            tabs: const [
-              Tab(text: 'All'),
-              Tab(text: 'Waiting'),
-              Tab(text: 'Accepted'),
-              Tab(text: 'Rejected'),
+            tabs: [
+              Tab(text: AppLocalizations.of(context)!.all),
+              Tab(text: AppLocalizations.of(context)!.waiting),
+              Tab(text: AppLocalizations.of(context)!.accepted),
+              Tab(text: AppLocalizations.of(context)!.rejected),
             ],
           ),
         ),
@@ -83,28 +84,50 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ReservationScreen(
-                                    tripName: allReservations[index].get('tripName'),
-                                    tripTime: allReservations[index].get('tripTime'),
-                                    tripDate: allReservations[index].get('tripDate'),
-                                    tripAddressId: allReservations[index].get('cityId'),
-                                    tripAddress: allReservations[index].get('addressCityName'),
-                                    tripAddressAr: allReservations[index].get('addressCityNameAr'),
-                                    tripId: allReservations[index].get('tripId'),
-                                    firstPayment: allReservations[index].get('firstPayment'),
-                                    leftPayment: allReservations[index].get('leftPayment'),
-                                    officeName: allReservations[index].get('officeName'),
-                                    officeEmail: allReservations[index].get('officeEmail'),
-                                    officeId: allReservations[index].get('officeId'),
-                                    userId: allReservations[index].get('userId'),
-                                    userName: allReservations[index].get('userName'),
-                                    userMobile: allReservations[index].get('userMobile'),
-                                    userDocId: allReservations[index].get('userDocId'),
-                                    fullPaid: allReservations[index].get('fullPaid'),
-                                    status: allReservations[index].get('status'),
-                                    noOfPeople: allReservations[index].get('noOfPeople'),
-                                    userNote: allReservations[index].get('userNote'),
-                                    officeNote: allReservations[index].get('officeNote'),
-                                    orderId: allReservations[index].get('orderId'),
+                                    tripName:
+                                        allReservations[index].get('tripName'),
+                                    tripTime:
+                                        allReservations[index].get('tripTime'),
+                                    tripDate:
+                                        allReservations[index].get('tripDate'),
+                                    tripAddressId:
+                                        allReservations[index].get('cityId'),
+                                    tripAddress: allReservations[index]
+                                        .get('addressCityName'),
+                                    tripAddressAr: allReservations[index]
+                                        .get('addressCityNameAr'),
+                                    tripId:
+                                        allReservations[index].get('tripId'),
+                                    firstPayment: allReservations[index]
+                                        .get('firstPayment'),
+                                    leftPayment: allReservations[index]
+                                        .get('leftPayment'),
+                                    officeName: allReservations[index]
+                                        .get('officeName'),
+                                    officeEmail: allReservations[index]
+                                        .get('officeEmail'),
+                                    officeId:
+                                        allReservations[index].get('officeId'),
+                                    userId:
+                                        allReservations[index].get('userId'),
+                                    userName:
+                                        allReservations[index].get('userName'),
+                                    userMobile: allReservations[index]
+                                        .get('userMobile'),
+                                    userDocId:
+                                        allReservations[index].get('userDocId'),
+                                    fullPaid:
+                                        allReservations[index].get('fullPaid'),
+                                    status:
+                                        allReservations[index].get('status'),
+                                    noOfPeople: allReservations[index]
+                                        .get('noOfPeople'),
+                                    userNote:
+                                        allReservations[index].get('userNote'),
+                                    officeNote: allReservations[index]
+                                        .get('officeNote'),
+                                    orderId:
+                                        allReservations[index].get('orderId'),
                                   ),
                                 ),
                               );
@@ -135,33 +158,61 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                               itemCount: waitingReservations.length,
                               itemBuilder: (context, index) {
                                 return InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ReservationScreen(
-                                          tripName: waitingReservations[index].get('tripName'),
-                                          tripTime: waitingReservations[index].get('tripTime'),
-                                          tripDate: waitingReservations[index].get('tripDate'),
-                                          tripAddressId: waitingReservations[index].get('cityId'),
-                                          tripAddress: waitingReservations[index].get('addressCityName'),
-                                          tripAddressAr: waitingReservations[index].get('addressCityNameAr'),
-                                          tripId: waitingReservations[index].get('tripId'),
-                                          firstPayment: waitingReservations[index].get('firstPayment'),
-                                          leftPayment: waitingReservations[index].get('leftPayment'),
-                                          officeName: waitingReservations[index].get('officeName'),
-                                          officeEmail: waitingReservations[index].get('officeEmail'),
-                                          officeId: waitingReservations[index].get('officeId'),
-                                          userId: waitingReservations[index].get('userId'),
-                                          userName: waitingReservations[index].get('userName'),
-                                          userMobile: waitingReservations[index].get('userMobile'),
-                                          userDocId: waitingReservations[index].get('userDocId'),
-                                          fullPaid: waitingReservations[index].get('fullPaid'),
-                                          status: waitingReservations[index].get('status'),
-                                          noOfPeople: waitingReservations[index].get('noOfPeople'),
-                                          userNote: waitingReservations[index].get('userNote'),
-                                          officeNote: waitingReservations[index].get('officeNote'),
-                                          orderId: waitingReservations[index].get('orderId'),
+                                          tripName: waitingReservations[index]
+                                              .get('tripName'),
+                                          tripTime: waitingReservations[index]
+                                              .get('tripTime'),
+                                          tripDate: waitingReservations[index]
+                                              .get('tripDate'),
+                                          tripAddressId:
+                                              waitingReservations[index]
+                                                  .get('cityId'),
+                                          tripAddress:
+                                              waitingReservations[index]
+                                                  .get('addressCityName'),
+                                          tripAddressAr:
+                                              waitingReservations[index]
+                                                  .get('addressCityNameAr'),
+                                          tripId: waitingReservations[index]
+                                              .get('tripId'),
+                                          firstPayment:
+                                              waitingReservations[index]
+                                                  .get('firstPayment'),
+                                          leftPayment:
+                                              waitingReservations[index]
+                                                  .get('leftPayment'),
+                                          officeName: waitingReservations[index]
+                                              .get('officeName'),
+                                          officeEmail:
+                                              waitingReservations[index]
+                                                  .get('officeEmail'),
+                                          officeId: waitingReservations[index]
+                                              .get('officeId'),
+                                          userId: waitingReservations[index]
+                                              .get('userId'),
+                                          userName: waitingReservations[index]
+                                              .get('userName'),
+                                          userMobile: waitingReservations[index]
+                                              .get('userMobile'),
+                                          userDocId: waitingReservations[index]
+                                              .get('userDocId'),
+                                          fullPaid: waitingReservations[index]
+                                              .get('fullPaid'),
+                                          status: waitingReservations[index]
+                                              .get('status'),
+                                          noOfPeople: waitingReservations[index]
+                                              .get('noOfPeople'),
+                                          userNote: waitingReservations[index]
+                                              .get('userNote'),
+                                          officeNote: waitingReservations[index]
+                                              .get('officeNote'),
+                                          orderId: waitingReservations[index]
+                                              .get('orderId'),
                                         ),
                                       ),
                                     );
@@ -174,8 +225,8 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                             .get('addressCityName')
                                         : waitingReservations[index]
                                             .get('addressCityNameAr'),
-                                    status:
-                                        waitingReservations[index].get('status'),
+                                    status: waitingReservations[index]
+                                        .get('status'),
                                     name: waitingReservations[index]
                                         .get('tripName'),
                                     time: waitingReservations[index]
@@ -186,10 +237,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                 );
                               },
                             )
-                          : const Center(
+                          : Center(
                               child: Text(
-                                'No Reservations No Show!',
-                                style: TextStyle(
+                                noReservations(),
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -208,33 +259,65 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                               itemCount: acceptedReservations.length,
                               itemBuilder: (context, index) {
                                 return InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ReservationScreen(
-                                          tripName: acceptedReservations[index].get('tripName'),
-                                          tripTime: acceptedReservations[index].get('tripTime'),
-                                          tripDate: acceptedReservations[index].get('tripDate'),
-                                          tripAddressId: acceptedReservations[index].get('cityId'),
-                                          tripAddress: acceptedReservations[index].get('addressCityName'),
-                                          tripAddressAr: acceptedReservations[index].get('addressCityNameAr'),
-                                          tripId: acceptedReservations[index].get('tripId'),
-                                          firstPayment: acceptedReservations[index].get('firstPayment'),
-                                          leftPayment: acceptedReservations[index].get('leftPayment'),
-                                          officeName: acceptedReservations[index].get('officeName'),
-                                          officeEmail: acceptedReservations[index].get('officeEmail'),
-                                          officeId: acceptedReservations[index].get('officeId'),
-                                          userId: acceptedReservations[index].get('userId'),
-                                          userName: acceptedReservations[index].get('userName'),
-                                          userMobile: acceptedReservations[index].get('userMobile'),
-                                          userDocId: acceptedReservations[index].get('userDocId'),
-                                          fullPaid: acceptedReservations[index].get('fullPaid'),
-                                          status: acceptedReservations[index].get('status'),
-                                          noOfPeople: acceptedReservations[index].get('noOfPeople'),
-                                          userNote: acceptedReservations[index].get('userNote'),
-                                          officeNote: acceptedReservations[index].get('officeNote'),
-                                          orderId: acceptedReservations[index].get('orderId'),
+                                          tripName: acceptedReservations[index]
+                                              .get('tripName'),
+                                          tripTime: acceptedReservations[index]
+                                              .get('tripTime'),
+                                          tripDate: acceptedReservations[index]
+                                              .get('tripDate'),
+                                          tripAddressId:
+                                              acceptedReservations[index]
+                                                  .get('cityId'),
+                                          tripAddress:
+                                              acceptedReservations[index]
+                                                  .get('addressCityName'),
+                                          tripAddressAr:
+                                              acceptedReservations[index]
+                                                  .get('addressCityNameAr'),
+                                          tripId: acceptedReservations[index]
+                                              .get('tripId'),
+                                          firstPayment:
+                                              acceptedReservations[index]
+                                                  .get('firstPayment'),
+                                          leftPayment:
+                                              acceptedReservations[index]
+                                                  .get('leftPayment'),
+                                          officeName:
+                                              acceptedReservations[index]
+                                                  .get('officeName'),
+                                          officeEmail:
+                                              acceptedReservations[index]
+                                                  .get('officeEmail'),
+                                          officeId: acceptedReservations[index]
+                                              .get('officeId'),
+                                          userId: acceptedReservations[index]
+                                              .get('userId'),
+                                          userName: acceptedReservations[index]
+                                              .get('userName'),
+                                          userMobile:
+                                              acceptedReservations[index]
+                                                  .get('userMobile'),
+                                          userDocId: acceptedReservations[index]
+                                              .get('userDocId'),
+                                          fullPaid: acceptedReservations[index]
+                                              .get('fullPaid'),
+                                          status: acceptedReservations[index]
+                                              .get('status'),
+                                          noOfPeople:
+                                              acceptedReservations[index]
+                                                  .get('noOfPeople'),
+                                          userNote: acceptedReservations[index]
+                                              .get('userNote'),
+                                          officeNote:
+                                              acceptedReservations[index]
+                                                  .get('officeNote'),
+                                          orderId: acceptedReservations[index]
+                                              .get('orderId'),
                                         ),
                                       ),
                                     );
@@ -247,8 +330,8 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                             .get('addressCityName')
                                         : acceptedReservations[index]
                                             .get('addressCityNameAr'),
-                                    status:
-                                        acceptedReservations[index].get('status'),
+                                    status: acceptedReservations[index]
+                                        .get('status'),
                                     name: acceptedReservations[index]
                                         .get('tripName'),
                                     time: acceptedReservations[index]
@@ -259,10 +342,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                 );
                               },
                             )
-                          : const Center(
+                          : Center(
                               child: Text(
-                                'No Reservations No Show!',
-                                style: TextStyle(
+                                noReservations(),
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -281,33 +364,65 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                               itemCount: rejectedReservations.length,
                               itemBuilder: (context, index) {
                                 return InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ReservationScreen(
-                                          tripName: rejectedReservations[index].get('tripName'),
-                                          tripTime: rejectedReservations[index].get('tripTime'),
-                                          tripDate: rejectedReservations[index].get('tripDate'),
-                                          tripAddressId: rejectedReservations[index].get('cityId'),
-                                          tripAddress: rejectedReservations[index].get('addressCityName'),
-                                          tripAddressAr: rejectedReservations[index].get('addressCityNameAr'),
-                                          tripId: rejectedReservations[index].get('tripId'),
-                                          firstPayment: rejectedReservations[index].get('firstPayment'),
-                                          leftPayment: rejectedReservations[index].get('leftPayment'),
-                                          officeName: rejectedReservations[index].get('officeName'),
-                                          officeEmail: rejectedReservations[index].get('officeEmail'),
-                                          officeId: rejectedReservations[index].get('officeId'),
-                                          userId: rejectedReservations[index].get('userId'),
-                                          userName: rejectedReservations[index].get('userName'),
-                                          userMobile: rejectedReservations[index].get('userMobile'),
-                                          userDocId: rejectedReservations[index].get('userDocId'),
-                                          fullPaid: rejectedReservations[index].get('fullPaid'),
-                                          status: rejectedReservations[index].get('status'),
-                                          noOfPeople: rejectedReservations[index].get('noOfPeople'),
-                                          userNote: rejectedReservations[index].get('userNote'),
-                                          officeNote: rejectedReservations[index].get('officeNote'),
-                                          orderId: rejectedReservations[index].get('orderId'),
+                                          tripName: rejectedReservations[index]
+                                              .get('tripName'),
+                                          tripTime: rejectedReservations[index]
+                                              .get('tripTime'),
+                                          tripDate: rejectedReservations[index]
+                                              .get('tripDate'),
+                                          tripAddressId:
+                                              rejectedReservations[index]
+                                                  .get('cityId'),
+                                          tripAddress:
+                                              rejectedReservations[index]
+                                                  .get('addressCityName'),
+                                          tripAddressAr:
+                                              rejectedReservations[index]
+                                                  .get('addressCityNameAr'),
+                                          tripId: rejectedReservations[index]
+                                              .get('tripId'),
+                                          firstPayment:
+                                              rejectedReservations[index]
+                                                  .get('firstPayment'),
+                                          leftPayment:
+                                              rejectedReservations[index]
+                                                  .get('leftPayment'),
+                                          officeName:
+                                              rejectedReservations[index]
+                                                  .get('officeName'),
+                                          officeEmail:
+                                              rejectedReservations[index]
+                                                  .get('officeEmail'),
+                                          officeId: rejectedReservations[index]
+                                              .get('officeId'),
+                                          userId: rejectedReservations[index]
+                                              .get('userId'),
+                                          userName: rejectedReservations[index]
+                                              .get('userName'),
+                                          userMobile:
+                                              rejectedReservations[index]
+                                                  .get('userMobile'),
+                                          userDocId: rejectedReservations[index]
+                                              .get('userDocId'),
+                                          fullPaid: rejectedReservations[index]
+                                              .get('fullPaid'),
+                                          status: rejectedReservations[index]
+                                              .get('status'),
+                                          noOfPeople:
+                                              rejectedReservations[index]
+                                                  .get('noOfPeople'),
+                                          userNote: rejectedReservations[index]
+                                              .get('userNote'),
+                                          officeNote:
+                                              rejectedReservations[index]
+                                                  .get('officeNote'),
+                                          orderId: rejectedReservations[index]
+                                              .get('orderId'),
                                         ),
                                       ),
                                     );
@@ -320,8 +435,8 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                             .get('addressCityName')
                                         : rejectedReservations[index]
                                             .get('addressCityNameAr'),
-                                    status:
-                                        rejectedReservations[index].get('status'),
+                                    status: rejectedReservations[index]
+                                        .get('status'),
                                     name: rejectedReservations[index]
                                         .get('tripName'),
                                     time: rejectedReservations[index]
@@ -332,10 +447,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                 );
                               },
                             )
-                          : const Center(
+                          : Center(
                               child: Text(
-                                'No Reservations No Show!',
-                                style: TextStyle(
+                                noReservations(),
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -348,10 +463,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 ],
               );
             } else {
-              return const Center(
+              return Center(
                 child: Text(
-                  'No Reservations No Show!',
-                  style: TextStyle(
+                  noReservations(),
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -367,12 +482,20 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   }
 
   Stream<QuerySnapshot> stream() {
-    if(SharedPrefController().getAccountType == 'user') {
+    if (SharedPrefController().getAccountType == 'user') {
       return FbFireStoreOrdersController().readUserReservations();
-    } else if(SharedPrefController().getAccountType == 'office') {
+    } else if (SharedPrefController().getAccountType == 'office') {
       return FbFireStoreOrdersController().readOfficeOrders();
     } else {
       return FbFireStoreOrdersController().readAllReservationsForAdmin();
+    }
+  }
+
+  String noReservations() {
+    if (SharedPrefController().getAccountType == 'office') {
+      return AppLocalizations.of(context)!.noReservations;
+    } else {
+      return AppLocalizations.of(context)!.noReservations;
     }
   }
 }

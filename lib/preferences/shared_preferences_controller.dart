@@ -9,6 +9,8 @@ enum SharedPrefKeys {
   uId,
   accountType,
   profileImage,
+  balance,
+  fcmToken,
 }
 
 class SharedPrefController {
@@ -83,12 +85,30 @@ class SharedPrefController {
   String get getProfileImage =>
       _sharedPrefLibObj.getString(SharedPrefKeys.profileImage.toString()) ?? '';
 
+  Future<bool> setBalance({required int balance}) async {
+    return await _sharedPrefLibObj.setInt(
+        SharedPrefKeys.balance.toString(), balance);
+  }
+
+  int get getBalance =>
+      _sharedPrefLibObj.getInt(SharedPrefKeys.balance.toString()) ?? 0;
+
+  Future<bool> setFcmToken({required String fcm}) async {
+    return await _sharedPrefLibObj.setString(
+        SharedPrefKeys.fcmToken.toString(), fcm);
+  }
+
+  String get getFcmToken =>
+      _sharedPrefLibObj.getString(SharedPrefKeys.fcmToken.toString()) ?? '';
+
   Future<void> logout() async {
     await _sharedPrefLibObj.setBool(SharedPrefKeys.loggedIn.toString(), false);
     await _sharedPrefLibObj.setString(SharedPrefKeys.fullName.toString(), '');
     await _sharedPrefLibObj.setString(SharedPrefKeys.email.toString(), '');
     await _sharedPrefLibObj.setString(SharedPrefKeys.mobile.toString(), '');
     await _sharedPrefLibObj.setString(SharedPrefKeys.uId.toString(), '');
+    await _sharedPrefLibObj.setString(SharedPrefKeys.fcmToken.toString(), '');
+    await _sharedPrefLibObj.setDouble(SharedPrefKeys.balance.toString(), 0);
     await _sharedPrefLibObj.setString(
         SharedPrefKeys.accountType.toString(), '');
     await _sharedPrefLibObj.setString(

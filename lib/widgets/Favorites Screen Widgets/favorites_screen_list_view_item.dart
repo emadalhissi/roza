@@ -6,6 +6,7 @@ import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavoritesScreenListViewItem extends StatefulWidget {
   final Trip trip;
@@ -194,7 +195,7 @@ class _FavoritesScreenListViewItemState
           );
           showSnackBar(
             context,
-            message: 'Trip Added to Favorites!',
+            message: AppLocalizations.of(context)!.favoriteAdded,
             error: false,
           );
         } else if (status && !favorite) {
@@ -204,13 +205,13 @@ class _FavoritesScreenListViewItemState
           );
           showSnackBar(
             context,
-            message: 'Trip Removed from Favorites!',
+            message: AppLocalizations.of(context)!.favoriteRemoved,
             error: false,
           );
         } else {
           showSnackBar(
             context,
-            message: 'Something went wrong, try again!',
+            message: AppLocalizations.of(context)!.somethingWentWrong,
             error: true,
           );
         }

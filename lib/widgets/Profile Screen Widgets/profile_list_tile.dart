@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class ProfileListTile extends StatelessWidget {
   final String title;
   final IconData leadingIcon;
+  final bool hasIcon;
 
   const ProfileListTile({
     required this.title,
     required this.leadingIcon,
+    this.hasIcon = true,
     Key? key,
   }) : super(key: key);
 
@@ -27,11 +29,13 @@ class ProfileListTile extends StatelessWidget {
           fontSize: 16,
         ),
       ),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        color: Colors.black,
-        size: 20,
-      ),
+      trailing: hasIcon
+          ? const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.black,
+              size: 20,
+            )
+          : const SizedBox.shrink(),
     );
   }
 }

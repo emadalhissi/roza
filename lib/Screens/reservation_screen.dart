@@ -1,6 +1,7 @@
 import 'package:Rehlati/FireBase/fb_firestore_orders_controller.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReservationScreen extends StatefulWidget {
   final String tripName;
@@ -82,9 +83,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Back',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.back,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -148,35 +149,35 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                'User Information',
-                style: TextStyle(fontSize: 18),
+              Text(
+                AppLocalizations.of(context)!.userInfo,
+                style: const TextStyle(fontSize: 18),
               ),
               Text(
-                'Name: ${widget.userName}',
+                '${AppLocalizations.of(context)!.fullName}: ${widget.userName}',
                 style: const TextStyle(
                   color: Color(0xff8A8A8E),
                   fontSize: 16,
                 ),
               ),
               Text(
-                'Mobile Number: ${widget.userMobile}',
+                '${AppLocalizations.of(context)!.mobileNumber}: ${widget.userMobile}',
                 style: const TextStyle(
                   color: Color(0xff8A8A8E),
                   fontSize: 16,
                 ),
               ),
               Text(
-                'Doc ID: ${widget.userDocId}',
+                '${AppLocalizations.of(context)!.docIdNo}: ${widget.userDocId}',
                 style: const TextStyle(
                   color: Color(0xff8A8A8E),
                   fontSize: 16,
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Reservation Details',
-                style: TextStyle(fontSize: 18),
+              Text(
+                AppLocalizations.of(context)!.reservationDetails,
+                style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 8),
               Table(
@@ -252,7 +253,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'No. People: ${widget.noOfPeople}',
+                            '${AppLocalizations.of(context)!.noOfPeople}: ${widget.noOfPeople}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
@@ -274,7 +275,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'Paid: \$${widget.firstPayment}',
+                            '${AppLocalizations.of(context)!.paid}: \$${widget.firstPayment}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
@@ -292,7 +293,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'Left: \$${widget.leftPayment}',
+                            '${AppLocalizations.of(context)!.left}: \$${widget.leftPayment}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
@@ -306,9 +307,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                'User Notes',
-                style: TextStyle(fontSize: 18),
+              Text(
+                AppLocalizations.of(context)!.userNotes,
+                style: const TextStyle(fontSize: 18),
               ),
               widget.userNote != ''
                   ? Text(
@@ -318,17 +319,17 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         fontSize: 16,
                       ),
                     )
-                  : const Text(
-                      'User did not add any notes!',
-                      style: TextStyle(
+                  : Text(
+                      AppLocalizations.of(context)!.userDidNotAddNotes,
+                      style: const TextStyle(
                         color: Color(0xff8A8A8E),
                         fontSize: 16,
                       ),
                     ),
               const SizedBox(height: 20),
-              const Text(
-                'Office Notes',
-                style: TextStyle(fontSize: 18),
+              Text(
+                AppLocalizations.of(context)!.officeNotes,
+                style: const TextStyle(fontSize: 18),
               ),
               widget.officeNote != ''
                   ? Text(
@@ -338,9 +339,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         fontSize: 16,
                       ),
                     )
-                  : const Text(
-                      'Office did not add any notes!',
-                      style: TextStyle(
+                  : Text(
+                      AppLocalizations.of(context)!.officeDidNotAddNotes,
+                      style: const TextStyle(
                         color: Color(0xff8A8A8E),
                         fontSize: 16,
                       ),
@@ -364,9 +365,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  child: const Text(
-                    'Accept',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.accept,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 22,
@@ -390,9 +391,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: ElevatedButton(
-                  child: const Text(
-                    'Review',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.review,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 22,
@@ -416,9 +417,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: ElevatedButton(
-                  child: const Text(
-                    'Reject',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.reject,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 22,
@@ -469,9 +470,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
     required String status,
   }) {
     Widget cancelButton = TextButton(
-      child: const Text(
-        'No',
-        style: TextStyle(color: Colors.black),
+      child: Text(
+        AppLocalizations.of(context)!.no,
+        style: const TextStyle(color: Colors.black),
       ),
       onPressed: () {
         Navigator.pop(context, () {
@@ -480,9 +481,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
       },
     );
     Widget continueButton = TextButton(
-      child: const Text(
-        'Yes',
-        style: TextStyle(color: Colors.black),
+      child: Text(
+        AppLocalizations.of(context)!.yes,
+        style: const TextStyle(color: Colors.black),
       ),
       onPressed: () async {
         Navigator.pop(context);
@@ -491,8 +492,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: const Text('Change Status!'),
-      content: const Text('Are you sure you want to change the status?'),
+      title: Text(AppLocalizations.of(context)!.changeStatus),
+      content: Text(AppLocalizations.of(context)!.sureChangeStatus),
       actions: [
         cancelButton,
         continueButton,
@@ -509,13 +510,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
   String orderStatus() {
     if (widget.status == 'accepted') {
-      return SharedPrefController().getLang == 'en' ? 'Accepted' : 'مقبول';
+      return AppLocalizations.of(context)!.accepted;
     } else if (widget.status == 'waiting') {
-      return SharedPrefController().getLang == 'en'
-          ? 'Waiting'
-          : 'قيد الإنتظار';
+      return AppLocalizations.of(context)!.waiting;
     } else if (widget.status == 'rejected') {
-      return SharedPrefController().getLang == 'en' ? 'Rejected' : 'مرفوض';
+      return AppLocalizations.of(context)!.rejected;
     } else {
       return '';
     }
@@ -535,13 +534,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
   String paidStatus() {
     if (widget.fullPaid) {
-      return SharedPrefController().getLang == 'en'
-          ? 'Full Paid'
-          : 'تم الدفع كامل';
+      return AppLocalizations.of(context)!.fullPaid;
     } else {
-      return SharedPrefController().getLang == 'en'
-          ? 'Not Full Paid'
-          : 'لم يتم الدفع كامل';
+      return AppLocalizations.of(context)!.notFullPaid;
     }
   }
 

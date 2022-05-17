@@ -11,11 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:Rehlati/Screens/launch_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:Rehlati/FireBase/fb_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefController().initSharedPref();
   await Firebase.initializeApp();
+  await FbNotifications.initNotifications();
   runApp(
     const MyApp(),
   );
@@ -76,7 +78,7 @@ class MyMaterialApp extends StatelessWidget {
         Locale('ar'),
         Locale('en'),
       ],
-      locale: Locale(SharedPrefController().getLang),
+      locale: Locale(Provider.of<LangProvider>(context).lang),
     );
   }
 }

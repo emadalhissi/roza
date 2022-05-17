@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TripScreen extends StatefulWidget {
   final String tripName;
@@ -99,9 +100,9 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Back',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.back,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -144,8 +145,8 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                           end: 15,
                           child: Chip(
                             label: Text(
-                              noOfOrders +
-                                  (noOfOrders == '1' ? ' Order' : ' Orders'),
+                              AppLocalizations.of(context)!.noOfOrders +
+                                  noOfOrders,
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -265,12 +266,14 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                                 size: 20,
                               ),
                               const SizedBox(width: 5),
-                              Text(
-                                'Min. Payment: \$${widget.minPayment}',
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                              Expanded(
+                                child: Text(
+                                  '${AppLocalizations.of(context)!.minPayment}: \$${widget.minPayment}',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
                             ],
@@ -280,9 +283,9 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Trip Details',
-                    style: TextStyle(fontSize: 18),
+                  Text(
+                    AppLocalizations.of(context)!.tripDetails,
+                    style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -307,9 +310,9 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
       return const SizedBox.shrink();
     } else {
       return ElevatedButton(
-        child: const Text(
-          'Order',
-          style: TextStyle(
+        child: Text(
+          AppLocalizations.of(context)!.order,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
             fontSize: 22,
@@ -394,7 +397,7 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
           );
           showSnackBar(
             context,
-            message: 'Trip Added to Favorites!',
+            message: AppLocalizations.of(context)!.favoriteAdded,
             error: false,
           );
         } else if (status && !favorite) {
@@ -404,13 +407,13 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
           );
           showSnackBar(
             context,
-            message: 'Trip Removed from Favorites!',
+            message: AppLocalizations.of(context)!.favoriteRemoved,
             error: false,
           );
         } else {
           showSnackBar(
             context,
-            message: 'Something went wrong, try again!',
+            message: AppLocalizations.of(context)!.somethingWentWrong,
             error: true,
           );
         }

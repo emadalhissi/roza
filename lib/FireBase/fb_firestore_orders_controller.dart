@@ -72,7 +72,6 @@ class FbFireStoreOrdersController {
     required String tripId,
     required String city,
   }) async {
-
     await _firebaseFireStoreUsers
         .collection('users')
         .doc(userId)
