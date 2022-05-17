@@ -335,7 +335,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     user.email = emailEditingController.text;
     user.type = accountType;
     user.profileImage = '';
-    user.balance = '0';
+    user.balance = 1000;
     user.fcmToken = '';
     return user;
   }
@@ -348,7 +348,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     office.email = emailEditingController.text.toString();
     office.type = accountType;
     office.profileImage = '';
-    office.balance = '0';
+    office.balance = 1000;
     office.fcmToken = '';
     return office;
   }

@@ -1,5 +1,3 @@
-import 'package:Rehlati/models/order.dart';
-import 'package:Rehlati/models/trip.dart';
 
 class UserModel {
   late String uId;
@@ -9,7 +7,7 @@ class UserModel {
   late String type;
   late String profileImage;
   late String fcmToken;
-  late String balance;
+  late int balance;
 
   UserModel();
 

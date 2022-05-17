@@ -1,10 +1,13 @@
 import 'package:Rehlati/FireBase/fb_firestore_orders_controller.dart';
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/reservation_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Reservations%20Screen%20Widgets/reservations_screen_list_view_item.dart';
+import 'package:Rehlati/widgets/not_logged_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class ReservationsScreen extends StatefulWidget {
   const ReservationsScreen({Key? key}) : super(key: key);
@@ -18,7 +21,13 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Scaffold(
+      child: reservationsWidget(),
+    );
+  }
+
+  Widget reservationsWidget() {
+    if (Provider.of<ProfileProvider>(context).loggedIn_) {
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -116,6 +125,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                         .get('userMobile'),
                                     userDocId:
                                         allReservations[index].get('userDocId'),
+                                    userEmail:
+                                        allReservations[index].get('userEmail'),
+                                    userAge:
+                                        allReservations[index].get('userAge'),
+                                    userGender: allReservations[index]
+                                        .get('userGender'),
                                     fullPaid:
                                         allReservations[index].get('fullPaid'),
                                     status:
@@ -201,6 +216,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                               .get('userMobile'),
                                           userDocId: waitingReservations[index]
                                               .get('userDocId'),
+                                          userEmail: waitingReservations[index]
+                                              .get('userEmail'),
+                                          userAge: waitingReservations[index]
+                                              .get('userAge'),
+                                          userGender: waitingReservations[index]
+                                              .get('userGender'),
                                           fullPaid: waitingReservations[index]
                                               .get('fullPaid'),
                                           status: waitingReservations[index]
@@ -304,6 +325,13 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                                   .get('userMobile'),
                                           userDocId: acceptedReservations[index]
                                               .get('userDocId'),
+                                          userEmail: acceptedReservations[index]
+                                              .get('userEmail'),
+                                          userAge: acceptedReservations[index]
+                                              .get('userAge'),
+                                          userGender:
+                                              acceptedReservations[index]
+                                                  .get('userGender'),
                                           fullPaid: acceptedReservations[index]
                                               .get('fullPaid'),
                                           status: acceptedReservations[index]
@@ -409,6 +437,13 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                                   .get('userMobile'),
                                           userDocId: rejectedReservations[index]
                                               .get('userDocId'),
+                                          userEmail: rejectedReservations[index]
+                                              .get('userEmail'),
+                                          userAge: rejectedReservations[index]
+                                              .get('userAge'),
+                                          userGender:
+                                              rejectedReservations[index]
+                                                  .get('userGender'),
                                           fullPaid: rejectedReservations[index]
                                               .get('fullPaid'),
                                           status: rejectedReservations[index]
@@ -477,8 +512,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             }
           },
         ),
-      ),
-    );
+      );
+    } else {
+      return const Scaffold(body: NotLoggedIn());
+    }
   }
 
   Stream<QuerySnapshot> stream() {

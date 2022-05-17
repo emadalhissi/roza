@@ -1,5 +1,6 @@
 import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
 import 'package:Rehlati/Providers/favorites_provider.dart';
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/order.dart';
 import 'package:Rehlati/models/trip.dart';
@@ -188,7 +189,9 @@ class _TripsScreenTripsListViewItemState
                           ],
                         ),
                       ),
-                      favoriteOption(),
+                      Provider.of<ProfileProvider>(context).loggedIn_
+                          ? favoriteOption()
+                          : const SizedBox.shrink(),
                     ],
                   ),
                   const SizedBox(height: 12),

@@ -1,5 +1,6 @@
 import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
 import 'package:Rehlati/Providers/favorites_provider.dart';
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/User%20Screens/add_reservation_screen.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/order.dart';
@@ -190,7 +191,9 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                           ),
                         ],
                       ),
-                      favoriteOption(),
+                      Provider.of<ProfileProvider>(context).loggedIn_
+                          ? favoriteOption()
+                          : const SizedBox.shrink(),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -319,26 +322,34 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
           ),
         ),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddReservationScreen(
-                tripId: widget.tripId,
-                tripName: widget.tripName,
-                addressCityId: widget.tripAddressId,
-                addressCityName: widget.tripAddress,
-                addressCityNameAr: widget.tripAddressAr,
-                time: widget.tripTime,
-                date: widget.tripDate,
-                price: widget.price,
-                minPayment: widget.minPayment,
-                officeName: widget.officeName,
-                officeEmail: widget.officeEmail,
-                officeId: widget.officeId,
-                tripImage: widget.tripImages[0],
+          if (Provider.of<ProfileProvider>(context, listen: false).loggedIn_) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddReservationScreen(
+                  tripId: widget.tripId,
+                  tripName: widget.tripName,
+                  addressCityId: widget.tripAddressId,
+                  addressCityName: widget.tripAddress,
+                  addressCityNameAr: widget.tripAddressAr,
+                  time: widget.tripTime,
+                  date: widget.tripDate,
+                  price: widget.price,
+                  minPayment: widget.minPayment,
+                  officeName: widget.officeName,
+                  officeEmail: widget.officeEmail,
+                  officeId: widget.officeId,
+                  tripImage: widget.tripImages[0],
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            showSnackBar(
+              context,
+              message: AppLocalizations.of(context)!.pleaseLogin,
+              error: true,
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 70),

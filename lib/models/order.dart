@@ -24,6 +24,9 @@ class Order {
   late String? userName;
   late String? userMobile;
   late String? userDocId;
+  late String? userEmail;
+  late int? userAge;
+  late int? userGender;
 
   Order({
     required this.orderId,
@@ -51,6 +54,9 @@ class Order {
     required this.userName,
     required this.userMobile,
     required this.userDocId,
+    required this.userEmail,
+    required this.userAge,
+    required this.userGender,
   });
 
   Order.fromMap(Map<String, dynamic> json) {
@@ -79,6 +85,9 @@ class Order {
     userName = json['userName'];
     userMobile = json['userMobile'];
     userDocId = json['userDocId'];
+    userEmail = json['userEmail'];
+    userAge = json['userAge'];
+    userGender = json['userGender'];
   }
 
   Map<String, dynamic> toMap() {
@@ -108,6 +117,9 @@ class Order {
     data['userName'] = userName;
     data['userMobile'] = userMobile;
     data['userDocId'] = userDocId;
+    data['userEmail'] = userEmail;
+    data['userAge'] = userAge;
+    data['userGender'] = userGender;
     return data;
   }
 }

@@ -25,10 +25,10 @@ class _LaunchScreenState extends State<LaunchScreen> with FbNotifications {
     // initializeForegroundNotificationForAndroid();
     manageNotificationAction();
     Future.delayed(const Duration(seconds: 3), () {
-      String route = SharedPrefController().checkLoggedIn
-          ? '/home_screen'
-          : '/login_screen';
-      Navigator.pushReplacementNamed(context, route);
+      // String route = SharedPrefController().checkLoggedIn
+      //     ? '/home_screen'
+      //     : '/login_screen';
+      Navigator.pushReplacementNamed(context, '/home_screen');
     });
   }
 

@@ -61,6 +61,7 @@
     "editProfile": "Edit Profile",
     "myTrips": "My Trips",
     "logout": "Logout",
+    "sureLogout": "Are you sure you want to logout?",
     "edit": "Edit",
     "delete": "Delete",
     "youHaveNoTrips": "You have no trips yet!",
@@ -83,7 +84,7 @@
     "favoriteRemoved": "Trip Removed from Favorites!",
     "deleteTrip": "Delete Trip!",
     "sureDeleteTrip": "Are you sure you want to delete this trip?",
-    "yourInfo": "Your Info",
+    "orderInfo": "Order Information",
     "paymentDetails": "Payment Details",
     "otherDetails": "Other Details",
     "noOfPeople": "No. of People",
@@ -110,5 +111,13 @@
     "fullPaid": "Full Paid",
     "notFullPaid": "Not Full Paid",
     "order": "Order",
-    "balance": "Balance"
+    "balance": "Balance",
+    "optional": "(Optional)",
+    "age": "Age",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "enterAge": "Enter Age!",
+    "chooseGender": "Choose Gender!",
+    "pleaseLogin": "You're Not Logged In! Please Login."
 }

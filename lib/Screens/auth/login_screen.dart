@@ -4,9 +4,7 @@ import 'package:Rehlati/FireBase/fb_firestore_users_controller.dart';
 import 'package:Rehlati/Providers/favorites_provider.dart';
 import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/auth/register_screen.dart';
-import 'package:Rehlati/Screens/home_screen.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
-import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -67,6 +65,15 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.close,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -230,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
       if (value.exists) {
         if (emailEditingController.text == value.get('email') &&
             passwordEditingController.text == value.get('password')) {
-          await SharedPrefController().login();
+          Provider.of<ProfileProvider>(context, listen: false).login_();
           Provider.of<ProfileProvider>(context, listen: false)
               .setUserId_(value.get('email'));
           Provider.of<ProfileProvider>(context, listen: false)
@@ -249,12 +256,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             message: AppLocalizations.of(context)!.adminLogin,
             error: false,
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
+          Navigator.pop(context);
         } else {
           setState(() {
             loading = false;
@@ -272,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             email: emailEditingController.text.toString(),
             password: passwordEditingController.text.toString(),
           );
-          await SharedPrefController().login();
+          Provider.of<ProfileProvider>(context, listen: false).login_();
           Provider.of<ProfileProvider>(context, listen: false)
               .setUserId_(userCredential.user!.uid);
           Provider.of<ProfileProvider>(context, listen: false)
@@ -291,8 +293,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   .setMobile_(officeDoc.get('mobile'));
               Provider.of<ProfileProvider>(context, listen: false)
                   .setProfileImage_(officeDoc.get('profileImage'));
-              Provider.of<ProfileProvider>(context, listen: false)
-                  .setBalance_(int.parse(officeDoc.get('balance')));
 
               var favorites = await FbFireStoreFavoritesController()
                   .readFavorites(type: 'office');
@@ -322,9 +322,6 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
                   .setMobile_(userDoc.get('mobile'));
               Provider.of<ProfileProvider>(context, listen: false)
                   .setProfileImage_(userDoc.get('profileImage'));
-              print('CHECK');
-              Provider.of<ProfileProvider>(context, listen: false)
-                  .setBalance_(int.parse(userDoc.get('balance')));
 
               var favorites = await FbFireStoreFavoritesController()
                   .readFavorites(type: 'user');
@@ -349,12 +346,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarHelper {
             message: AppLocalizations.of(context)!.loggedInSuccess,
             error: false,
           );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
+          Navigator.pop(context);
         } on FirebaseAuthException catch (e) {
           setState(() {
             loading = false;

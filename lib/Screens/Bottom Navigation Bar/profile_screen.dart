@@ -7,6 +7,7 @@ import 'package:Rehlati/Screens/auth/login_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/Profile%20Screen%20Widgets/profile_list_tile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: profileWidget(),
+    );
+  }
+
+  Widget profileWidget() {
+    if (Provider.of<ProfileProvider>(context).loggedIn_) {
+      return SingleChildScrollView(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Column(
@@ -38,7 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       radius: 50,
                       backgroundColor: Colors.transparent,
                       backgroundImage: CachedNetworkImageProvider(
-                          Provider.of<ProfileProvider>(context).profileImage_),
+                        Provider.of<ProfileProvider>(context).profileImage_,
+                      ),
                     ),
               const SizedBox(height: 10),
               Text(
@@ -62,11 +70,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Provider.of<ProfileProvider>(context).accountType_ ==
                             'admin'
                         ? const SizedBox.shrink()
-                        : ProfileListTile(
-                            title:
-                                '${AppLocalizations.of(context)!.balance}: ${Provider.of<ProfileProvider>(context).balance_}',
-                            leadingIcon: Icons.attach_money,
-                            hasIcon: false,
+                        : StreamBuilder<
+                            DocumentSnapshot<Map<dynamic, dynamic>>?>(
+                            stream: streamType(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const SizedBox.shrink();
+                              } else if (snapshot.hasData &&
+                                  snapshot.data!.data()!.isNotEmpty) {
+                                var userDocument = snapshot.data;
+                                return ProfileListTile(
+                                  title:
+                                      '${AppLocalizations.of(context)!.balance}: ${userDocument!.get('balance')}',
+                                  leadingIcon: Icons.attach_money,
+                                  hasIcon: false,
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
                           ),
                     Provider.of<ProfileProvider>(context).accountType_ ==
                             'admin'
@@ -143,15 +166,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 endIndent: 16,
               ),
               InkWell(
-                onTap: () async {
-                  await FirebaseAuth.instance.signOut();
-                  await SharedPrefController().logout();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ),
-                  );
+                onTap: () {
+                  showLogoutDialog(context);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -176,7 +192,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+      );
+    } else {
+      return SingleChildScrollView(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              const SizedBox(height: 100),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                      },
+                      child: ProfileListTile(
+                        title: AppLocalizations.of(context)!.settings,
+                        leadingIcon: Icons.settings,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 40,
+                indent: 16,
+                endIndent: 16,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.logout,
+                      color: Color(0xff5859F3),
+                      size: 28,
+                    ),
+                    const SizedBox(width: 20),
+                    Text(
+                      AppLocalizations.of(context)!.login.toUpperCase(),
+                      style: const TextStyle(
+                        color: Color(0xff5859F3),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  Stream<DocumentSnapshot<Map<dynamic, dynamic>>>? streamType() {
+    if (Provider.of<ProfileProvider>(context).accountType_ == 'user') {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc(SharedPrefController().getUId)
+          .snapshots();
+    } else if (Provider.of<ProfileProvider>(context).accountType_ == 'office') {
+      return FirebaseFirestore.instance
+          .collection('offices')
+          .doc(SharedPrefController().getUId)
+          .snapshots();
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> logout() async {
+    Navigator.pop(context);
+    await FirebaseAuth.instance.signOut();
+    Provider.of<ProfileProvider>(context, listen: false).logout();
+  }
+
+  showLogoutDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: Text(
+        AppLocalizations.of(context)!.no,
+        style: const TextStyle(color: Colors.black),
       ),
+      onPressed: () {
+        Navigator.pop(context, () {
+          setState(() {});
+        });
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text(
+        AppLocalizations.of(context)!.yes,
+        style: const TextStyle(color: Colors.black),
+      ),
+      onPressed: () async {
+        await logout();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(AppLocalizations.of(context)!.logout + '!'),
+      content: Text(AppLocalizations.of(context)!.sureLogout),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

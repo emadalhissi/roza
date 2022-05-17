@@ -446,6 +446,7 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
       tripId: widget.tripId,
       tripCity: widget.tripAddress,
     );
+    //
     Navigator.pop(context);
   }
 
@@ -453,7 +454,7 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
     Widget cancelButton = TextButton(
       child: Text(
         AppLocalizations.of(context)!.no,
-        style:const  TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
       onPressed: () {
         Navigator.pop(context, () {

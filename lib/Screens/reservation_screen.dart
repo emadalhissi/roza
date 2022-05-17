@@ -22,6 +22,9 @@ class ReservationScreen extends StatefulWidget {
   final String userName;
   final String userMobile;
   final String userDocId;
+  final String userEmail;
+  final int userAge;
+  final int userGender;
   final String userNote;
   final String officeNote;
   final String orderId;
@@ -46,6 +49,9 @@ class ReservationScreen extends StatefulWidget {
     required this.userName,
     required this.userMobile,
     required this.userDocId,
+    required this.userEmail,
+    required this.userAge,
+    required this.userGender,
     required this.fullPaid,
     required this.userNote,
     required this.officeNote,
@@ -63,6 +69,14 @@ class _ReservationScreenState extends State<ReservationScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  String gender() {
+    if(widget.userGender == 0) {
+      return AppLocalizations.of(context)!.male;
+    } else {
+      return AppLocalizations.of(context)!.female;
+    }
   }
 
   @override
@@ -169,6 +183,29 @@ class _ReservationScreenState extends State<ReservationScreen> {
               ),
               Text(
                 '${AppLocalizations.of(context)!.docIdNo}: ${widget.userDocId}',
+                style: const TextStyle(
+                  color: Color(0xff8A8A8E),
+                  fontSize: 16,
+                ),
+              ),
+              widget.userEmail != ''
+                  ? Text(
+                      '${AppLocalizations.of(context)!.email}: ${widget.userEmail}',
+                      style: const TextStyle(
+                        color: Color(0xff8A8A8E),
+                        fontSize: 16,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              Text(
+                '${AppLocalizations.of(context)!.age}: ${widget.userAge}',
+                style: const TextStyle(
+                  color: Color(0xff8A8A8E),
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                '${AppLocalizations.of(context)!.gender}: ${gender()}',
                 style: const TextStyle(
                   color: Color(0xff8A8A8E),
                   fontSize: 16,

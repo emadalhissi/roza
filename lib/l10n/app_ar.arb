@@ -61,6 +61,7 @@
     "editProfile": "تعديل الملف الشخصي",
     "myTrips": "رحلاتي",
     "logout": "تسجيل الخروج",
+    "sureLogout": "هل أنت متأكد من تسجيل الخروج؟",
     "edit": "تعديل",
     "delete": "حذف",
     "youHaveNoTrips": "ليس لديك رحلات بعد!",
@@ -83,7 +84,7 @@
     "favoriteRemoved": "تم إزالة الرحلة من المفضلة!",
     "deleteTrip": "حذف الرحلة!",
     "sureDeleteTrip": "هل أنت متأكد من حذف الرحلة!",
-    "yourInfo": "معلومات عنك",
+    "orderInfo": "معلومات الطلب",
     "paymentDetails": "تفاصيل الدفع",
     "otherDetails": "تفاصيل أخرى",
     "noOfPeople": "عدد الأشخاص",
@@ -110,5 +111,13 @@
     "fullPaid": "تم الدفع كامل",
     "notFullPaid": "لم يتم الدفع كامل",
     "order": "حجز",
-    "balance": "الرصيد"
+    "balance": "الرصيد",
+    "optional": "(اختياري)",
+    "age": "العمر",
+    "gender": "الجنس",
+    "male": "ذكر",
+    "female": "أنثى",
+    "enterAge": "أدخل العمر!",
+    "chooseGender": "اختر الجنس!",
+    "pleaseLogin": "أنت غير مسجل دخول! الرجاء تسجيل الدخول."
 }

@@ -3,14 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  bool loggedIn_ = SharedPrefController().checkLoggedIn;
   String name_ = SharedPrefController().getFullName;
   String email_ = SharedPrefController().getEmail;
   String mobile_ = SharedPrefController().getMobile;
   String uId_ = SharedPrefController().getUId;
   String profileImage_ = SharedPrefController().getProfileImage;
   String accountType_ = SharedPrefController().getAccountType;
-  int balance_ = SharedPrefController().getBalance;
   String fcmToken_ = SharedPrefController().getFcmToken;
+
+  void login_() {
+    loggedIn_ = true;
+    SharedPrefController().login();
+    notifyListeners();
+  }
 
   void setName_(String name) {
     name_ = name;
@@ -48,15 +54,15 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setBalance_(int balance) {
-    balance_ = balance;
-    SharedPrefController().setBalance(balance: balance);
-    notifyListeners();
-  }
-
   void setFcmToken_(String fcm) {
     fcmToken_ = fcm;
     SharedPrefController().setFcmToken(fcm: fcm);
+    notifyListeners();
+  }
+
+  void logout() {
+    loggedIn_ = false;
+    SharedPrefController().logout();
     notifyListeners();
   }
 }

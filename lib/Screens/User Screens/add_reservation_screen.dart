@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_orders_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_users_controller.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/order.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
@@ -48,6 +50,8 @@ class _AddReservationScreenState extends State<AddReservationScreen>
   late TextEditingController fullNameEditingController;
   late TextEditingController mobileEditingController;
   late TextEditingController userDocIdEditingController;
+  late TextEditingController userEmailEditingController;
+  late TextEditingController userAgeEditingController;
   late TextEditingController firstPaymentEditingController;
   late TextEditingController noOfPeopleEditingController;
   late TextEditingController userNoteEditingController;
@@ -55,6 +59,8 @@ class _AddReservationScreenState extends State<AddReservationScreen>
   var random = Random().nextInt(1000000);
 
   bool loading = false;
+
+  int gender = -1;
 
   @override
   void initState() {
@@ -64,6 +70,9 @@ class _AddReservationScreenState extends State<AddReservationScreen>
     mobileEditingController =
         TextEditingController(text: SharedPrefController().getMobile);
     userDocIdEditingController = TextEditingController();
+    userEmailEditingController =
+        TextEditingController(text: SharedPrefController().getEmail);
+    userAgeEditingController = TextEditingController();
     firstPaymentEditingController = TextEditingController();
     noOfPeopleEditingController = TextEditingController();
     userNoteEditingController = TextEditingController();
@@ -74,6 +83,8 @@ class _AddReservationScreenState extends State<AddReservationScreen>
     fullNameEditingController.dispose();
     mobileEditingController.dispose();
     userDocIdEditingController.dispose();
+    userEmailEditingController.dispose();
+    userAgeEditingController.dispose();
     firstPaymentEditingController.dispose();
     noOfPeopleEditingController.dispose();
     userNoteEditingController.dispose();
@@ -234,7 +245,7 @@ class _AddReservationScreenState extends State<AddReservationScreen>
               ),
               const SizedBox(height: 20),
               Text(
-                AppLocalizations.of(context)!.yourInfo,
+                AppLocalizations.of(context)!.orderInfo,
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -257,6 +268,60 @@ class _AddReservationScreenState extends State<AddReservationScreen>
                 textEditingController: mobileEditingController,
                 hint: AppLocalizations.of(context)!.mobileNumber,
                 textInputType: TextInputType.phone,
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                textEditingController: userEmailEditingController,
+                hint: AppLocalizations.of(context)!.email +
+                    ' ${AppLocalizations.of(context)!.optional}',
+                textInputType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                textEditingController: noOfPeopleEditingController,
+                hint: AppLocalizations.of(context)!.noOfPeople,
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                textEditingController: userAgeEditingController,
+                hint: AppLocalizations.of(context)!.age,
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      leading: Radio(
+                        value: 0,
+                        groupValue: gender,
+                        activeColor: const Color(0xff5859F3),
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            gender = newValue!;
+                          });
+                        },
+                      ),
+                      title: Text(AppLocalizations.of(context)!.male),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListTile(
+                      leading: Radio(
+                        value: 1,
+                        groupValue: gender,
+                        activeColor: const Color(0xff5859F3),
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            gender = newValue!;
+                          });
+                        },
+                      ),
+                      title: Text(AppLocalizations.of(context)!.female),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               Text(
@@ -282,12 +347,6 @@ class _AddReservationScreenState extends State<AddReservationScreen>
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
-              ),
-              const SizedBox(height: 10),
-              AppTextField(
-                textEditingController: noOfPeopleEditingController,
-                hint: AppLocalizations.of(context)!.noOfPeople,
-                textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               AppTextField(
@@ -339,10 +398,32 @@ class _AddReservationScreenState extends State<AddReservationScreen>
       loading = true;
     });
     await FbFireStoreOrdersController().createOrder(order: order);
+    await updateBalance();
     setState(() {
       loading = false;
     });
     Navigator.pop(context);
+  }
+
+  Future<void> updateBalance() async {
+    int oldUserBalance = await FbFireStoreUsersController()
+        .getUserBalance(uId: SharedPrefController().getUId);
+    int oldOfficeBalance = await FbFireStoreOfficesController()
+        .getOfficeBalance(uId: widget.officeId!);
+
+    int newUserBalance =
+        oldUserBalance - int.parse(firstPaymentEditingController.text);
+    int newOfficeBalance =
+        oldOfficeBalance + int.parse(firstPaymentEditingController.text);
+
+    await FbFireStoreUsersController().updateBalance(
+      uId: SharedPrefController().getUId,
+      balance: newUserBalance,
+    );
+    await FbFireStoreOfficesController().updateBalance(
+      uId: widget.officeId!,
+      balance: newOfficeBalance,
+    );
   }
 
   bool checkData() {
@@ -367,6 +448,20 @@ class _AddReservationScreenState extends State<AddReservationScreen>
         error: true,
       );
       return false;
+    } else if (userAgeEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.enterAge,
+        error: true,
+      );
+      return false;
+    } else if (gender == -1) {
+      showSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.chooseGender,
+        error: true,
+      );
+      return false;
     } else if (firstPaymentEditingController.text.isEmpty) {
       showSnackBar(
         context,
@@ -378,7 +473,8 @@ class _AddReservationScreenState extends State<AddReservationScreen>
         num.parse(widget.minPayment!)) {
       showSnackBar(
         context,
-        message: AppLocalizations.of(context)!.firstPaymentCantBeLessThanTripMinPayment,
+        message: AppLocalizations.of(context)!
+            .firstPaymentCantBeLessThanTripMinPayment,
         error: true,
       );
       return false;
@@ -386,7 +482,8 @@ class _AddReservationScreenState extends State<AddReservationScreen>
         num.parse(widget.price!)) {
       showSnackBar(
         context,
-        message: AppLocalizations.of(context)!.firstPaymentCantBeGreaterThanTripPrice,
+        message: AppLocalizations.of(context)!
+            .firstPaymentCantBeGreaterThanTripPrice,
         error: true,
       );
       return false;
@@ -438,6 +535,9 @@ class _AddReservationScreenState extends State<AddReservationScreen>
       userId: SharedPrefController().getUId,
       tripDate: widget.date,
       tripTime: widget.time,
+      userEmail: userEmailEditingController.text.toString(),
+      userAge: int.parse(userAgeEditingController.text.toString()),
+      userGender: gender,
     );
     return trip;
   }

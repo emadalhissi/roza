@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
+import 'package:Rehlati/Functions/sent_fire_base_message_from_server.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
@@ -77,6 +79,8 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
   late String date_ = widget.tripDate;
 
   int imagesUploaded = 0;
+
+  late String oldTripName = widget.tripName;
 
   @override
   void initState() {
@@ -548,7 +552,19 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     setState(() {
       loading = true;
     });
+
+    String messageTitle = 'تعديل على رحلة';
+    String changesMade = 'تم التعديل على الرحلة: ';
+    String changesMadeBy = ' من قبل المكتب ';
+    String messageBody = changesMade + oldTripName + changesMadeBy + SharedPrefController().getFullName;
     await FbFireStoreTripsController().editTrip(trip: trip);
+    var fcmTokens = await FbFireStoreOfficesController()
+        .getFcmTokensForTrip(tripId: widget.tripId);
+    await SendFireBaseMessageFromServer().sentMessage(
+      fcmTokens: fcmTokens,
+      title: messageTitle,
+      body: messageBody,
+    );
     if (newTripImages!.isNotEmpty) {
       for (int i = 0; i < newTripImages!.length; i++) {
         await uploadImages(newTripImages![i].path);
@@ -639,9 +655,9 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
       },
     );
     Widget continueButton = TextButton(
-      child:Text(
+      child: Text(
         AppLocalizations.of(context)!.yes,
-        style:  const TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
       onPressed: () async {
         Navigator.pop(context);
