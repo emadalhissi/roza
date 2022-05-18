@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:Rehlati/FireBase/fb_firestore_notifications_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
 import 'package:Rehlati/FireBase/fb_storage_controller.dart';
 import 'package:Rehlati/Functions/sent_fire_base_message_from_server.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/models/notification.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:Rehlati/widgets/app_text_field.dart';
@@ -548,6 +550,12 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     return trip;
   }
 
+  String createNotificationId() {
+    String dateTimeNow =
+        '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}-${DateTime.now().millisecond}';
+    return 'EditTripNotification:$dateTimeNow-${SharedPrefController().getUId}';
+  }
+
   Future<void> editTrip() async {
     setState(() {
       loading = true;
@@ -555,9 +563,24 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
 
     String messageTitle = 'تعديل على رحلة';
     String changesMade = 'تم التعديل على الرحلة: ';
-    String changesMadeBy = ' من قبل المكتب ';
-    String messageBody = changesMade + oldTripName + changesMadeBy + SharedPrefController().getFullName;
+    String changesMadeBy = ' من قبل المكتب: ';
+    String messageBody =
+        changesMade +
+        oldTripName +
+        changesMadeBy +
+        SharedPrefController().getFullName;
     await FbFireStoreTripsController().editTrip(trip: trip);
+    await FbFireStoreNotificationsController().addNotificationToUsers(
+      tripId: widget.tripId,
+      notification: NotificationModel(
+        notificationId: createNotificationId(),
+        title: messageTitle,
+        body: messageBody,
+        reason: '',
+        timestamp: Timestamp.now(),
+      ),
+    );
+
     var fcmTokens = await FbFireStoreOfficesController()
         .getFcmTokensForTrip(tripId: widget.tripId);
     await SendFireBaseMessageFromServer().sentMessage(

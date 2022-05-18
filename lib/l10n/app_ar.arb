@@ -66,6 +66,7 @@
     "delete": "حذف",
     "youHaveNoTrips": "ليس لديك رحلات بعد!",
     "youHaveNoFavorites": "ليس لديك رحلات مفضلة بعد!",
+    "youHaveNoNotifications": "ليس لديك إشعارات بعد!",
     "all": "الكل",
     "waiting": "قيد المراجعة",
     "accepted": "مقبول",
@@ -119,5 +120,7 @@
     "female": "أنثى",
     "enterAge": "أدخل العمر!",
     "chooseGender": "اختر الجنس!",
-    "pleaseLogin": "أنت غير مسجل دخول! الرجاء تسجيل الدخول."
+    "pleaseLogin": "أنت غير مسجل دخول! الرجاء تسجيل الدخول.",
+    "deleteReason": "سبب الحذف",
+    "notifications": "الإشعارات"
 }

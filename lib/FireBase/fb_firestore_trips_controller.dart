@@ -61,6 +61,27 @@ class FbFireStoreTripsController {
     required String tripId,
     required String tripCity,
   }) async {
+    List<String> usersIds = <String>[];
+
+    var docsWhereTripId = await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('orders')
+        .where('tripId', isEqualTo: tripId)
+        .get();
+
+    var listWhereTripId = docsWhereTripId.docs;
+
+    for (int i = 0; i < listWhereTripId.length; i++) {
+      int index = usersIds
+          .indexWhere((element) => element == listWhereTripId[i].get('userId'));
+      if (index == -1) {
+        usersIds.add(listWhereTripId[i].get('userId'));
+      }
+    }
+
+    // Delete Trip
+
     await _firebaseFireStoreUsers
         .collection('offices')
         .doc(SharedPrefController().getUId)
@@ -74,6 +95,61 @@ class FbFireStoreTripsController {
         .collection('trips')
         .doc(tripId)
         .delete();
+
+    // Delete Orders Belongs to the Trip
+
+    var docsWhereOrderIdInOfficeCollection = await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('orders')
+        .where('tripId', isEqualTo: tripId)
+        .get();
+
+    var listWhereOrderIdInOfficeCollection =
+        docsWhereOrderIdInOfficeCollection.docs;
+
+    for (int i = 0; i < listWhereOrderIdInOfficeCollection.length; i++) {
+      await _firebaseFireStoreUsers
+          .collection('offices')
+          .doc(SharedPrefController().getUId)
+          .collection('orders')
+          .doc(listWhereOrderIdInOfficeCollection[i].id)
+          .delete();
+
+      await _firebaseFireStoreUsers
+          .collection('orders')
+          .doc(listWhereOrderIdInOfficeCollection[i].id)
+          .delete();
+    }
+
+    for (int i = 0; i < usersIds.length; i++) {
+      for (int j = 0; j < listWhereOrderIdInOfficeCollection.length; j++) {
+        await _firebaseFireStoreUsers
+            .collection('users')
+            .doc(usersIds[i])
+            .collection('orders')
+            .doc(listWhereOrderIdInOfficeCollection[j].id)
+            .delete();
+      }
+      await _firebaseFireStoreUsers
+          .collection('users')
+          .doc(usersIds[i])
+          .collection('favorites')
+          .doc(tripId)
+          .delete();
+    }
+
+    var offices = await _firebaseFireStoreUsers.collection('offices').get();
+    var officesList = offices.docs;
+
+    for (int i = 0; i < officesList.length; i++) {
+      await _firebaseFireStoreUsers
+          .collection('offices')
+          .doc(officesList[i].id)
+          .collection('favorites')
+          .doc(tripId)
+          .delete();
+    }
   }
 
   Future<void> deleteTripImage({

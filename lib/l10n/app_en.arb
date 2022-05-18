@@ -66,6 +66,7 @@
     "delete": "Delete",
     "youHaveNoTrips": "You have no trips yet!",
     "youHaveNoFavorites": "You have no favorites yet!",
+    "youHaveNoNotifications": "You have no notifications yet!",
     "all": "All",
     "waiting": "Waiting",
     "accepted": "Accepted",
@@ -119,5 +120,7 @@
     "female": "Female",
     "enterAge": "Enter Age!",
     "chooseGender": "Choose Gender!",
-    "pleaseLogin": "You're Not Logged In! Please Login."
+    "pleaseLogin": "You're Not Logged In! Please Login.",
+    "deleteReason": "Delete Reason",
+    "notifications": "Notifications"
 }

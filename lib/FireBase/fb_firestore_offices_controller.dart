@@ -105,4 +105,29 @@ class FbFireStoreOfficesController {
 
     return usersFcmTokens;
   }
+
+  Future<List<Map<dynamic, int>>> getUserIdAndFirstPaymentForOrder({
+    required String tripId,
+  }) async {
+    // Get Users Ids
+
+    List<Map<dynamic, int>> usersIdsAndFirstPayment = <Map<dynamic, int>>[];
+
+    var docsWhereTripId = await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(SharedPrefController().getUId)
+        .collection('orders')
+        .where('tripId', isEqualTo: tripId)
+        .get();
+    var listWhereTripId = docsWhereTripId.docs;
+
+    for (int i = 0; i < listWhereTripId.length; i++) {
+      usersIdsAndFirstPayment.add({
+        listWhereTripId[i].get('userId'):
+            listWhereTripId[i].get('firstPayment'),
+      });
+    }
+
+    return usersIdsAndFirstPayment;
+  }
 }

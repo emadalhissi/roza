@@ -96,7 +96,7 @@ mixin FbNotifications {
               channel.id,
               channel.name,
               channelDescription: channel.description,
-              icon: 'ic_launcher',
+              icon: 'trip_trans',
             ),
           ),
         );

@@ -22,7 +22,7 @@ class _LaunchScreenState extends State<LaunchScreen> with FbNotifications {
     super.initState();
     launchData();
     requestNotificationPermissions();
-    // initializeForegroundNotificationForAndroid();
+    initializeForegroundNotificationForAndroid();
     manageNotificationAction();
     Future.delayed(const Duration(seconds: 3), () {
       // String route = SharedPrefController().checkLoggedIn

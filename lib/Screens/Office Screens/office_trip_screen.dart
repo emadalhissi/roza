@@ -1,11 +1,17 @@
 import 'package:Rehlati/FireBase/fb_firestore_favorites_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_notifications_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_offices_controller.dart';
 import 'package:Rehlati/FireBase/fb_firestore_trips_controller.dart';
+import 'package:Rehlati/FireBase/fb_firestore_users_controller.dart';
+import 'package:Rehlati/Functions/sent_fire_base_message_from_server.dart';
 import 'package:Rehlati/Providers/favorites_provider.dart';
 import 'package:Rehlati/Screens/Office%20Screens/edit_trip_screen.dart';
 import 'package:Rehlati/helpers/snack_bar.dart';
+import 'package:Rehlati/models/notification.dart';
 import 'package:Rehlati/models/order.dart';
 import 'package:Rehlati/models/trip.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
+import 'package:Rehlati/widgets/app_text_field.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +57,19 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
     with SnackBarHelper {
   String noOfOrders = '0';
 
+  late TextEditingController deleteReasonEditingController;
+
   @override
   void initState() {
     super.initState();
+    deleteReasonEditingController = TextEditingController();
     getTripOrders();
+  }
+
+  @override
+  void dispose() {
+    deleteReasonEditingController.dispose();
+    super.dispose();
   }
 
   Future<void> getTripOrders() async {
@@ -441,13 +456,76 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
     }
   }
 
+  String createNotificationId() {
+    String dateTimeNow =
+        '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}-${DateTime.now().millisecond}';
+    return 'DeleteTripNotification:$dateTimeNow-${SharedPrefController().getUId}';
+  }
+
   Future<void> deleteTrip() async {
+    String messageTitle = 'حذف رحلة';
+    String deleteMade = 'تم حذف الرحلة: ';
+    String deleteMadeBy = ' من قبل المكتب ';
+    String deleteReason = 'السبب: ';
+    String messageBody = deleteMade +
+        widget.tripName +
+        deleteMadeBy +
+        SharedPrefController().getFullName +
+        ' - ' +
+        deleteReason +
+        deleteReasonEditingController.text;
+
+    await updateBalance();
+
+    await FbFireStoreNotificationsController().addNotificationToUsers(
+      tripId: widget.tripId,
+      notification: NotificationModel(
+        notificationId: createNotificationId(),
+        title: messageTitle,
+        body: messageBody,
+        reason: deleteReasonEditingController.text,
+        timestamp: Timestamp.now(),
+      ),
+    );
+
+    var fcmTokens = await FbFireStoreOfficesController()
+        .getFcmTokensForTrip(tripId: widget.tripId);
+    await SendFireBaseMessageFromServer().sentMessage(
+      fcmTokens: fcmTokens,
+      title: messageTitle,
+      body: messageBody,
+    );
+
     await FbFireStoreTripsController().deleteTrip(
       tripId: widget.tripId,
       tripCity: widget.tripAddress,
     );
-    //
+
     Navigator.pop(context);
+  }
+
+  Future<void> updateBalance() async {
+    var idsAndFirstPayments = await FbFireStoreOfficesController()
+        .getUserIdAndFirstPaymentForOrder(tripId: widget.tripId);
+    for (int i = 0; i < idsAndFirstPayments.length; i++) {
+      int oldUserBalance = await FbFireStoreUsersController()
+          .getUserBalance(uId: idsAndFirstPayments[i].keys.single);
+      int oldOfficeBalance = await FbFireStoreOfficesController()
+          .getOfficeBalance(uId: SharedPrefController().getUId);
+      int newUserBalance =
+          oldUserBalance + idsAndFirstPayments[i].values.single;
+      int newOfficeBalance =
+          oldOfficeBalance - idsAndFirstPayments[i].values.single;
+
+      await FbFireStoreUsersController().updateBalance(
+        uId: idsAndFirstPayments[i].keys.single,
+        balance: newUserBalance,
+      );
+      await FbFireStoreOfficesController().updateBalance(
+        uId: SharedPrefController().getUId,
+        balance: newOfficeBalance,
+      );
+    }
   }
 
   showDeleteTripAlertDialog(BuildContext context) {
@@ -469,7 +547,7 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
       ),
       onPressed: () async {
         Navigator.pop(context);
-        await deleteTrip();
+        showReasonAlertDialog(context);
       },
     );
 
@@ -479,6 +557,39 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
       actions: [
         cancelButton,
         continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showReasonAlertDialog(BuildContext context) {
+    deleteReasonEditingController.text = '';
+    Widget deleteButton = TextButton(
+      child: Text(
+        AppLocalizations.of(context)!.delete.toUpperCase(),
+        style: const TextStyle(color: Colors.black),
+      ),
+      onPressed: () async {
+        Navigator.pop(context);
+        await deleteTrip();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(AppLocalizations.of(context)!.deleteReason),
+      content: AppTextField(
+        textEditingController: deleteReasonEditingController,
+        hint: AppLocalizations.of(context)!.deleteReason,
+        lines: 3,
+      ),
+      actions: [
+        deleteButton,
       ],
     );
 

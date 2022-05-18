@@ -62,12 +62,4 @@ class FbFireStoreUsersController {
         .then((value) => true)
         .catchError((error) => false);
   }
-
-  // Stream<QuerySnapshot> readBalance() async* {
-  //   yield* _firebaseFireStoreUsers
-  //       .collection('users')
-  //       .doc(SharedPrefController().getUId)
-  //       .collection('trips')
-  //       .snapshots();
-  // }
 }

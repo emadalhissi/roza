@@ -1,11 +1,14 @@
+import 'package:Rehlati/Providers/profile_provider.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/favorites_screen.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/reservations_screen.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/profile_screen.dart';
 import 'package:Rehlati/Screens/Bottom%20Navigation%20Bar/trips_screen.dart';
+import 'package:Rehlati/Screens/notifications_screen.dart';
 import 'package:Rehlati/models/bn_models/bn_screen.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -69,6 +72,25 @@ class _HomeScreenState extends State<HomeScreen> {
         leadingWidth: 0,
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: [
+          Provider.of<ProfileProvider>(context).accountType_ == 'user' &&
+                  Provider.of<ProfileProvider>(context).loggedIn_
+              ? IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationsScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.notifications,
+                    color: Colors.grey,
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ],
       ),
       body: _bnScreens[_currentIndex].widget,
       bottomNavigationBar: BottomNavigationBar(
