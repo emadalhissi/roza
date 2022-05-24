@@ -23,6 +23,7 @@
     "enterPassword": "أدخل كلمة المرور!",
     "enterFullName": "أدخل الاسم كامل!",
     "enterMobile": "أدخل رقم الجوال!",
+    "passwordMustContains": "كلمة المرور يجب أن تحتوي على رقم واحد ، رمز ، حرف كبير ، حرف كبير على  الأقل!",
     "mobileMustBe10Digits": "رقم الجوال يجب أن يكون 10 خانات!",
     "chooseAccountType": "اختر نوع الحساب!",
     "adminLogin": "تم تسجيل الدخول كمدير نظام!",

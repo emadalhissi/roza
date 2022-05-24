@@ -23,6 +23,7 @@
     "enterPassword": "Enter Password!",
     "enterFullName": "Enter Full Name!",
     "enterMobile": "Enter Mobile Number!",
+    "passwordMustContains": "Password must contain at least one character, one capital latter, one small letter and one number!",
     "mobileMustBe10Digits": "Mobile Number Must Be 10 Digits!",
     "chooseAccountType": "Choose Account Type!",
     "adminLogin": "Admin Logged In!",

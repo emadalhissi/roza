@@ -225,6 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
   }
 
   bool checkData() {
+    bool passValid = RegExp("^(?=.{8,32}\$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?:{}|<>]).*").hasMatch(passwordEditingController.text);
     if (nameEditingController.text.isEmpty) {
       showSnackBar(
         context,
@@ -257,6 +258,13 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
       showSnackBar(
         context,
         message: AppLocalizations.of(context)!.enterPassword,
+        error: true,
+      );
+      return false;
+    } else if (!passValid) {
+      showSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.passwordMustContains,
         error: true,
       );
       return false;
