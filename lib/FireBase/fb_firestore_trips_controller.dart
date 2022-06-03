@@ -1,6 +1,4 @@
-import 'package:Rehlati/models/office.dart';
 import 'package:Rehlati/models/trip.dart';
-import 'package:Rehlati/models/user.dart';
 import 'package:Rehlati/preferences/shared_preferences_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -178,5 +176,30 @@ class FbFireStoreTripsController {
         })
         .then((value) {})
         .catchError((error) {});
+  }
+
+  Future<void> updateTripSpace({
+    required String officeUId,
+    required String tripId,
+    required String newSpace,
+    required String addressCityName,
+  }) async {
+    await _firebaseFireStoreUsers
+        .collection('offices')
+        .doc(officeUId)
+        .collection('trips')
+        .doc(tripId)
+        .update({
+      'space': newSpace,
+    });
+
+    await _firebaseFireStoreUsers
+        .collection('cities')
+        .doc(addressCityName)
+        .collection('trips')
+        .doc(tripId)
+        .update({
+      'space': newSpace,
+    });
   }
 }

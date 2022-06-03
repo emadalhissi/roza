@@ -89,6 +89,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               officeId: Provider.of<FavoritesProvider>(context)
                                   .favorites_[index]
                                   .officeId!,
+                              space: Provider.of<FavoritesProvider>(context)
+                                  .favorites_[index]
+                                  .space!,
                             ),
                           ),
                         );

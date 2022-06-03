@@ -345,6 +345,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     user.profileImage = '';
     user.balance = 1000;
     user.fcmToken = '';
+    user.password = passwordEditingController.text;
     return user;
   }
 
@@ -358,6 +359,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SnackBarHelper {
     office.profileImage = '';
     office.balance = 1000;
     office.fcmToken = '';
+    office.password = passwordEditingController.text;
     return office;
   }
 

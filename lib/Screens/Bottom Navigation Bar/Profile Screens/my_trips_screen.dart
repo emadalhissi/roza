@@ -78,6 +78,8 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
                               minPayment: myTrips[index].get('minPayment'),
                               tripImages: myTrips[index].get('images'),
                               officeId: myTrips[index].get('officeId'),
+                              number: myTrips[index].get('number'),
+                              space: myTrips[index].get('space'),
                             ),
                           ),
                         );

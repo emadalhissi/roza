@@ -123,5 +123,19 @@
     "chooseGender": "Choose Gender!",
     "pleaseLogin": "You're Not Logged In! Please Login.",
     "deleteReason": "Delete Reason",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "leftNumber": "Left Number",
+    "males": "Males",
+    "females": "Females",
+    "children": "Children",
+    "number": "Number",
+    "enterNoOfMales": "Enter No. of Males!",
+    "enterNoOfFemales": "Enter No. of Females!",
+    "enterNoOfChildren": "Enter No. of Children!",
+    "enterAtLeastOnePerson": "Enter At Least One Person!",
+    "numberOfPeopleMoreThanLeftNumber": "Number of People Can't be More Than Left Number!",
+    "noOfMales": "No. of Males",
+    "noOfFemales": "No. of Females",
+    "noOfChildren": "No. of Children",
+    "cantBeOrdered": "You Can't Order this Trip, Because it's Full!"
 }

@@ -24,11 +24,13 @@ class ReservationScreen extends StatefulWidget {
   final String userDocId;
   final String userEmail;
   final int userAge;
-  final int userGender;
   final String userNote;
   final String officeNote;
   final String orderId;
   final bool fullPaid;
+  final String males;
+  final String females;
+  final String children;
 
   const ReservationScreen({
     required this.tripName,
@@ -51,11 +53,13 @@ class ReservationScreen extends StatefulWidget {
     required this.userDocId,
     required this.userEmail,
     required this.userAge,
-    required this.userGender,
     required this.fullPaid,
     required this.userNote,
     required this.officeNote,
     required this.orderId,
+    required this.males,
+    required this.females,
+    required this.children,
     Key? key,
   }) : super(key: key);
 
@@ -69,14 +73,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  String gender() {
-    if(widget.userGender == 0) {
-      return AppLocalizations.of(context)!.male;
-    } else {
-      return AppLocalizations.of(context)!.female;
-    }
   }
 
   @override
@@ -204,13 +200,33 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   fontSize: 16,
                 ),
               ),
-              Text(
-                '${AppLocalizations.of(context)!.gender}: ${gender()}',
-                style: const TextStyle(
-                  color: Color(0xff8A8A8E),
-                  fontSize: 16,
-                ),
-              ),
+              widget.males != '0'
+                  ? Text(
+                      '${AppLocalizations.of(context)!.noOfMales}: ${widget.males}',
+                      style: const TextStyle(
+                        color: Color(0xff8A8A8E),
+                        fontSize: 16,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              widget.females != '0'
+                  ? Text(
+                      '${AppLocalizations.of(context)!.noOfFemales}: ${widget.females}',
+                      style: const TextStyle(
+                        color: Color(0xff8A8A8E),
+                        fontSize: 16,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              widget.children != '0'
+                  ? Text(
+                      '${AppLocalizations.of(context)!.noOfChildren}: ${widget.children}',
+                      style: const TextStyle(
+                        color: Color(0xff8A8A8E),
+                        fontSize: 16,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
               const SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)!.reservationDetails,

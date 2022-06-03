@@ -129,8 +129,6 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                         allReservations[index].get('userEmail'),
                                     userAge:
                                         allReservations[index].get('userAge'),
-                                    userGender: allReservations[index]
-                                        .get('userGender'),
                                     fullPaid:
                                         allReservations[index].get('fullPaid'),
                                     status:
@@ -143,6 +141,11 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                         .get('officeNote'),
                                     orderId:
                                         allReservations[index].get('orderId'),
+                                    males: allReservations[index].get('males'),
+                                    females:
+                                        allReservations[index].get('females'),
+                                    children:
+                                        allReservations[index].get('children'),
                                   ),
                                 ),
                               );
@@ -220,8 +223,6 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                               .get('userEmail'),
                                           userAge: waitingReservations[index]
                                               .get('userAge'),
-                                          userGender: waitingReservations[index]
-                                              .get('userGender'),
                                           fullPaid: waitingReservations[index]
                                               .get('fullPaid'),
                                           status: waitingReservations[index]
@@ -234,6 +235,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                               .get('officeNote'),
                                           orderId: waitingReservations[index]
                                               .get('orderId'),
+                                          males: waitingReservations[index]
+                                              .get('males'),
+                                          females: waitingReservations[index]
+                                              .get('females'),
+                                          children: waitingReservations[index]
+                                              .get('children'),
                                         ),
                                       ),
                                     );
@@ -329,9 +336,6 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                               .get('userEmail'),
                                           userAge: acceptedReservations[index]
                                               .get('userAge'),
-                                          userGender:
-                                              acceptedReservations[index]
-                                                  .get('userGender'),
                                           fullPaid: acceptedReservations[index]
                                               .get('fullPaid'),
                                           status: acceptedReservations[index]
@@ -346,6 +350,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                                   .get('officeNote'),
                                           orderId: acceptedReservations[index]
                                               .get('orderId'),
+                                          males: acceptedReservations[index]
+                                              .get('males'),
+                                          females: acceptedReservations[index]
+                                              .get('females'),
+                                          children: acceptedReservations[index]
+                                              .get('children'),
                                         ),
                                       ),
                                     );
@@ -441,9 +451,6 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                               .get('userEmail'),
                                           userAge: rejectedReservations[index]
                                               .get('userAge'),
-                                          userGender:
-                                              rejectedReservations[index]
-                                                  .get('userGender'),
                                           fullPaid: rejectedReservations[index]
                                               .get('fullPaid'),
                                           status: rejectedReservations[index]
@@ -458,6 +465,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                                   .get('officeNote'),
                                           orderId: rejectedReservations[index]
                                               .get('orderId'),
+                                          males: rejectedReservations[index]
+                                              .get('males'),
+                                          females: rejectedReservations[index]
+                                              .get('females'),
+                                          children: rejectedReservations[index]
+                                              .get('children'),
                                         ),
                                       ),
                                     );

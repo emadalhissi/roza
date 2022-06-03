@@ -123,5 +123,19 @@
     "chooseGender": "اختر الجنس!",
     "pleaseLogin": "أنت غير مسجل دخول! الرجاء تسجيل الدخول.",
     "deleteReason": "سبب الحذف",
-    "notifications": "الإشعارات"
+    "notifications": "الإشعارات",
+    "leftNumber": "العدد المتبقي",
+    "males": "ذكور",
+    "females": "إناث",
+    "children": "أطفال",
+    "number": "العدد",
+    "enterNoOfMales": "أدخل عدد الذكور!",
+    "enterNoOfFemales": "أدخل عدد الإناث!",
+    "enterNoOfChildren": "أدخل عدد الأطفال!",
+    "enterAtLeastOnePerson": "أدخل على الأقل شخص واحد!",
+    "numberOfPeopleMoreThanLeftNumber": "عدد الأشخاص لا يمكن أن يكون أكبر من العدد المتبقي!",
+    "noOfMales": "عدد الذكور",
+    "noOfFemales": "عدد الإناث",
+    "noOfChildren": "عدد الأطفال",
+    "cantBeOrdered": "لا يمكنك حجز هذه الرحلة ، لأن العدد ممتلئ!"
 }

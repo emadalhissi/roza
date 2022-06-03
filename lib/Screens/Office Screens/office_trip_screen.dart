@@ -32,6 +32,8 @@ class OfficeTripScreen extends StatefulWidget {
   final String minPayment;
   final List<dynamic> tripImages;
   final String officeId;
+  final String number;
+  final String space;
 
   const OfficeTripScreen({
     required this.tripName,
@@ -46,6 +48,8 @@ class OfficeTripScreen extends StatefulWidget {
     required this.minPayment,
     required this.tripImages,
     required this.officeId,
+    required this.number,
+    required this.space,
     Key? key,
   }) : super(key: key);
 
@@ -345,6 +349,8 @@ class _OfficeTripScreenState extends State<OfficeTripScreen>
                           tripDescription: widget.tripDescription,
                           minPayment: widget.minPayment,
                           tripImages: widget.tripImages,
+                          number: widget.number,
+                          space: widget.space,
                         ),
                       ),
                     );

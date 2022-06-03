@@ -1,4 +1,3 @@
-
 class UserModel {
   late String uId;
   late String name;
@@ -8,6 +7,7 @@ class UserModel {
   late String profileImage;
   late String fcmToken;
   late int balance;
+  late String password;
 
   UserModel();
 
@@ -20,6 +20,7 @@ class UserModel {
     profileImage = documentMap['profileImage'];
     fcmToken = documentMap['fcmToken'];
     balance = documentMap['balance'];
+    password = documentMap['password'];
   }
 
   Map<String, dynamic> toMap() {
@@ -32,6 +33,7 @@ class UserModel {
     map['profileImage'] = profileImage;
     map['fcmToken'] = fcmToken;
     map['balance'] = balance;
+    map['password'] = password;
     return map;
   }
 }

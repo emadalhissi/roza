@@ -29,6 +29,8 @@ class EditTripScreen extends StatefulWidget {
   final String tripDescription;
   final String minPayment;
   final List<dynamic> tripImages;
+  final String number;
+  final String space;
 
   const EditTripScreen({
     required this.tripName,
@@ -42,6 +44,8 @@ class EditTripScreen extends StatefulWidget {
     required this.tripDescription,
     required this.minPayment,
     required this.tripImages,
+    required this.number,
+    required this.space,
     Key? key,
   }) : super(key: key);
 
@@ -54,6 +58,7 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
   late TextEditingController tripDescriptionEditingController;
   late TextEditingController tripPriceEditingController;
   late TextEditingController tripMinPaymentEditingController;
+  late TextEditingController numberOfPeopleEditingController;
 
   var imagePicker = ImagePicker();
 
@@ -93,6 +98,8 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     tripPriceEditingController = TextEditingController(text: widget.price);
     tripMinPaymentEditingController =
         TextEditingController(text: widget.minPayment);
+    numberOfPeopleEditingController =
+        TextEditingController(text: widget.number);
   }
 
   @override
@@ -101,6 +108,7 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     tripDescriptionEditingController.dispose();
     tripPriceEditingController.dispose();
     tripMinPaymentEditingController.dispose();
+    numberOfPeopleEditingController.dispose();
     super.dispose();
   }
 
@@ -160,6 +168,12 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
               AppTextField(
                 textEditingController: tripMinPaymentEditingController,
                 hint: AppLocalizations.of(context)!.minPayment,
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                textEditingController: numberOfPeopleEditingController,
+                hint: AppLocalizations.of(context)!.noOfPeople,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
@@ -498,6 +512,13 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
         error: true,
       );
       return false;
+    } else if (numberOfPeopleEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.enterNoOfPeople,
+        error: true,
+      );
+      return false;
     } else if (tripDescriptionEditingController.text.isEmpty) {
       showSnackBar(
         context,
@@ -546,6 +567,8 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
       officeEmail: SharedPrefController().getEmail,
       officeName: SharedPrefController().getFullName,
       officeId: SharedPrefController().getUId,
+      number: numberOfPeopleEditingController.text.toString(),
+      space: widget.space,
     );
     return trip;
   }
@@ -564,8 +587,7 @@ class _EditTripScreenState extends State<EditTripScreen> with SnackBarHelper {
     String messageTitle = 'تعديل على رحلة';
     String changesMade = 'تم التعديل على الرحلة: ';
     String changesMadeBy = ' من قبل المكتب: ';
-    String messageBody =
-        changesMade +
+    String messageBody = changesMade +
         oldTripName +
         changesMadeBy +
         SharedPrefController().getFullName;

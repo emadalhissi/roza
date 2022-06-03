@@ -29,6 +29,7 @@ class TripScreen extends StatefulWidget {
   final String officeEmail;
   final String officeId;
   final bool isAdmin;
+  final String space;
 
   const TripScreen({
     required this.tripName,
@@ -46,6 +47,7 @@ class TripScreen extends StatefulWidget {
     required this.officeEmail,
     required this.officeId,
     this.isAdmin = false,
+    required this.space,
     Key? key,
   }) : super(key: key);
 
@@ -201,23 +203,26 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                     children: [
                       TableRow(
                         children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.timer,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.tripTime,
-                                style: const TextStyle(
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.timer,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 5),
+                                Text(
+                                  widget.tripTime,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Row(
                             children: [
@@ -241,25 +246,28 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                       ),
                       TableRow(
                         children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.place,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                SharedPrefController().getLang == 'en'
-                                    ? widget.tripAddress
-                                    : widget.tripAddressAr,
-                                style: const TextStyle(
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.place,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 5),
+                                Text(
+                                  SharedPrefController().getLang == 'en'
+                                      ? widget.tripAddress
+                                      : widget.tripAddressAr,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Row(
                             children: [
@@ -281,6 +289,32 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.people,
+                                  color: Colors.deepOrange,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  AppLocalizations.of(context)!.leftNumber + ': ' + widget.space,
+                                  style: const TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(),
                         ],
                       ),
                     ],
@@ -340,6 +374,7 @@ class _TripScreenState extends State<TripScreen> with SnackBarHelper {
                   officeEmail: widget.officeEmail,
                   officeId: widget.officeId,
                   tripImage: widget.tripImages[0],
+                  space: widget.space,
                 ),
               ),
             );

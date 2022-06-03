@@ -16,6 +16,8 @@ class Trip {
   late String? officeEmail;
   late String? officeName;
   late String? officeId;
+  late String? number;
+  late String? space;
 
   Trip({
     required this.tripId,
@@ -32,6 +34,8 @@ class Trip {
     required this.officeEmail,
     required this.officeName,
     required this.officeId,
+    required this.number,
+    required this.space,
   });
 
   Trip.fromMap(Map<String, dynamic> json) {
@@ -54,6 +58,8 @@ class Trip {
     officeEmail = json['officeEmail'];
     officeName = json['officeName'];
     officeId = json['officeId'];
+    number = json['number'];
+    space = json['space'];
     // if (json['images'] != null) {
     //   images = <ImageModel>[];
     //   json['images'].forEach((v) {
@@ -80,6 +86,8 @@ class Trip {
     data['officeEmail'] = officeEmail;
     data['officeName'] = officeName;
     data['officeId'] = officeId;
+    data['number'] = number;
+    data['space'] = space;
     // if (images != null) {
     //   data['images'] = images!.map((v) => v.toMap()).toList();
     // }

@@ -28,6 +28,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
   late TextEditingController tripDescriptionEditingController;
   late TextEditingController tripPriceEditingController;
   late TextEditingController tripMinPaymentEditingController;
+  late TextEditingController numberOfPeopleEditingController;
 
   var random = Random().nextInt(1000000);
 
@@ -67,6 +68,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
     tripDescriptionEditingController = TextEditingController();
     tripPriceEditingController = TextEditingController();
     tripMinPaymentEditingController = TextEditingController();
+    numberOfPeopleEditingController = TextEditingController();
   }
 
   @override
@@ -75,6 +77,7 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
     tripDescriptionEditingController.dispose();
     tripPriceEditingController.dispose();
     tripMinPaymentEditingController.dispose();
+    numberOfPeopleEditingController.dispose();
     super.dispose();
   }
 
@@ -134,6 +137,12 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
               AppTextField(
                 textEditingController: tripMinPaymentEditingController,
                 hint: AppLocalizations.of(context)!.minPayment,
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                textEditingController: numberOfPeopleEditingController,
+                hint: AppLocalizations.of(context)!.noOfPeople,
                 textInputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
@@ -467,6 +476,13 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
         error: true,
       );
       return false;
+    } else if (numberOfPeopleEditingController.text.isEmpty) {
+      showSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.enterNoOfPeople,
+        error: true,
+      );
+      return false;
     } else if (tripDescriptionEditingController.text.isEmpty) {
       showSnackBar(
         context,
@@ -531,6 +547,8 @@ class _AddTripScreenState extends State<AddTripScreen> with SnackBarHelper {
       officeName: SharedPrefController().getFullName,
       officeId: SharedPrefController().getUId,
       images: [],
+      number: numberOfPeopleEditingController.text.toString(),
+      space: numberOfPeopleEditingController.text.toString(),
     );
     return trip;
   }

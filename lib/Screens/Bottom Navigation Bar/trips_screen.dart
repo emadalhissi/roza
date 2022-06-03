@@ -160,6 +160,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                     officeId:
                                         searchedTrips[index].get('officeId'),
                                     isAdmin: true,
+                                    space: searchedTrips[index].get('space'),
                                   ),
                                 ),
                               );
@@ -189,6 +190,8 @@ class _TripsScreenState extends State<TripsScreen> {
                                         .get('addressCityId'),
                                     officeId:
                                         searchedTrips[index].get('officeId'),
+                                    number: searchedTrips[index].get('number'),
+                                    space: searchedTrips[index].get('space'),
                                   ),
                                 ),
                               );
@@ -220,6 +223,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                         searchedTrips[index].get('officeEmail'),
                                     officeId:
                                         searchedTrips[index].get('officeId'),
+                                    space: searchedTrips[index].get('space'),
                                   ),
                                 ),
                               );
@@ -291,6 +295,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                           officeId:
                                               trips[index].get('officeId'),
                                           isAdmin: true,
+                                          space: trips[index].get('space'),
                                         ),
                                       ),
                                     );
@@ -319,6 +324,8 @@ class _TripsScreenState extends State<TripsScreen> {
                                               trips[index].get('addressCityId'),
                                           officeId:
                                               trips[index].get('officeId'),
+                                          number: trips[index].get('number'),
+                                          space: trips[index].get('space'),
                                         ),
                                       ),
                                     );
@@ -350,6 +357,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                               trips[index].get('officeEmail'),
                                           officeId:
                                               trips[index].get('officeId'),
+                                          space: trips[index].get('space'),
                                         ),
                                       ),
                                     );
